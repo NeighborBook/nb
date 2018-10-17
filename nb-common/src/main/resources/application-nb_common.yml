@@ -1,0 +1,8 @@
+com:
+  nb:
+    module:
+      config:
+        swagger2:
+          api:
+            url: https://github.com/NeighborBook/nb
+            description: NeighborBook的微服务

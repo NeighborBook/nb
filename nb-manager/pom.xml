@@ -9,6 +9,7 @@
 
 	<name>nb-manager</name>
 	<description>nb-manager</description>
+
 	<parent>
 		<groupId>com.nb.module</groupId>
 		<artifactId>nb-parent</artifactId>
