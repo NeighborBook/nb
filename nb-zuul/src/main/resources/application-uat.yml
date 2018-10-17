@@ -1,0 +1,9 @@
+eureka:
+  instance:
+    #实例ip 配置在sh中
+    ip-address: #10.130.12.42
+    
+server:
+  port: 80
+  servlet:
+    context-path:

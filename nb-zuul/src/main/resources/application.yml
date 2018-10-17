@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: nb-zuul
+  profiles:
+    include: common, nb_common
+    active: dev, eureka_dev
+
+zuul:
+  sensitiveHeaders: # 不过滤头部
+  host:
+    socket-timeout-millis: 600000
+    connect-timeout-millis: 600000
+
+ribbon:
+  ReadTimeout: 600000
+  ConnectTimeout: 600000
