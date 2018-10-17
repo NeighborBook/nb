@@ -1,0 +1,9 @@
+eureka:
+  instance:
+    #实例ip
+    ip-address: 10.130.12.15
+
+sync:
+  cron:
+    method: 0 0 0 * * ?
+    businesscode: 0 0 0 * * ?

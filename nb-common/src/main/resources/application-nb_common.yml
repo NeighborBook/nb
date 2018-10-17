@@ -8,3 +8,7 @@ com:
               url: https://github.com/NeighborBook/nb
               description: NeighborBook的微服务
 
+common:
+  authorization:
+    application:
+      name: nb-authorization
