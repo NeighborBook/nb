@@ -23,6 +23,19 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- nb common -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>nb-common</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
+
+			<!-- nb properties -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>nb-properties</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>

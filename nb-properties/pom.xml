@@ -3,12 +3,12 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>nb-common</artifactId>
+	<artifactId>nb-properties</artifactId>
 
 	<packaging>jar</packaging>
 
-	<name>nb-common</name>
-	<description>nb-common</description>
+	<name>nb-properties</name>
+	<description>nb-properties</description>
 
 	<parent>
 		<groupId>com.nb.module</groupId>
@@ -16,19 +16,4 @@
 		<version>1.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
-	<dependencies>
-		<!-- common -->
-		<dependency>
-			<groupId>com.zjk.module</groupId>
-			<artifactId>common</artifactId>
-		</dependency>
-
-		<!-- nb properties -->
-		<dependency>
-			<groupId>com.nb.module</groupId>
-			<artifactId>nb-properties</artifactId>
-		</dependency>
-
-	</dependencies>
 </project>
