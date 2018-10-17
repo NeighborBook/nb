@@ -1,6 +1,6 @@
 spring:
   application:
-    name: common-authorization
+    name: nb-authorization
   profiles:
     include: common, nb_common, data, redis
     active: dev, eureka_dev, db_ms_dev, redis_dev
