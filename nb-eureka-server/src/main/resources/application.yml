@@ -2,11 +2,10 @@ spring:
   application:
     name: nb-eureka-server
   profiles:
-    include: common, nb-common
+    include: common, nb_common
     active: dev
 
 server:
   port: 8761
   servlet:
     context-path:
-
