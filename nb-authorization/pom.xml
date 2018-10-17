@@ -18,6 +18,12 @@
 	</parent>
 
 	<dependencies>
+		<!-- nb common -->
+		<dependency>
+			<groupId>com.nb.module</groupId>
+			<artifactId>nb-common</artifactId>
+		</dependency>
+
 		<!-- common authorization server -->
 		<dependency>
 			<groupId>com.zjk.module</groupId>
