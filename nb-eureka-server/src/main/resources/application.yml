@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: nb-eureka-server
+  profiles:
+    include: common, nb-common
+    active: dev
+
+server:
+  port: 8761
+  servlet:
+    context-path:
+
