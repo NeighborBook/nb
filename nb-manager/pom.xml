@@ -37,6 +37,34 @@
 				<version>${com.nb.module.version}</version>
 			</dependency>
 
+			<!-- partner aliyun oss -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>partner-aliyun-oss</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
+
+			<!-- partner douban client -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>partner-douban-client</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
+
+			<!-- partner szmesoft client -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>partner-szmesoft-client</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
+
+			<!-- partner weixin client -->
+			<dependency>
+				<groupId>com.nb.module</groupId>
+				<artifactId>partner-weixin-client</artifactId>
+				<version>${com.nb.module.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>

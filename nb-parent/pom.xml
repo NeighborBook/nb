@@ -17,4 +17,20 @@
 		<version>1.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<properties>
+		<aliyun-sdk-oss.version>3.1.0</aliyun-sdk-oss.version>
+	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+			<!-- aliyun oss -->
+			<dependency>
+				<groupId>com.aliyun.oss</groupId>
+				<artifactId>aliyun-sdk-oss</artifactId>
+				<version>${aliyun-sdk-oss.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 </project>

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: nb-customer
+  profiles:
+    include: common, nb_common, data, redis, aliyun_oss
+    active: dev, db_nb_dev,redis_dev, eureka_dev, weixin_dev
+
+server:
+  port: 10001
+  servlet:
+    context-path:
+
