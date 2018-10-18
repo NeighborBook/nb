@@ -1,12 +1,12 @@
 package com.nb.module.nb.customer.api.weixin.token.controller;
 
-import com.sbm.module.common.annotation.CreateApiDocs;
-import com.sbm.module.common.controller.BaseController;
-import com.sbm.module.common.domain.JsonContainer;
-import com.sbm.module.nb.customer.api.weixin.token.biz.ITokenService;
-import com.sbm.module.partner.weixin.rest.token.domain.AccessToken;
-import com.sbm.module.partner.weixin.rest.token.domain.JsapiTicket;
-import com.sbm.module.partner.weixin.util.Sign;
+import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
+import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
+import com.nb.module.partner.weixin.client.api.token.domain.JsapiTicket;
+import com.nb.module.partner.weixin.client.util.Sign;
+import com.zjk.module.common.base.annotation.CreateApiDocs;
+import com.zjk.module.common.base.controller.BaseController;
+import com.zjk.module.common.base.domain.JsonContainer;
 import io.swagger.annotations.ApiOperation;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;

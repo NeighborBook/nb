@@ -1,16 +1,16 @@
 package com.nb.module.nb.customer.api.weixin.token.biz.impl;
 
-import com.sbm.module.common.biz.impl.CommonServiceImpl;
-import com.sbm.module.common.redis.biz.IRedisService;
-import com.sbm.module.nb.customer.api.weixin.token.biz.ITokenService;
-import com.sbm.module.partner.weixin.constant.WeixinConstant;
-import com.sbm.module.partner.weixin.holder.WeixinHolder;
-import com.sbm.module.partner.weixin.rest.token.biz.IWeixinTokenService;
-import com.sbm.module.partner.weixin.rest.token.constant.TokenConstant;
-import com.sbm.module.partner.weixin.rest.token.domain.AccessToken;
-import com.sbm.module.partner.weixin.rest.token.domain.JsapiTicket;
-import com.sbm.module.partner.weixin.util.Sign;
-import com.sbm.module.partner.weixin.util.Signature;
+import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
+import com.nb.module.partner.weixin.client.api.token.biz.IWeixinTokenService;
+import com.nb.module.partner.weixin.client.api.token.constant.TokenConstant;
+import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
+import com.nb.module.partner.weixin.client.api.token.domain.JsapiTicket;
+import com.nb.module.partner.weixin.client.constant.WeixinConstant;
+import com.nb.module.partner.weixin.client.holder.WeixinHolder;
+import com.nb.module.partner.weixin.client.util.Sign;
+import com.nb.module.partner.weixin.client.util.Signature;
+import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
+import com.zjk.module.common.redis.biz.IRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.nb.module.nb.customer.api.weixin.token.biz;
 
 
-import com.sbm.module.partner.weixin.rest.token.domain.AccessToken;
-import com.sbm.module.partner.weixin.rest.token.domain.JsapiTicket;
-import com.sbm.module.partner.weixin.util.Sign;
+import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
+import com.nb.module.partner.weixin.client.api.token.domain.JsapiTicket;
+import com.nb.module.partner.weixin.client.util.Sign;
 
 public interface ITokenService {
 

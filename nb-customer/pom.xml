@@ -30,6 +30,12 @@
 			<artifactId>common-data</artifactId>
 		</dependency>
 
+		<!-- common redis -->
+		<dependency>
+			<groupId>com.zjk.module</groupId>
+			<artifactId>common-redis</artifactId>
+		</dependency>
+
 		<!-- common authorization server -->
 		<dependency>
 			<groupId>com.zjk.module</groupId>
