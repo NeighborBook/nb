@@ -4,6 +4,6 @@ eureka:
     ip-address: 10.130.12.15
 
 server:
-  port: 8750
+  port: 8060
   servlet:
     context-path:
