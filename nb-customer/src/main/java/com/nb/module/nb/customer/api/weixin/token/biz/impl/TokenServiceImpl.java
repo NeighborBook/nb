@@ -34,7 +34,6 @@ public class TokenServiceImpl extends CommonServiceImpl implements ITokenService
 			// 放入缓存
 			redisService.set2Redis(WeixinConstant.WEIXIN_ACCESS_TOKEN, accessToken, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
 		}
-		System.out.println();
 		return accessToken;
 	}
 
