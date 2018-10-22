@@ -11,7 +11,7 @@ public class WeixinUserInfo implements Serializable {
 
 	private String nickname;
 
-	private String sex;
+	private Integer sex;
 
 	private String province;
 
