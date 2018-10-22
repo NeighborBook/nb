@@ -18,9 +18,9 @@ public class WeixinSnsServiceImpl extends CommonServiceImpl implements IWeixinSn
 	private ISnsClient client;
 
 	@Override
-	public AccessToken accessToken(String appId, String appSecret, String grantType) {
+	public AccessToken accessToken(String appId, String appSecret, String code, String grantType) {
 		AccessToken accessToken;
-		String result = client.accessToken(appId, appSecret, grantType);
+		String result = client.accessToken(appId, appSecret, code, grantType);
 		try {
 			accessToken = JSON.parseObject(result, AccessToken.class);
 		} catch (Exception e) {

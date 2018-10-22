@@ -13,6 +13,7 @@ public interface ISnsClient {
 	@RequestMapping(value = "/access_token", method = RequestMethod.GET)
 	String accessToken(@RequestParam(value = "appid") String appId,
 					   @RequestParam(value = "secret") String appSecret,
+					   @RequestParam(value = "code") String code,
 					   @RequestParam(value = "grant_type") String grantType);
 
 	@RequestMapping(value = "/ticket/userinfo", method = RequestMethod.GET)
