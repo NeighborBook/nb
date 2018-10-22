@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "token", url = WeixinConstant.WEIXIN_URL)
+@RequestMapping("/cgi-bin")
 public interface ITokenClient {
 
 	@RequestMapping(value = "/token", method = RequestMethod.GET)

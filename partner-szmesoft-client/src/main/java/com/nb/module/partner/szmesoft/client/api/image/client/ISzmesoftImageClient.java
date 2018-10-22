@@ -1,4 +1,4 @@
-package com.nb.module.partner.szmesoft.client.api.client;
+package com.nb.module.partner.szmesoft.client.api.image.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

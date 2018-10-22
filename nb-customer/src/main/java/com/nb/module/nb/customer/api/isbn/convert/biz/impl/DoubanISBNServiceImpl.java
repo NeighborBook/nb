@@ -11,7 +11,7 @@ import com.nb.module.nb.customer.api.isbn.convert.exception.BookConvertCode;
 import com.nb.module.nb.customer.api.tag.domain.BookTag;
 import com.nb.module.nb.customer.api.tag.domain.Tag;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
-import com.nb.module.partner.douban.client.api.client.IDoubanImageClient;
+import com.nb.module.partner.douban.client.api.image.client.IDoubanImageClient;
 import com.nb.module.partner.douban.client.api.isbn.client.IDoubanISBNClient;
 import com.nb.module.partner.douban.client.api.isbn.domain.DoubanBook;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;

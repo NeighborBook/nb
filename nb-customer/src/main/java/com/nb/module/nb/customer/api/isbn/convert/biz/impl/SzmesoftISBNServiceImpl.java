@@ -7,7 +7,7 @@ import com.nb.module.nb.customer.api.isbn.convert.biz.IBookConvertService;
 import com.nb.module.nb.customer.api.isbn.convert.constant.BookConvertConstant;
 import com.nb.module.nb.customer.api.isbn.convert.exception.BookConvertCode;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
-import com.nb.module.partner.szmesoft.client.api.client.ISzmesoftImageClient;
+import com.nb.module.partner.szmesoft.client.api.image.client.ISzmesoftImageClient;
 import com.nb.module.partner.szmesoft.client.api.isbn.client.ISzmesoftISBNClient;
 import com.nb.module.partner.szmesoft.client.api.isbn.domain.SzmesoftBook;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;

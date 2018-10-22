@@ -28,22 +28,22 @@ public class TokenServiceImpl extends CommonServiceImpl implements ITokenService
 
 	@Override
 	public AccessToken accessToken() {
-		AccessToken accessToken = (AccessToken) redisService.get(WeixinConstant.WEIXIN_ACCESS_TOKEN);
+		AccessToken accessToken = (AccessToken) redisService.get(TokenConstant.WEIXIN_ACCESS_TOKEN);
 		if (null == accessToken) {
 			accessToken = weixinTokenService.accessToken(TokenConstant.GRAND_TYPE, holder.getAppId(), holder.getAppSecret());
 			// 放入缓存
-			redisService.set2Redis(WeixinConstant.WEIXIN_ACCESS_TOKEN, accessToken, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
+			redisService.set2Redis(TokenConstant.WEIXIN_ACCESS_TOKEN, accessToken, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
 		}
 		return accessToken;
 	}
 
 	@Override
 	public JsapiTicket getTicket() {
-		JsapiTicket jsapiTicket = (JsapiTicket) redisService.get(WeixinConstant.WEIXIN_JSAPI_TICKET);
+		JsapiTicket jsapiTicket = (JsapiTicket) redisService.get(TokenConstant.WEIXIN_JSAPI_TICKET);
 		if (null == jsapiTicket) {
 			jsapiTicket = weixinTokenService.getTicket(accessToken().getAccessToken(), TokenConstant.JS_API);
 			// 放入缓存
-			redisService.set2Redis(WeixinConstant.WEIXIN_JSAPI_TICKET, jsapiTicket, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
+			redisService.set2Redis(TokenConstant.WEIXIN_JSAPI_TICKET, jsapiTicket, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
 		}
 		return jsapiTicket;
 	}
