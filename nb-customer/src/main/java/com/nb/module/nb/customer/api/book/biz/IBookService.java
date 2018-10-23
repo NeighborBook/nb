@@ -28,7 +28,5 @@ public interface IBookService {
 
 	String generatePresignedUrl(String path);
 
-	String getFilename(String path);
-
 	Page<BookMinInfo> findAllByTagCode(List<String> tagCodes, Pageable pageable);
 }

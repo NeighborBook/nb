@@ -20,4 +20,5 @@ public interface IPathService {
 	 */
 	String generateSaveUrl(String filename);
 
+	String getFilename(String path);
 }

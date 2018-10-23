@@ -11,6 +11,7 @@ import com.nb.module.nb.customer.api.isbn.convert.exception.BookConvertCode;
 import com.nb.module.nb.customer.api.tag.domain.BookTag;
 import com.nb.module.nb.customer.api.tag.domain.Tag;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
+import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.nb.module.partner.douban.client.api.image.client.IDoubanImageClient;
 import com.nb.module.partner.douban.client.api.isbn.client.IDoubanISBNClient;
 import com.nb.module.partner.douban.client.api.isbn.domain.DoubanBook;
@@ -37,6 +38,8 @@ public class DoubanISBNServiceImpl extends CommonServiceImpl implements IBookCon
 	private IDoubanImageClient imageClient;
 	@Autowired
 	private IUploadService uploadService;
+	@Autowired
+	private IPathService pathService;
 
 	public static final String DOUBAN = "douban";
 
@@ -76,7 +79,7 @@ public class DoubanISBNServiceImpl extends CommonServiceImpl implements IBookCon
 
 	@SneakyThrows
 	private String uploadImage(String path) {
-		String filename = bookService.getFilename(path);
+		String filename = pathService.getFilename(path);
 		ResponseEntity<byte[]> result = imageClient.mImage(filename);
 		return uploadService.uploadByte(result.getBody(), filename);
 	}

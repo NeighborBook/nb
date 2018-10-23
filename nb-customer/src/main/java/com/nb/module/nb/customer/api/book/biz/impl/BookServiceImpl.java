@@ -121,13 +121,7 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 
 	@Override
 	public String generatePresignedUrl(String path) {
-		return pathService.generatePresignedUrl(getFilename(path));
-	}
-
-	@Override
-	public String getFilename(String path) {
-		String[] arr = path.split("/");
-		return arr[arr.length - 1];
+		return pathService.generatePresignedUrl(pathService.getFilename(path));
 	}
 
 	@Override

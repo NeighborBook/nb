@@ -7,6 +7,7 @@ import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.login.biz.IWeixinLoginService;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
+import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.nb.module.partner.weixin.client.api.image.client.IWeixinImageClient;
 import com.nb.module.partner.weixin.client.api.sns.biz.IWeixinSnsService;
 import com.nb.module.partner.weixin.client.api.sns.constant.SnsConstant;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
 
 @Service
 @Slf4j
@@ -41,6 +43,10 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	private IWeixinImageClient weixinImageClient;
 	@Autowired
 	private IUploadService uploadService;
+	@Autowired
+	private IPathService pathService;
+
+	public static final String HDADIMGURL = "headimgurl";
 
 	@Override
 	@Transactional
@@ -92,7 +98,10 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	 * @return
 	 */
 	protected LoginResult getLoginResult(User user) {
-		return new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
+		LoginResult result = new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
+		LinkedHashMap map = (LinkedHashMap) result.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
+		map.put(HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(HDADIMGURL))));
+		return result;
 	}
 
 
@@ -130,7 +139,7 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 		if (StringUtils.isNotBlank(url)) {
 			// 上传图片
 			try {
-				url = uploadImage(url);
+				url = uploadImage(url, wx.getOpenid());
 			} catch (Exception ex) {
 				log.warn(BookConvertConstant.UPLOAD_IMAGE_FAILURE + url, ex);
 			}
@@ -147,9 +156,9 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	 * @return
 	 */
 	@SneakyThrows
-	private String uploadImage(String url) {
+	private String uploadImage(String url, String openid) {
 		String[] arr = url.split("mmopen/");
 		ResponseEntity<byte[]> result = weixinImageClient.image(arr[arr.length - 1]);
-		return uploadService.uploadByte(result.getBody(), arr[arr.length - 2]);
+		return uploadService.uploadByte(result.getBody(), HDADIMGURL + openid);
 	}
 }

@@ -36,4 +36,10 @@ public class PathServiceImpl extends CommonServiceImpl implements IPathService {
 	public String generateSaveUrl(String filename) {
 		return generatePresignedUrl(filename).split("\\?")[0];
 	}
+
+	@Override
+	public String getFilename(String path) {
+		String[] arr = path.split("/");
+		return arr[arr.length - 1];
+	}
 }
