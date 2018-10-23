@@ -1,8 +1,8 @@
 package com.nb.module.nb.customer.api.weixin.login.biz.impl;
 
 import com.nb.module.nb.customer.api.isbn.convert.constant.BookConvertConstant;
+import com.nb.module.nb.customer.api.login.biz.impl.LoginCommonServiceImpl;
 import com.nb.module.nb.customer.api.login.domain.LoginResult;
-import com.nb.module.nb.customer.api.user.biz.IUserService;
 import com.nb.module.nb.customer.api.weixin.login.biz.IWeixinLoginService;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
 import com.nb.module.partner.weixin.client.api.image.client.IWeixinImageClient;
@@ -11,16 +11,11 @@ import com.nb.module.partner.weixin.client.api.sns.constant.SnsConstant;
 import com.nb.module.partner.weixin.client.api.sns.domain.AccessToken;
 import com.nb.module.partner.weixin.client.api.sns.domain.WeixinUserInfo;
 import com.nb.module.partner.weixin.client.holder.WeixinHolder;
-import com.zjk.module.common.authorization.client.api.jsonwebtoken.client.IJSONWebTokenClient;
-import com.zjk.module.common.authorization.client.api.jsonwebtoken.constant.JSONWebTokenConstant;
-import com.zjk.module.common.authorization.client.api.jsonwebtoken.domain.JSONWebToken;
 import com.zjk.module.common.authorization.client.api.passport.domain.Register;
 import com.zjk.module.common.authorization.client.api.user.domain.User;
 import com.zjk.module.common.authorization.client.exception.AuthorizationCode;
 import com.zjk.module.common.authorization.client.weixin.plugin.api.passport.constant.WeixinPluginConstant;
 import com.zjk.module.common.authorization.client.weixin.plugin.api.passport.domain.UserWeixin;
-import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
-import com.zjk.module.common.base.domain.JsonContainer;
 import com.zjk.module.common.base.exception.BusinessException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,17 +23,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 @Slf4j
-public class WeixinLoginServiceImpl extends CommonServiceImpl implements IWeixinLoginService {
-
-	@Autowired
-	private IJSONWebTokenClient jsonWebTokenClient;
-	@Autowired
-	private IUserService userService;
+public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IWeixinLoginService {
 
 	@Autowired
 	private WeixinHolder holder;
@@ -50,6 +41,7 @@ public class WeixinLoginServiceImpl extends CommonServiceImpl implements IWeixin
 	private IUploadService uploadService;
 
 	@Override
+	@Transactional
 	public LoginResult login(String code, HttpServletResponse response) {
 		LoginResult result;
 		// 通过code获取accessToken和openid
@@ -84,45 +76,16 @@ public class WeixinLoginServiceImpl extends CommonServiceImpl implements IWeixin
 	}
 
 	/**
-	 * 登录
-	 *
-	 * @param user
-	 * @param response
-	 * @return
-	 */
-	private LoginResult login(User user, HttpServletResponse response) {
-		// 获取登录信息
-		LoginResult login = getLoginResult(user);
-		// 修改最后登陆时间
-		userService.updateLastLogin(user.getCode());
-		// 写入头参数
-		setHeader(response, user);
-		return login;
-	}
-
-	/**
 	 * 获取登录信息
 	 *
 	 * @param user
 	 * @return
 	 */
-	private LoginResult getLoginResult(User user) {
+	protected LoginResult getLoginResult(User user) {
 		LoginResult login = new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
 		return login;
 	}
 
-	/**
-	 * 写入头参数
-	 *
-	 * @param response
-	 * @param user
-	 */
-	private void setHeader(HttpServletResponse response, User user) {
-		// 写入头参数
-		JsonContainer<String> token = jsonWebTokenClient.token(new JSONWebToken(user.getCode()));
-		response.setHeader(JSONWebTokenConstant.AUTHORIZATION, checkJsonContainer(token));
-		response.setHeader(JSONWebTokenConstant.LOGIN, user.getCode());
-	}
 
 	/**
 	 * 注册
