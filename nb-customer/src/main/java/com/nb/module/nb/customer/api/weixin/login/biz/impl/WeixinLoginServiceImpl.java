@@ -148,8 +148,8 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	 */
 	@SneakyThrows
 	private String uploadImage(String url) {
-		String[] arr = url.split("/");
-		ResponseEntity<byte[]> result = weixinImageClient.image(arr[arr.length - 2], arr[arr.length - 1]);
+		String[] arr = url.split("mmopen/");
+		ResponseEntity<byte[]> result = weixinImageClient.image(arr[arr.length - 1]);
 		return uploadService.uploadByte(result.getBody(), arr[arr.length - 2]);
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/mmopen")
 public interface IWeixinImageClient {
 
-	@RequestMapping(value = "/{id}/{size}", method = RequestMethod.GET)
-	ResponseEntity<byte[]> image(@PathVariable(value = "id") String id, @PathVariable(value = "size") String size);
+	@RequestMapping(value = "/{path}", method = RequestMethod.GET)
+	ResponseEntity<byte[]> image(@PathVariable(value = "path") String path);
 
 }
