@@ -24,6 +24,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,12 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	@Autowired
 	private IPathService pathService;
 
+	@Value("${login.weixin.role}")
+	private String role;
+
 	public static final String HDADIMGURL = "headimgurl";
+
+	private static String roleCode;
 
 	@Override
 	@Transactional
@@ -116,6 +122,11 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 		// 注册
 		User user = register(accessToken);
 		try {
+			// 绑定默认用户角色
+			if (StringUtils.isBlank(roleCode)) {
+				roleCode = userService.findRoleByRole(role).getCode();
+			}
+			userService.saveUserRole(user.getCode(), roleCode);
 			// 获取返回结果
 			return login(user, response);
 		} catch (Exception ex) {

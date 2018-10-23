@@ -10,3 +10,6 @@ server:
   servlet:
     context-path:
 
+login:
+  weixin:
+    role: user
