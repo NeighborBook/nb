@@ -6,4 +6,6 @@ public class WeixinConstant {
 
 	public static final Long WEIXIN_EXPIRES_IN = 7200L;
 
+	public static final String WEIXIN_IMAGE_URL = "http://thirdwx.qlogo.cn";
+
 }
