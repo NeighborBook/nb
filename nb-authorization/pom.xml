@@ -30,6 +30,12 @@
 			<artifactId>common-authorization-server</artifactId>
 		</dependency>
 
+		<!-- common authorization server weixin plugin -->
+		<dependency>
+			<groupId>com.zjk.module</groupId>
+			<artifactId>common-authorization-server-weixin-plugin</artifactId>
+		</dependency>
+
 		<!-- spring cloud eureka client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
