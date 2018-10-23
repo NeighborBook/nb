@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/sns")
 public interface ISnsClient {
 
-	@RequestMapping(value = "/access_token", method = RequestMethod.GET)
+	@RequestMapping(value = "/oauth2/access_token", method = RequestMethod.GET)
 	String accessToken(@RequestParam(value = "appid") String appId,
 					   @RequestParam(value = "secret") String appSecret,
 					   @RequestParam(value = "code") String code,
 					   @RequestParam(value = "grant_type") String grantType);
 
-	@RequestMapping(value = "/ticket/userinfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/userinfo", method = RequestMethod.GET)
 	String getUserInfo(@RequestParam(value = "access_token") String accessToken,
 					   @RequestParam(value = "openid") String openid,
 					   @RequestParam(value = "lang") String lang);
