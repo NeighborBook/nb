@@ -51,23 +51,36 @@ public class WeixinLoginServiceImpl extends CommonServiceImpl implements IWeixin
 
 	@Override
 	public LoginResult login(String code, HttpServletResponse response) {
+		LoginResult result;
 		// 通过code获取accessToken和openid
 		AccessToken accessToken = weixinSnsService.accessToken(holder.getAppId(), holder.getAppSecret(), code, SnsConstant.GRAND_TYPE);
 		User user;
 		// 尝试登陆，判断openid是否存在
 		try {
+			// 登陆
 			user = userService.loginSimple(accessToken.getOpenid(), WeixinPluginConstant.WEIXIN_PLUGIN);
+			// 获取返回结果
+			result = login(user, response);
 		} catch (BusinessException e) {
 			// 如果用户名错误，执行注册
 			if (AuthorizationCode.PP0001.getCode().equalsIgnoreCase(e.getCode())) {
+				// 注册
 				user = register(accessToken);
+				try {
+					// 获取返回结果
+					result = login(user, response);
+				} catch (Exception ex) {
+					// 出错回滚
+					userService.deleteByCode(user.getCode(), WeixinPluginConstant.WEIXIN_PLUGIN);
+					throw e;
+				}
 			}
 			// 其他错误抛出
 			else {
 				throw e;
 			}
 		}
-		return login(user, response);
+		return result;
 	}
 
 	/**
