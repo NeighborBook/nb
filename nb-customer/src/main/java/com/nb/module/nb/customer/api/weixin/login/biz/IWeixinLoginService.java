@@ -10,9 +10,10 @@ public interface IWeixinLoginService {
 	/**
 	 * 微信登录
 	 *
-	 * @param code
+	 * @param username
+	 * @param type
 	 * @param response
 	 * @return
 	 */
-	LoginResult login(String code, HttpServletResponse response);
+	LoginResult login(String username, String type, HttpServletResponse response);
 }

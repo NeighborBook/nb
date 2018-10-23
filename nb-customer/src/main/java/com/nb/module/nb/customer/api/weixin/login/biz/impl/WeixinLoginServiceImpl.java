@@ -3,6 +3,8 @@ package com.nb.module.nb.customer.api.weixin.login.biz.impl;
 import com.nb.module.nb.customer.api.isbn.convert.constant.BookConvertConstant;
 import com.nb.module.nb.customer.api.login.biz.impl.LoginCommonServiceImpl;
 import com.nb.module.nb.customer.api.login.domain.LoginResult;
+import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
+import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.login.biz.IWeixinLoginService;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
 import com.nb.module.partner.weixin.client.api.image.client.IWeixinImageClient;
@@ -42,37 +44,45 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 
 	@Override
 	@Transactional
-	public LoginResult login(String code, HttpServletResponse response) {
+	public LoginResult login(String username, String type, HttpServletResponse response) {
 		LoginResult result;
-		// 通过code获取accessToken和openid
-		AccessToken accessToken = weixinSnsService.accessToken(holder.getAppId(), holder.getAppSecret(), code, SnsConstant.GRAND_TYPE);
-		User user;
-		// 尝试登陆，判断openid是否存在
-		try {
+		if (WeixinLoginConstant.TYPE_OPENID.equalsIgnoreCase(type)) {
 			// 登陆
-			user = userService.loginSimple(accessToken.getOpenid(), WeixinPluginConstant.WEIXIN_PLUGIN);
-			// 获取返回结果
-			result = login(user, response);
-		} catch (BusinessException e) {
-			// 如果用户名错误，执行注册
-			if (AuthorizationCode.PP0001.getCode().equalsIgnoreCase(e.getCode())) {
-				// 注册
-				user = register(accessToken);
-				try {
-					// 获取返回结果
-					result = login(user, response);
-				} catch (Exception ex) {
-					// 出错回滚
-					userService.deleteByCode(user.getCode(), WeixinPluginConstant.WEIXIN_PLUGIN);
+			result = loginSimple(username, response);
+		} else if (WeixinLoginConstant.TYPE_CODE.equalsIgnoreCase(type)) {
+			// 通过code获取accessToken和openid
+			AccessToken accessToken = weixinSnsService.accessToken(holder.getAppId(), holder.getAppSecret(), username, SnsConstant.GRAND_TYPE);
+			// 尝试登陆，判断openid是否存在
+			try {
+				// 登陆
+				result = loginSimple(accessToken.getOpenid(), response);
+			} catch (BusinessException e) {
+				// 如果用户名错误，执行注册
+				if (AuthorizationCode.PP0001.getCode().equalsIgnoreCase(e.getCode())) {
+					// 注册
+					result = register(accessToken, response);
+				}
+				// 其他错误抛出
+				else {
 					throw e;
 				}
 			}
-			// 其他错误抛出
-			else {
-				throw e;
-			}
+		} else {
+			throw new BusinessException(WeixinLoginCode.WXL0001, new Object[]{type});
 		}
 		return result;
+	}
+
+	/**
+	 * 登陆
+	 *
+	 * @param openid
+	 * @param response
+	 * @return
+	 */
+	private LoginResult loginSimple(String openid, HttpServletResponse response) {
+		// 获取返回结果
+		return login(userService.loginSimple(openid, WeixinPluginConstant.WEIXIN_PLUGIN), response);
 	}
 
 	/**
@@ -82,10 +92,29 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	 * @return
 	 */
 	protected LoginResult getLoginResult(User user) {
-		LoginResult login = new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
-		return login;
+		return new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
 	}
 
+
+	/**
+	 * 注册
+	 *
+	 * @param accessToken
+	 * @param response
+	 * @return
+	 */
+	private LoginResult register(AccessToken accessToken, HttpServletResponse response) {
+		// 注册
+		User user = register(accessToken);
+		try {
+			// 获取返回结果
+			return login(user, response);
+		} catch (Exception ex) {
+			// 出错回滚
+			userService.deleteByCode(user.getCode(), WeixinPluginConstant.WEIXIN_PLUGIN);
+			throw ex;
+		}
+	}
 
 	/**
 	 * 注册
@@ -111,6 +140,12 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 		return userService.register(register, WeixinPluginConstant.WEIXIN_PLUGIN);
 	}
 
+	/**
+	 * 上传图片
+	 *
+	 * @param url
+	 * @return
+	 */
 	@SneakyThrows
 	private String uploadImage(String url) {
 		String[] arr = url.split("/");

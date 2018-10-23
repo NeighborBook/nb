@@ -27,8 +27,8 @@ public class WeixinLoginController extends BaseController {
 
 	@ApiOperation(value = "微信登录", notes = "微信登录")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public JsonContainer<LoginResult> login(@RequestParam @NotBlank String code, HttpServletResponse response) {
-		return setSuccessMessage(weixinLoginService.login(code, response));
+	public JsonContainer<LoginResult> login(@RequestParam @NotBlank String username, @RequestParam @NotBlank String type, HttpServletResponse response) {
+		return setSuccessMessage(weixinLoginService.login(username, type, response));
 	}
 
 }
