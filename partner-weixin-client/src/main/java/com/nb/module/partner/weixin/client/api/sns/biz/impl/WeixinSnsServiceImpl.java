@@ -8,6 +8,7 @@ import com.nb.module.partner.weixin.client.api.sns.domain.WeixinUserInfo;
 import com.nb.module.partner.weixin.client.exception.WeixinCode;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class WeixinSnsServiceImpl extends CommonServiceImpl implements IWeixinSn
 		String result = client.accessToken(appId, appSecret, code, grantType);
 		try {
 			accessToken = JSON.parseObject(result, AccessToken.class);
+			if (StringUtils.isBlank(accessToken.getAccessToken())) {
+				throw new BusinessException(WeixinCode.WX0003, null, result);
+			}
 		} catch (Exception e) {
 			throw new BusinessException(WeixinCode.WX0003, e, result);
 		}
@@ -35,6 +39,9 @@ public class WeixinSnsServiceImpl extends CommonServiceImpl implements IWeixinSn
 		String result = client.getUserInfo(accessToken, openid, lang);
 		try {
 			weixinUserInfo = JSON.parseObject(result, WeixinUserInfo.class);
+			if (StringUtils.isBlank(weixinUserInfo.getOpenid())) {
+				throw new BusinessException(WeixinCode.WX0004, null, result);
+			}
 		} catch (Exception e) {
 			throw new BusinessException(WeixinCode.WX0004, e, result);
 		}
