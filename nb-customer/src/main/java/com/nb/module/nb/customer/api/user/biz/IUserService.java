@@ -80,9 +80,10 @@ public interface IUserService {
 	/**
 	 * 更新用户信息
 	 *
-	 * @param vo
+	 * @param user
+	 * @param plugin
 	 */
-	void updateUser(User vo);
+	User updateUser(User user, String plugin);
 
 	/**
 	 * 查询角色

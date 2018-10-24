@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 
 @Service
@@ -66,8 +67,8 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 			AccessToken accessToken = weixinSnsService.accessToken(holder.getAppId(), holder.getAppSecret(), username, SnsConstant.GRAND_TYPE);
 			// 尝试登陆，判断openid是否存在
 			try {
-				// 登陆
-				result = loginSimple(accessToken.getOpenid(), response);
+				// 登陆并更新
+				result = loginAndUpdate(accessToken, response);
 			} catch (BusinessException e) {
 				// 如果用户名错误，执行注册
 				if (AuthorizationCode.PP0001.getCode().equalsIgnoreCase(e.getCode())) {
@@ -83,6 +84,19 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 			throw new BusinessException(WeixinLoginCode.WXL0001, new Object[]{type});
 		}
 		return result;
+	}
+
+	/**
+	 * 登录并更新
+	 *
+	 * @param accessToken
+	 * @param response
+	 * @return
+	 */
+	private LoginResult loginAndUpdate(AccessToken accessToken, HttpServletResponse response) {
+		User user = userService.loginSimple(accessToken.getOpenid(), WeixinPluginConstant.WEIXIN_PLUGIN);
+		user.getPlugin().put(WeixinPluginConstant.WEIXIN_PLUGIN, getUserWeixin(accessToken));
+		return login(userService.updateUser(user, WeixinPluginConstant.WEIXIN_PLUGIN), response);
 	}
 
 	/**
@@ -106,7 +120,7 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	protected LoginResult getLoginResult(User user) {
 		LoginResult result = new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
 		LinkedHashMap map = (LinkedHashMap) result.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
-		map.put(HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(HDADIMGURL))));
+		map.put(HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(HDADIMGURL)), Calendar.MONTH, 1));
 		return result;
 	}
 
@@ -136,13 +150,7 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 		}
 	}
 
-	/**
-	 * 注册
-	 *
-	 * @param accessToken
-	 * @return
-	 */
-	private User register(AccessToken accessToken) {
+	private UserWeixin getUserWeixin(AccessToken accessToken) {
 		// 获取微信信息
 		WeixinUserInfo wx = weixinSnsService.getUserInfo(accessToken.getAccessToken(), accessToken.getOpenid(), SnsConstant.LANG);
 		// 头像url
@@ -155,8 +163,18 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 				log.warn(BookConvertConstant.UPLOAD_IMAGE_FAILURE + url, ex);
 			}
 		}
+		return new UserWeixin(null, wx.getOpenid(), wx.getNickname(), wx.getSex(), wx.getCity(), wx.getCity(), wx.getProvince(), wx.getCountry(), url, wx.getUnionid());
+	}
+
+	/**
+	 * 注册
+	 *
+	 * @param accessToken
+	 * @return
+	 */
+	private User register(AccessToken accessToken) {
 		Register register = new Register();
-		register.getPlugin().put(WeixinPluginConstant.WEIXIN_PLUGIN, new UserWeixin(null, wx.getOpenid(), wx.getNickname(), wx.getSex(), wx.getCity(), wx.getCity(), wx.getProvince(), wx.getCountry(), url, wx.getUnionid()));
+		register.getPlugin().put(WeixinPluginConstant.WEIXIN_PLUGIN, getUserWeixin(accessToken));
 		return userService.register(register, WeixinPluginConstant.WEIXIN_PLUGIN);
 	}
 

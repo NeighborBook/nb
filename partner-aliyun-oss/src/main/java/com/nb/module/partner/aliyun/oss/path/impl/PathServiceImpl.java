@@ -20,15 +20,19 @@ public class PathServiceImpl extends CommonServiceImpl implements IPathService {
 
 	@Override
 	public String generatePresignedUrl(String filename) {
+		return generatePresignedUrl(filename, Calendar.HOUR, 2);
+	}
+	@Override
+	public String generatePresignedUrl(String filename, int field, int amount) {
 		OSS client = holder.getClient();
 		// 生成返回url
-		URL url = client.generatePresignedUrl(holder.getBucketName(), filename, getDate(), HttpMethod.GET);
+		URL url = client.generatePresignedUrl(holder.getBucketName(), filename, getDate(field, amount), HttpMethod.GET);
 		return url.toString();
 	}
 
-	private Date getDate() {
+	private Date getDate(int field, int amount) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.HOUR, 2);
+		calendar.add(field, amount);
 		return calendar.getTime();
 	}
 
