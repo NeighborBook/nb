@@ -2,6 +2,9 @@ package com.nb.module.nb.customer.api.userbook.biz;
 
 
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IUserBookService {
 
@@ -21,5 +24,5 @@ public interface IUserBookService {
 	 */
 	void save(UserBook vo);
 
-
+	Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable);
 }
