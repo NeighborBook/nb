@@ -34,14 +34,14 @@ public class TagController extends BaseController {
 
 	@ApiOperation(value = "保存标签", notes = "保存标签")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public JsonContainer save(@RequestBody Tag tag) {
+	public JsonContainer save(@RequestBody @Validated Tag tag) {
 		service.save(tag);
 		return setSuccessMessage();
 	}
 
 	@ApiOperation(value = "绑定书标签", notes = "绑定书标签")
 	@RequestMapping(value = "/saveBookTags", method = RequestMethod.POST)
-	public JsonContainer saveBookTags(@RequestBody BookTags bookTags) {
+	public JsonContainer saveBookTags(@RequestBody @Validated BookTags bookTags) {
 		service.saveBookTags(bookTags);
 		return setSuccessMessage();
 	}

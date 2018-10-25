@@ -2,11 +2,13 @@ package com.nb.module.nb.customer.api.tag.domain;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
 public class BookTags {
 
+	@NotBlank
 	private String bookCode;
 
 	private List<BookTag> bookTags;
