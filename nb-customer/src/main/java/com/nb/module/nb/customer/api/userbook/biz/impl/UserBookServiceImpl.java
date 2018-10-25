@@ -33,7 +33,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 		TNBUserBook po = userBookService.findOneByUserCodeAndBookCode(vo.getUserCode(), vo.getBookCode());
 		if (null == po) {
 			po = new TNBUserBook();
-			po.setUserCode(po.getUserCode());
+			po.setUserCode(vo.getUserCode());
 			po.setBookCode(vo.getBookCode());
 		}
 		po.setBookCount(vo.getBookCount());
