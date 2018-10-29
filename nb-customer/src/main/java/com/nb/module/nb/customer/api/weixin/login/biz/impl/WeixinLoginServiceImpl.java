@@ -51,8 +51,6 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	@Value("${login.weixin.role}")
 	private String role;
 
-	public static final String HDADIMGURL = "headimgurl";
-
 	private static String roleCode;
 
 	@Override
@@ -120,7 +118,7 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	protected LoginResult getLoginResult(User user) {
 		LoginResult result = new LoginResult(user.getCode(), user.getEmail(), user.getMobile(), user.getEmailVerified(), user.getEmailVerified(), user.getPlugin());
 		LinkedHashMap map = (LinkedHashMap) result.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
-		map.put(HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(HDADIMGURL)), Calendar.MONTH, 1));
+		map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
 		return result;
 	}
 
@@ -188,6 +186,6 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	private String uploadImage(String url, String openid) {
 		String[] arr = url.split("mmopen/");
 		ResponseEntity<byte[]> result = weixinImageClient.image(arr[arr.length - 1]);
-		return uploadService.uploadByte(result.getBody(), HDADIMGURL + openid);
+		return uploadService.uploadByte(result.getBody(), WeixinLoginConstant.HDADIMGURL + openid);
 	}
 }

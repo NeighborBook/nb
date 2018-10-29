@@ -6,4 +6,5 @@ public class WeixinLoginConstant {
 
 	public static final String TYPE_OPENID = "openid";
 
+	public static final String HDADIMGURL = "headimgurl";
 }
