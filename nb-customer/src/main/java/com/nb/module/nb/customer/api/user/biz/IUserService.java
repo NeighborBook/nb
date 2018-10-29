@@ -55,9 +55,10 @@ public interface IUserService {
 	 * 通过用户编号查询
 	 *
 	 * @param userCode
+	 * @param plugin
 	 * @return
 	 */
-	User findUserByUserCode(String userCode);
+	User findOneByCode(String userCode, String plugin);
 
 	/**
 	 * 更新用户姓名和证件信息

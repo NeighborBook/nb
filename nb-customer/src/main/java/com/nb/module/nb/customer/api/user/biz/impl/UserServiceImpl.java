@@ -57,8 +57,8 @@ public class UserServiceImpl extends CommonServiceImpl implements IUserService {
 	}
 
 	@Override
-	public User findUserByUserCode(String userCode) {
-		return checkJsonContainer(passportClient.findOneByCode(userCode));
+	public User findOneByCode(String userCode, String plugin) {
+		return checkJsonContainer(passportClient.findOneByCode(userCode, plugin));
 	}
 
 	@Override
