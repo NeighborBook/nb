@@ -12,10 +12,13 @@ public class UserBookMinInfo {
 
 	private Integer bookCount;
 
-	public UserBookMinInfo(String userCode, BookMinInfo bookMinInfo, Integer bookCount) {
+	private Integer sharable;
+
+	public UserBookMinInfo(String userCode, BookMinInfo bookMinInfo, Integer bookCount, Integer sharable) {
 		this.userCode = userCode;
 		this.bookMinInfo = bookMinInfo;
 		this.bookCount = bookCount;
+		this.sharable = sharable;
 	}
 
 	public UserBookMinInfo() {

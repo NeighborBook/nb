@@ -1,13 +1,13 @@
 package com.nb.module.nb.customer.api.tag.biz.impl;
 
 import com.nb.module.nb.customer.api.tag.biz.ITagService;
-import com.nb.module.nb.customer.api.tag.domain.BookTag;
-import com.nb.module.nb.customer.api.tag.domain.BookTags;
-import com.nb.module.nb.customer.api.tag.domain.Tag;
+import com.nb.module.nb.customer.api.tag.domain.*;
 import com.nb.module.nb.customer.base.booktag.biz.ITNBBookTagService;
 import com.nb.module.nb.customer.base.booktag.domain.TNBBookTag;
 import com.nb.module.nb.customer.base.tag.biz.ITNBTagService;
 import com.nb.module.nb.customer.base.tag.domain.TNBTag;
+import com.nb.module.nb.customer.base.taggrouptag.biz.ITNBTagGroupTagService;
+import com.nb.module.nb.customer.base.taggrouptag.domain.TNBTagGroupTag;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,8 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	private ITNBTagService tagService;
 	@Autowired
 	private ITNBBookTagService bookTagService;
+	@Autowired
+	private ITNBTagGroupTagService tagGroupTagService;
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
@@ -56,6 +58,12 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public List<TagGroupTag> findAllByTagGroupCodeOrderByOrder(String tagGroupCode) {
+		return map(tagGroupTagService.findAllByTagGroupCodeOrderByOrder(tagGroupCode), s -> new TagGroupTag(s.getOrder(), findOneByCode(s.getTagCode())));
+	}
+
+	@Override
 	@Transactional
 	public void save(Tag tag) {
 		TNBTag po = tagService.findOneByName(tag.getName());
@@ -82,7 +90,7 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 			if (null == po) {
 				po = new TNBBookTag();
 				po.setBookCode(bookTags.getBookCode());
-				po.setTagCode(e.getTag().getCode());
+				po.setTagCode(tag.getCode());
 				// 没有tagCount则默认1
 				if (null == e.getTagCount() || 0 == e.getTagCount()) {
 					e.setTagCount(1);
@@ -99,5 +107,41 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	@Transactional
 	public void saveBookTags(String bookCode, List<BookTag> bookTags) {
 		saveBookTags(new BookTags(bookCode, bookTags));
+	}
+
+	@Override
+	@Transactional
+	public void saveTagGroupTags(TagGroupTags tagGroupTags) {
+		tagGroupTags.getBookTags().forEach(e -> {
+			// 保存Tag
+			Tag tag = e.getTag();
+			if (StringUtils.isBlank(tag.getCode())) {
+				save(tag);
+			}
+			// 标签组标签关联
+			TNBTagGroupTag po = tagGroupTagService.findOneByTagGroupCodeAndTagCode(tagGroupTags.getTagGroupCode(), tag.getCode());
+			if (null == po) {
+				po = new TNBTagGroupTag();
+				po.setTagGroupCode(tagGroupTags.getTagGroupCode());
+				po.setTagCode(tag.getCode());
+				// 没有order则默认1
+				if (null == e.getOrder() || 0 == e.getOrder()) {
+					e.setOrder(1);
+				}
+				po.setOrder(e.getOrder());
+			} else {
+				// 存在order则修改
+				if (null != e.getOrder() && 0 != e.getOrder()) {
+					po.setOrder(e.getOrder());
+				}
+			}
+			tagGroupTagService.save(po);
+		});
+	}
+
+	@Override
+	@Transactional
+	public void saveTagGroupTags(String tagCode, List<TagGroupTag> tagGroupTags) {
+		saveTagGroupTags(new TagGroupTags(tagCode, tagGroupTags));
 	}
 }

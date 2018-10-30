@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.tag.controller;
 import com.nb.module.nb.customer.api.tag.biz.ITagService;
 import com.nb.module.nb.customer.api.tag.domain.BookTags;
 import com.nb.module.nb.customer.api.tag.domain.Tag;
+import com.nb.module.nb.customer.api.tag.domain.TagGroupTags;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
@@ -43,6 +44,13 @@ public class TagController extends BaseController {
 	@RequestMapping(value = "/saveBookTags", method = RequestMethod.POST)
 	public JsonContainer saveBookTags(@RequestBody @Validated BookTags bookTags) {
 		service.saveBookTags(bookTags);
+		return setSuccessMessage();
+	}
+
+	@ApiOperation(value = "绑定标签组标签", notes = "绑定标签组标签")
+	@RequestMapping(value = "/saveTagGroupTags", method = RequestMethod.POST)
+	public JsonContainer saveTagGroupTags(@RequestBody @Validated TagGroupTags tagGroupTags) {
+		service.saveTagGroupTags(tagGroupTags);
 		return setSuccessMessage();
 	}
 

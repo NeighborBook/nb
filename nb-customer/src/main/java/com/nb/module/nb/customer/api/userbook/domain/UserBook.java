@@ -15,10 +15,13 @@ public class UserBook {
 
 	private Integer bookCount;
 
-	public UserBook(@NotBlank String userCode, @NotBlank String bookCode, Integer bookCount) {
+	private Integer sharable;
+
+	public UserBook(@NotBlank String userCode, @NotBlank String bookCode, Integer bookCount, Integer sharable) {
 		this.userCode = userCode;
 		this.bookCode = bookCode;
 		this.bookCount = bookCount;
+		this.sharable = sharable;
 	}
 
 	public UserBook() {

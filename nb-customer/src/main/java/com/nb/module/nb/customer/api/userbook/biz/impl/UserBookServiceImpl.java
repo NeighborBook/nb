@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.userbook.biz.impl;
 import com.nb.module.nb.customer.api.book.biz.IBookService;
 import com.nb.module.nb.customer.api.book.domain.BookMinInfo;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
+import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
 import com.nb.module.nb.customer.base.userbook.biz.ITNBUserBookService;
@@ -30,7 +31,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	}
 
 	private UserBook convert(TNBUserBook e) {
-		UserBook userBook = new UserBook(e.getUserCode(), e.getBookCode(), e.getBookCount());
+		UserBook userBook = new UserBook(e.getUserCode(), e.getBookCode(), e.getBookCount(), e.getSharable());
 		return userBook;
 	}
 
@@ -44,6 +45,11 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 			po.setBookCode(vo.getBookCode());
 		}
 		po.setBookCount(vo.getBookCount());
+		// 没有sharable则默认 1-可共享的
+		if (null == vo.getSharable()) {
+			vo.setSharable(UserBookConstant.SHARABLE);
+		}
+		po.setSharable(vo.getSharable());
 		userBookService.save(po);
 	}
 
@@ -51,10 +57,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable) {
 		return userBookService.findAllByUserCode(userCode, pageable).map(e -> {
-			UserBookMinInfo userBookMinInfo = new UserBookMinInfo();
-			userBookMinInfo.setUserCode(e.getUserCode());
-			userBookMinInfo.setBookMinInfo(new BookMinInfo(bookService.findOneByCode(e.getBookCode())));
-			userBookMinInfo.setBookCount(e.getBookCount());
+			UserBookMinInfo userBookMinInfo = new UserBookMinInfo(e.getUserCode(), new BookMinInfo(bookService.findOneByCode(e.getBookCode())), e.getBookCount(), e.getSharable());
 			return userBookMinInfo;
 		});
 	}

@@ -16,4 +16,7 @@ public class TNBUserBook extends DataEntity {
 	private String bookCode;
 
 	private Integer bookCount;
+
+	private Integer sharable;
+
 }
