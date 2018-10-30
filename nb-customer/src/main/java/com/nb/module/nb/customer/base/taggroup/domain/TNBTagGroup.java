@@ -19,6 +19,6 @@ public class TNBTagGroup extends DataEntity {
 
 	private Integer visible;
 
-	private Integer order;
+	private Integer position;
 
 }

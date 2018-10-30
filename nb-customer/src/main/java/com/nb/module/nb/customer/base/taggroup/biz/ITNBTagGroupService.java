@@ -14,5 +14,5 @@ public interface ITNBTagGroupService extends IDataService<TNBTagGroup, Integer> 
 
 	TNBTagGroup findOneByName(String name);
 
-	List<TNBTagGroup> findAllByVisibleOrderByOrder(Integer visible);
+	List<TNBTagGroup> findAllByVisibleOrderByPosition(Integer visible);
 }

@@ -25,7 +25,7 @@ public class TNBTagGroupTagServiceImpl extends DataServiceImpl<TNBTagGroupTag, I
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public List<TNBTagGroupTag> findAllByTagGroupCodeOrderByOrder(String tagGroupCode) {
-		return repository.findAllByTagGroupCodeOrderByOrder(tagGroupCode);
+	public List<TNBTagGroupTag> findAllByTagGroupCodeOrderByPosition(String tagGroupCode) {
+		return repository.findAllByTagGroupCodeOrderByPosition(tagGroupCode);
 	}
 }

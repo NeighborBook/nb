@@ -11,11 +11,11 @@ public class TagGroupTags {
 	@NotBlank
 	private String tagGroupCode;
 
-	private List<TagGroupTag> bookTags;
+	private List<TagGroupTag> tagGroupTags;
 
-	public TagGroupTags(@NotBlank String tagGroupCode, List<TagGroupTag> bookTags) {
+	public TagGroupTags(@NotBlank String tagGroupCode, List<TagGroupTag> tagGroupTags) {
 		this.tagGroupCode = tagGroupCode;
-		this.bookTags = bookTags;
+		this.tagGroupTags = tagGroupTags;
 	}
 
 	public TagGroupTags() {

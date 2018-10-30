@@ -44,10 +44,10 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 			}
 			po.setVisible(tagGroup.getVisible());
 			// 没有order则默认1
-			if (null == tagGroup.getOrder() || 0 == tagGroup.getOrder()) {
-				tagGroup.setOrder(1);
+			if (null == tagGroup.getPosition() || 0 == tagGroup.getPosition()) {
+				tagGroup.setPosition(1);
 			}
-			po.setOrder(tagGroup.getOrder());
+			po.setPosition(tagGroup.getPosition());
 			tagGroupService.save(po);
 		}
 		// 标签组code
@@ -68,8 +68,8 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 		}
 		// 没用从数据库中取
 		else {
-			tagGroups = map(tagGroupService.findAllByVisibleOrderByOrder(visible), e -> {
-				TagGroup tagGroup = new TagGroup(e.getCode(), e.getName(), e.getTitle(), e.getVisible(), e.getOrder());
+			tagGroups = map(tagGroupService.findAllByVisibleOrderByPosition(visible), e -> {
+				TagGroup tagGroup = new TagGroup(e.getCode(), e.getName(), e.getTitle(), e.getVisible(), e.getPosition());
 				tagGroup.setTagGroupTags(tagService.findAllByTagGroupCodeOrderByOrder(e.getCode()));
 				return tagGroup;
 			});

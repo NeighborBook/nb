@@ -13,6 +13,6 @@ public interface ITNBTagGroupRepository extends IDataRepository<TNBTagGroup, Int
 
 	TNBTagGroup findOneByName(String name);
 
-	List<TNBTagGroup> findAllByVisibleOrderByOrder(Integer visible);
+	List<TNBTagGroup> findAllByVisibleOrderByPosition(Integer visible);
 
 }

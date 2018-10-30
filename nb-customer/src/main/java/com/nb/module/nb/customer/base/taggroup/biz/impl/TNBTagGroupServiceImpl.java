@@ -43,7 +43,7 @@ public class TNBTagGroupServiceImpl extends DataServiceImpl<TNBTagGroup, Integer
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public List<TNBTagGroup> findAllByVisibleOrderByOrder(Integer visible) {
-		return repository.findAllByVisibleOrderByOrder(visible);
+	public List<TNBTagGroup> findAllByVisibleOrderByPosition(Integer visible) {
+		return repository.findAllByVisibleOrderByPosition(visible);
 	}
 }

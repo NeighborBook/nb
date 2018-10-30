@@ -5,16 +5,15 @@ import lombok.Data;
 @Data
 public class TagGroupTag {
 
-	private Integer order;
+	private Integer position;
 
 	private Tag tag;
 
 	public TagGroupTag() {
 	}
 
-	public TagGroupTag(Integer order, Tag tag) {
-
-		this.order = order;
+	public TagGroupTag(Integer position, Tag tag) {
+		this.position = position;
 		this.tag = tag;
 	}
 }

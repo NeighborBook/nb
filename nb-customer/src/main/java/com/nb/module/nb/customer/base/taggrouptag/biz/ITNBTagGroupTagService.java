@@ -9,6 +9,6 @@ public interface ITNBTagGroupTagService extends IDataService<TNBTagGroupTag, Int
 
 	TNBTagGroupTag findOneByTagGroupCodeAndTagCode(String tagGroupCode, String tagCode);
 
-	List<TNBTagGroupTag> findAllByTagGroupCodeOrderByOrder(String tagGroupCode);
+	List<TNBTagGroupTag> findAllByTagGroupCodeOrderByPosition(String tagGroupCode);
 
 }

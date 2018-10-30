@@ -18,18 +18,18 @@ public class TagGroup {
 
 	private Integer visible;
 
-	private Integer order;
+	private Integer position;
 
 	private List<TagGroupTag> tagGroupTags;
 
 	public TagGroup() {
 	}
 
-	public TagGroup(String code, @NotBlank String name, String title, Integer visible, Integer order) {
+	public TagGroup(String code, @NotBlank String name, String title, Integer visible, Integer position) {
 		this.code = code;
 		this.name = name;
 		this.title = title;
 		this.visible = visible;
-		this.order = order;
+		this.position = position;
 	}
 }

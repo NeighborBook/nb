@@ -15,5 +15,5 @@ public class TNBTagGroupTag extends DataEntity {
 
 	private String tagCode;
 
-	private Integer order;
+	private Integer position;
 }

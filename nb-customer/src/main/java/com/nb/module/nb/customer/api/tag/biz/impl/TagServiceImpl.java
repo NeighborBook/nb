@@ -60,7 +60,7 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<TagGroupTag> findAllByTagGroupCodeOrderByOrder(String tagGroupCode) {
-		return map(tagGroupTagService.findAllByTagGroupCodeOrderByOrder(tagGroupCode), s -> new TagGroupTag(s.getOrder(), findOneByCode(s.getTagCode())));
+		return map(tagGroupTagService.findAllByTagGroupCodeOrderByPosition(tagGroupCode), s -> new TagGroupTag(s.getPosition(), findOneByCode(s.getTagCode())));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	@Override
 	@Transactional
 	public void saveTagGroupTags(TagGroupTags tagGroupTags) {
-		tagGroupTags.getBookTags().forEach(e -> {
+		tagGroupTags.getTagGroupTags().forEach(e -> {
 			// 保存Tag
 			Tag tag = e.getTag();
 			if (StringUtils.isBlank(tag.getCode())) {
@@ -125,14 +125,14 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 				po.setTagGroupCode(tagGroupTags.getTagGroupCode());
 				po.setTagCode(tag.getCode());
 				// 没有order则默认1
-				if (null == e.getOrder() || 0 == e.getOrder()) {
-					e.setOrder(1);
+				if (null == e.getPosition() || 0 == e.getPosition()) {
+					e.setPosition(1);
 				}
-				po.setOrder(e.getOrder());
+				po.setPosition(e.getPosition());
 			} else {
 				// 存在order则修改
-				if (null != e.getOrder() && 0 != e.getOrder()) {
-					po.setOrder(e.getOrder());
+				if (null != e.getPosition() && 0 != e.getPosition()) {
+					po.setPosition(e.getPosition());
 				}
 			}
 			tagGroupTagService.save(po);
