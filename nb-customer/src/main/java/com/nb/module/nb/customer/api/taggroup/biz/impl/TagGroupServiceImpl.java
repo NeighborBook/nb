@@ -7,7 +7,6 @@ import com.nb.module.nb.customer.api.taggroup.constant.TagGroupConstant;
 import com.nb.module.nb.customer.api.taggroup.domain.TagGroup;
 import com.nb.module.nb.customer.base.taggroup.biz.ITNBTagGroupService;
 import com.nb.module.nb.customer.base.taggroup.domain.TNBTagGroup;
-import com.netflix.discovery.converters.Auto;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.redis.biz.IRedisService;
 import com.zjk.module.common.redis.constant.RedisConstant;
@@ -26,7 +25,7 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 
 	@Autowired
 	private ITagService tagService;
-	@Auto
+	@Autowired
 	private IRedisService redisService;
 
 	@Override
