@@ -6,6 +6,8 @@ import com.nb.module.nb.customer.base.book.repository.ITNBBookRepository;
 import com.nb.module.nb.customer.serialcode.CustomerSerialCode;
 import com.zjk.module.common.authorization.client.api.serialcode.client.ISerialCodeClient;
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;
+import com.zjk.module.common.data.specification.SpecificationOperate;
+import com.zjk.module.common.data.util.SpecificationUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,6 +61,7 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 		if (StringUtils.isBlank(search)) {
 			return findAll(pageable);
 		}
-		return repository.findAllBySearch(search, pageable);
+		return repository.findAllBySearch(SpecificationUtil.like(SpecificationOperate.LIKE, search), pageable);
 	}
+
 }

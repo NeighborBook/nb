@@ -28,10 +28,10 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	Page<TNBBook> findAllByTagCode(@Param("tagCodes") List<String> tagCodes, @Param("size") Integer size, Pageable pageable);
 
 	@Query(value = " select n.* from " +
-			" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like \"%:search%\" or a.publisher like \"%:search%\" or a.isbn13 like \"%:search%\" or b.author like \"%:search%\") m, " +
-			" t_nb_book n where m.code = n.code ",
+			" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+			" t_nb_book n where m.code = n.code \n#pageable\n",
 			countQuery = " select count(*) from " +
-					" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like \"%:search%\" or a.publisher like \"%:search%\" or a.isbn13 like \"%:search%\" or b.author like \"%:search%\") m, " +
+					" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
 					" t_nb_book n where m.code = n.code ",
 			nativeQuery = true)
 	Page<TNBBook> findAllBySearch(@Param("search") String search, Pageable pageable);
