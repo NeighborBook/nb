@@ -82,23 +82,25 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 		bookTags.getBookTags().forEach(e -> {
 			// 保存Tag
 			Tag tag = e.getTag();
-			save(tag);
-
-			// 书标签关联
-			TNBBookTag po = bookTagService.findOneByBookCodeAndTagCode(bookTags.getBookCode(), tag.getCode());
-			if (null == po) {
-				po = new TNBBookTag();
-				po.setBookCode(bookTags.getBookCode());
-				po.setTagCode(tag.getCode());
-				// 没有tagCount则默认1
-				if (null == e.getTagCount() || 0 == e.getTagCount()) {
-					e.setTagCount(1);
+			// 名称不能为空
+			if (StringUtils.isNotBlank(tag.getName())) {
+				save(tag);
+				// 书标签关联
+				TNBBookTag po = bookTagService.findOneByBookCodeAndTagCode(bookTags.getBookCode(), tag.getCode());
+				if (null == po) {
+					po = new TNBBookTag();
+					po.setBookCode(bookTags.getBookCode());
+					po.setTagCode(tag.getCode());
+					// 没有tagCount则默认1
+					if (null == e.getTagCount() || 0 == e.getTagCount()) {
+						e.setTagCount(1);
+					}
+					po.setTagCount(e.getTagCount());
+				} else {
+					po.setTagCount(po.getTagCount() + 1);
 				}
-				po.setTagCount(e.getTagCount());
-			} else {
-				po.setTagCount(po.getTagCount() + 1);
+				bookTagService.save(po);
 			}
-			bookTagService.save(po);
 		});
 	}
 
@@ -114,26 +116,28 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 		tagGroupTags.getTagGroupTags().forEach(e -> {
 			// 保存Tag
 			Tag tag = e.getTag();
-			save(tag);
-
-			// 标签组标签关联
-			TNBTagGroupTag po = tagGroupTagService.findOneByTagGroupCodeAndTagCode(tagGroupTags.getTagGroupCode(), tag.getCode());
-			if (null == po) {
-				po = new TNBTagGroupTag();
-				po.setTagGroupCode(tagGroupTags.getTagGroupCode());
-				po.setTagCode(tag.getCode());
-				// 没有order则默认1
-				if (null == e.getPosition() || 0 == e.getPosition()) {
-					e.setPosition(1);
-				}
-				po.setPosition(e.getPosition());
-			} else {
-				// 存在order则修改
-				if (null != e.getPosition() && 0 != e.getPosition()) {
+			// 名称不能为空
+			if (StringUtils.isNotBlank(tag.getName())) {
+				save(tag);
+				// 标签组标签关联
+				TNBTagGroupTag po = tagGroupTagService.findOneByTagGroupCodeAndTagCode(tagGroupTags.getTagGroupCode(), tag.getCode());
+				if (null == po) {
+					po = new TNBTagGroupTag();
+					po.setTagGroupCode(tagGroupTags.getTagGroupCode());
+					po.setTagCode(tag.getCode());
+					// 没有order则默认1
+					if (null == e.getPosition() || 0 == e.getPosition()) {
+						e.setPosition(1);
+					}
 					po.setPosition(e.getPosition());
+				} else {
+					// 存在order则修改
+					if (null != e.getPosition() && 0 != e.getPosition()) {
+						po.setPosition(e.getPosition());
+					}
 				}
+				tagGroupTagService.save(po);
 			}
-			tagGroupTagService.save(po);
 		});
 	}
 
