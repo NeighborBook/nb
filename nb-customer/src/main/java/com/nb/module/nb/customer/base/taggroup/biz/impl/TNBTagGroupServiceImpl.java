@@ -46,4 +46,10 @@ public class TNBTagGroupServiceImpl extends DataServiceImpl<TNBTagGroup, Integer
 	public List<TNBTagGroup> findAllByVisibleOrderByPosition(Integer visible) {
 		return repository.findAllByVisibleOrderByPosition(visible);
 	}
+
+	@Override
+	@Transactional
+	public void deleteByCode(String code) {
+		repository.deleteByCode(code);
+	}
 }

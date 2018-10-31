@@ -144,4 +144,10 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 	public void saveTagGroupTags(String tagCode, List<TagGroupTag> tagGroupTags) {
 		saveTagGroupTags(new TagGroupTags(tagCode, tagGroupTags));
 	}
+
+	@Override
+	@Transactional
+	public void deleteByTagGroupCode(String tagGroupCode) {
+		tagGroupTagService.deleteByTagGroupCode(tagGroupCode);
+	}
 }

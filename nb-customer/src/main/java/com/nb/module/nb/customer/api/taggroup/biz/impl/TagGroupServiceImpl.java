@@ -77,4 +77,11 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 		redisService.set2RedisTwoDays(RedisConstant.getKey(TagGroup.class, RedisConstant.LIST), JSON.toJSONString(tagGroups));
 		return tagGroups;
 	}
+
+	@Override
+	@Transactional
+	public void deleteByCode(String tagGroupCode) {
+		tagGroupService.deleteByCode(tagGroupCode);
+		tagService.deleteByTagGroupCode(tagGroupCode);
+	}
 }

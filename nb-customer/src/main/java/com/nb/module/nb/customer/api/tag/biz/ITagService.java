@@ -56,4 +56,10 @@ public interface ITagService {
 	 */
 	void saveTagGroupTags(String tagCode, List<TagGroupTag> tagGroupTags);
 
+	/**
+	 * 通过标签组code删除
+	 *
+	 * @param tagGroupCode
+	 */
+	void deleteByTagGroupCode(String tagGroupCode);
 }

@@ -13,4 +13,5 @@ public interface ITNBTagGroupTagRepository extends IDataRepository<TNBTagGroupTa
 
 	List<TNBTagGroupTag> findAllByTagGroupCodeOrderByPosition(String tagGroupCode);
 
+	void deleteByTagGroupCode(String tagGroupCode);
 }

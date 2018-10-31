@@ -10,4 +10,6 @@ public interface ITagGroupService {
 
 	List<TagGroup> findAllByVisible(Integer visible);
 
+	void deleteByCode(String tagGroupCode);
+
 }

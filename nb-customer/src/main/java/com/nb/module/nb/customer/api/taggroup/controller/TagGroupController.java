@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Validated
@@ -32,6 +33,13 @@ public class TagGroupController extends BaseController {
 	@RequestMapping(value = "/findAllByVisible", method = RequestMethod.GET)
 	public JsonContainer<List<TagGroup>> findAllByVisible(@RequestParam Integer visible) {
 		return setSuccessMessage(service.findAllByVisible(visible));
+	}
+
+	@ApiOperation(value = "删除标签组", notes = "删除标签组")
+	@RequestMapping(value = "/{tagGroupCode}", method = RequestMethod.DELETE)
+	public JsonContainer deleteByCode(@PathVariable @NotBlank String tagGroupCode) {
+		service.deleteByCode(tagGroupCode);
+		return setSuccessMessage();
 	}
 
 }

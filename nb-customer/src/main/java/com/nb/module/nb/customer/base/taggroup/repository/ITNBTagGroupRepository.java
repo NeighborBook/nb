@@ -15,4 +15,5 @@ public interface ITNBTagGroupRepository extends IDataRepository<TNBTagGroup, Int
 
 	List<TNBTagGroup> findAllByVisibleOrderByPosition(Integer visible);
 
+	void deleteByCode(String code);
 }

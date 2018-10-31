@@ -28,4 +28,10 @@ public class TNBTagGroupTagServiceImpl extends DataServiceImpl<TNBTagGroupTag, I
 	public List<TNBTagGroupTag> findAllByTagGroupCodeOrderByPosition(String tagGroupCode) {
 		return repository.findAllByTagGroupCodeOrderByPosition(tagGroupCode);
 	}
+
+	@Override
+	@Transactional
+	public void deleteByTagGroupCode(String tagGroupCode) {
+		repository.deleteByTagGroupCode(tagGroupCode);
+	}
 }
