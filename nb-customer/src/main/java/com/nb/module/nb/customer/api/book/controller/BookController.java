@@ -49,4 +49,10 @@ public class BookController extends BaseController {
 	public JsonContainer<Page<BookMinInfo>> findAllByTagCode(@RequestBody @NotNull List<String> tagCodes, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllByTagCode(tagCodes, pageable));
 	}
+
+	@ApiOperation(value = "通过搜索框分页查询", notes = "通过搜索框分页查询")
+	@RequestMapping(value = "/findAllBySearch", method = RequestMethod.POST)
+	public JsonContainer<Page<BookMinInfo>> findAllBySearch(@RequestParam @NotNull String search, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllBySearch(search, pageable));
+	}
 }

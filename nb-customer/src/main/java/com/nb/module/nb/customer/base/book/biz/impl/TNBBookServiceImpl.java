@@ -6,6 +6,7 @@ import com.nb.module.nb.customer.base.book.repository.ITNBBookRepository;
 import com.nb.module.nb.customer.serialcode.CustomerSerialCode;
 import com.zjk.module.common.authorization.client.api.serialcode.client.ISerialCodeClient;
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,5 +51,14 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 			return findAll(pageable);
 		}
 		return repository.findAllByTagCode(tagCodes, size, pageable);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBBook> findAllBySearch(String search, Pageable pageable) {
+		if (StringUtils.isBlank(search)) {
+			return findAll(pageable);
+		}
+		return repository.findAllBySearch(search, pageable);
 	}
 }
