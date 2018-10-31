@@ -37,18 +37,18 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 			po = tagGroupService.newInstance();
 			po.setName(tagGroup.getName());
 			po.setTitle(tagGroup.getTitle());
-			// 没有visible则默认 0-不可见
-			if (null == tagGroup.getVisible()) {
-				tagGroup.setVisible(TagGroupConstant.INVISIBLE);
-			}
-			po.setVisible(tagGroup.getVisible());
-			// 没有order则默认1
-			if (null == tagGroup.getPosition() || 0 == tagGroup.getPosition()) {
-				tagGroup.setPosition(1);
-			}
-			po.setPosition(tagGroup.getPosition());
-			tagGroupService.save(po);
 		}
+		// 没有visible则默认 0-不可见
+		if (null == tagGroup.getVisible()) {
+			tagGroup.setVisible(TagGroupConstant.INVISIBLE);
+		}
+		po.setVisible(tagGroup.getVisible());
+		// 没有order则默认1
+		if (null == tagGroup.getPosition() || 0 == tagGroup.getPosition()) {
+			tagGroup.setPosition(1);
+		}
+		po.setPosition(tagGroup.getPosition());
+		tagGroupService.save(po);
 		// 标签组code
 		tagGroup.setCode(po.getCode());
 
@@ -58,23 +58,11 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 
 	@Override
 	public List<TagGroup> findAllByVisible(Integer visible) {
-		List<TagGroup> tagGroups;
-		// 从redis取
-		String valuer = (String) redisService.get(RedisConstant.getKey(TagGroup.class, RedisConstant.LIST));
-		// 有就用
+		List<TagGroup> tagGroups = null;
+		String valuer = (String) redisService.get(RedisConstant.getKey(TagGroup.class, visible, RedisConstant.LIST));
 		if (StringUtils.isNotBlank(valuer)) {
 			tagGroups = JSON.parseArray(valuer, TagGroup.class);
 		}
-		// 没用从数据库中取
-		else {
-			tagGroups = map(tagGroupService.findAllByVisibleOrderByPosition(visible), e -> {
-				TagGroup tagGroup = new TagGroup(e.getCode(), e.getName(), e.getTitle(), e.getVisible(), e.getPosition());
-				tagGroup.setTagGroupTags(tagService.findAllByTagGroupCodeOrderByOrder(e.getCode()));
-				return tagGroup;
-			});
-		}
-		// 存入缓存
-		redisService.set2RedisTwoDays(RedisConstant.getKey(TagGroup.class, RedisConstant.LIST), JSON.toJSONString(tagGroups));
 		return tagGroups;
 	}
 
@@ -83,5 +71,26 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 	public void deleteByCode(String tagGroupCode) {
 		tagGroupService.deleteByCode(tagGroupCode);
 		tagService.deleteByTagGroupCode(tagGroupCode);
+	}
+
+	@Override
+	public void refresh() {
+		// 可见列表
+		List<TagGroup> visibleTagGroups = map(tagGroupService.findAllByVisibleOrderByPosition(TagGroupConstant.VISIBLE), e -> {
+			TagGroup tagGroup = new TagGroup(e.getCode(), e.getName(), e.getTitle(), e.getVisible(), e.getPosition());
+			tagGroup.setTagGroupTags(tagService.findAllByTagGroupCodeOrderByOrder(e.getCode()));
+			return tagGroup;
+		});
+		// 存入缓存
+		redisService.set2RedisTwoDays(RedisConstant.getKey(TagGroup.class, TagGroupConstant.VISIBLE, RedisConstant.LIST), JSON.toJSONString(visibleTagGroups));
+
+		// 不可见列表
+		List<TagGroup> invisibleTagGroups = map(tagGroupService.findAllByVisibleOrderByPosition(TagGroupConstant.INVISIBLE), e -> {
+			TagGroup tagGroup = new TagGroup(e.getCode(), e.getName(), e.getTitle(), e.getVisible(), e.getPosition());
+			tagGroup.setTagGroupTags(tagService.findAllByTagGroupCodeOrderByOrder(e.getCode()));
+			return tagGroup;
+		});
+		// 存入缓存
+		redisService.set2RedisTwoDays(RedisConstant.getKey(TagGroup.class, TagGroupConstant.INVISIBLE, RedisConstant.LIST), JSON.toJSONString(invisibleTagGroups));
 	}
 }

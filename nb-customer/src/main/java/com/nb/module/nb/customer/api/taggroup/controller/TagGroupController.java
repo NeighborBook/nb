@@ -29,7 +29,7 @@ public class TagGroupController extends BaseController {
 		return setSuccessMessage();
 	}
 
-	@ApiOperation(value = "保存标签组", notes = "保存标签组")
+	@ApiOperation(value = "根据visible查询标签组", notes = "根据visible查询标签组")
 	@RequestMapping(value = "/findAllByVisible", method = RequestMethod.GET)
 	public JsonContainer<List<TagGroup>> findAllByVisible(@RequestParam Integer visible) {
 		return setSuccessMessage(service.findAllByVisible(visible));
@@ -39,6 +39,13 @@ public class TagGroupController extends BaseController {
 	@RequestMapping(value = "/{tagGroupCode}", method = RequestMethod.DELETE)
 	public JsonContainer deleteByCode(@PathVariable @NotBlank String tagGroupCode) {
 		service.deleteByCode(tagGroupCode);
+		return setSuccessMessage();
+	}
+
+	@ApiOperation(value = "刷新数据", notes = "刷新数据")
+	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
+	public JsonContainer refresh() {
+		service.refresh();
 		return setSuccessMessage();
 	}
 

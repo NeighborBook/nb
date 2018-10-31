@@ -82,9 +82,8 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 		bookTags.getBookTags().forEach(e -> {
 			// 保存Tag
 			Tag tag = e.getTag();
-			if (StringUtils.isBlank(tag.getCode())) {
-				save(tag);
-			}
+			save(tag);
+
 			// 书标签关联
 			TNBBookTag po = bookTagService.findOneByBookCodeAndTagCode(bookTags.getBookCode(), tag.getCode());
 			if (null == po) {
@@ -115,9 +114,8 @@ public class TagServiceImpl extends CommonServiceImpl implements ITagService {
 		tagGroupTags.getTagGroupTags().forEach(e -> {
 			// 保存Tag
 			Tag tag = e.getTag();
-			if (StringUtils.isBlank(tag.getCode())) {
-				save(tag);
-			}
+			save(tag);
+
 			// 标签组标签关联
 			TNBTagGroupTag po = tagGroupTagService.findOneByTagGroupCodeAndTagCode(tagGroupTags.getTagGroupCode(), tag.getCode());
 			if (null == po) {

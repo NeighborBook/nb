@@ -12,4 +12,5 @@ public interface ITagGroupService {
 
 	void deleteByCode(String tagGroupCode);
 
+	void refresh();
 }
