@@ -41,13 +41,13 @@ public class UserBookController extends BaseController {
 	}
 
 	@ApiOperation(value = "通过标签和用户编号分页查询", notes = "通过标签和用户编号分页查询")
-	@RequestMapping(value = "/findAllByTagCode", method = RequestMethod.POST)
+	@RequestMapping(value = "/findAllBySearchAndUserCode", method = RequestMethod.POST)
 	public JsonContainer<Page<UserBookMinInfo>> findAllByTagCodeAndUserCode(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllByTagCodeAndUserCode(tagCodes, sharable, userCode, pageable));
 	}
 
 	@ApiOperation(value = "通过搜索框和用户编号分页查询", notes = "通过搜索框和用户编号分页查询")
-	@RequestMapping(value = "/findAllBySearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/findAllBySearchAndUserCode", method = RequestMethod.POST)
 	public JsonContainer<Page<UserBookMinInfo>> findAllBySearchAndUserCode(@RequestParam @NotNull String search, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllBySearchAndUserCode(search, userCode, pageable));
 	}
