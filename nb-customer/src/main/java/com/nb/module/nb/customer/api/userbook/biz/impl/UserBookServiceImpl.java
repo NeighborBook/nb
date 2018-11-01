@@ -56,7 +56,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable) {
-		return userBookService.findAllByBookCodeAndSharable(bookCode, sharable, pageable).map(e -> new UserBook(e.getUserCode(), e.getBookCode(), e.getBookCount(), e.getSharable()));
+		return userBookService.findAllByBookCodeAndSharable(bookCode, sharable, pageable).map(e -> convert(e));
 	}
 
 	@Override
