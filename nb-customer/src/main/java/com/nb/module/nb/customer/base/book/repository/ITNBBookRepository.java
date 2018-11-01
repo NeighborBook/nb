@@ -79,14 +79,14 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	 * @return
 	 */
 	@Query(value = " select b.* from " +
-			" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes" +
-			" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable) ub) where bt.book_code = ub.book_code) " +
+			" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes " +
+			" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable) ub where bt.book_code = ub.book_code) " +
 			" group by book_code having count(*) = :size)a, " +
 			" t_nb_book b where a.book_code = b.code order by a.total desc ",
 			countQuery = " select count(*) from ( " +
 					" select b.* from " +
-					" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes" +
-					" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable) ub) where bt.book_code = ub.book_code) " +
+					" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes " +
+					" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable) ub where bt.book_code = ub.book_code) " +
 					" group by book_code having count(*) = :size)a, " +
 					" t_nb_book b where a.book_code = b.code order by a.total desc " +
 					" ) countQuery ",
