@@ -137,8 +137,19 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 	}
 
 	@Override
+	public Page<BookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable) {
+		return bookService.findAllByTagCodeAndUserCode(tagCodes, tagCodes.size(), sharable, userCode, pageable).map(e -> new BookMinInfo(convert(e)));
+	}
+
+	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<BookMinInfo> findAllBySearch(String search, Pageable pageable) {
 		return bookService.findAllBySearch(search, pageable).map(e -> new BookMinInfo(convert(e)));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<BookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable) {
+		return bookService.findAllBySearchAndUserCode(search, userCode, pageable).map(e -> new BookMinInfo(convert(e)));
 	}
 }

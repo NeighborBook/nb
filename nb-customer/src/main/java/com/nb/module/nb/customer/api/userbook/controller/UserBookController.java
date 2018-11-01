@@ -15,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @CreateApiDocs
@@ -38,9 +40,15 @@ public class UserBookController extends BaseController {
 		return setSuccessMessage();
 	}
 
-	@ApiOperation(value = "分页查询", notes = "分页查询")
-	@RequestMapping(value = "/findAllByUserCode/{userCode}", method = RequestMethod.GET)
-	public JsonContainer<Page<UserBookMinInfo>> findAllByUserCode(@PathVariable String userCode, @PageableDefault Pageable pageable) {
-		return setSuccessMessage(service.findAllByUserCode(userCode, pageable));
+	@ApiOperation(value = "通过标签和用户编号分页查询", notes = "通过标签和用户编号分页查询")
+	@RequestMapping(value = "/findAllByTagCode", method = RequestMethod.POST)
+	public JsonContainer<Page<UserBookMinInfo>> findAllByTagCodeAndUserCode(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByTagCodeAndUserCode(tagCodes, sharable, userCode, pageable));
+	}
+
+	@ApiOperation(value = "通过搜索框和用户编号分页查询", notes = "通过搜索框和用户编号分页查询")
+	@RequestMapping(value = "/findAllBySearch", method = RequestMethod.POST)
+	public JsonContainer<Page<UserBookMinInfo>> findAllBySearchAndUserCode(@RequestParam @NotNull String search, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllBySearchAndUserCode(search, userCode, pageable));
 	}
 }

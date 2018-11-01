@@ -33,6 +33,24 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	/***********************************************************************************************************************************************************************/
 
 	/**
+	 * 通过用户编号查询
+	 *
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select b.* from t_nb_book b where " +
+			" exists(select 1 from (select distinct book_code from t_nb_user_book where user_code = :userCode) ub where b.code = ub.book_code) " +
+			" order by updated desc ",
+			countQuery = " select count(*) from ( " +
+					" select b.* from t_nb_book b where " +
+					" exists(select 1 from (select distinct book_code from t_nb_user_book where user_code = :userCode) ub where b.code = ub.book_code) " +
+					" order by updated desc " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllByUserCode(@Param("userCode") String userCode, Pageable pageable);
+
+	/**
 	 * 通过是否共享查询
 	 *
 	 * @param sharable
@@ -49,6 +67,25 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 					" ) countQuery ",
 			nativeQuery = true)
 	Page<TNBBook> findAllBySharable(@Param("sharable") Integer sharable, Pageable pageable);
+
+	/**
+	 * 通过是否共享和用户编号查询
+	 *
+	 * @param sharable
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select b.* from t_nb_book b where " +
+			" exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable and user_code = :userCode) ub where b.code = ub.book_code) " +
+			" order by updated desc ",
+			countQuery = " select count(*) from ( " +
+					" select b.* from t_nb_book b where " +
+					" exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable and user_code = :userCode) ub where b.code = ub.book_code) " +
+					" order by updated desc " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllBySharableAndUserCode(@Param("sharable") Integer sharable, @Param("userCode") String userCode, Pageable pageable);
 
 	/**
 	 * 通过标签查询
@@ -68,6 +105,26 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 					" ) countQuery ",
 			nativeQuery = true)
 	Page<TNBBook> findAllByTagCode(@Param("tagCodes") List<String> tagCodes, @Param("size") Integer size, Pageable pageable);
+
+	/**
+	 * 通过标签和用户编号查询
+	 *
+	 * @param tagCodes
+	 * @param size
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select b.* from " +
+			" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag where tag_code in :tagCodes group by book_code having count(*) = :size)a, " +
+			" t_nb_book b, t_nb_user_book ub where a.book_code = b.code and a.book_code = ub.book_code and ub.user_code = :userCode order by a.total desc ",
+			countQuery = " select count(*) from ( " +
+					" select b.* from " +
+					" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag where tag_code in :tagCodes group by book_code having count(*) = :size)a, " +
+					" t_nb_book b, t_nb_user_book ub where a.book_code = b.code and a.book_code = ub.book_code and ub.user_code = :userCode order by a.total desc " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllByTagCodeAndUserCode(@Param("tagCodes") List<String> tagCodes, @Param("size") Integer size, @Param("userCode") String userCode, Pageable pageable);
 
 	/**
 	 * 通过标签和是否共享查询
@@ -93,6 +150,31 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 			nativeQuery = true)
 	Page<TNBBook> findAllByTagCodeAndSharable(@Param("tagCodes") List<String> tagCodes, @Param("size") Integer size, @Param("sharable") Integer sharable, Pageable pageable);
 
+	/**
+	 * 通过标签，是否共享和用户编号查询
+	 *
+	 * @param tagCodes
+	 * @param size
+	 * @param sharable
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select b.* from " +
+			" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes " +
+			" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable and user_code = :userCode) ub where bt.book_code = ub.book_code) " +
+			" group by book_code having count(*) = :size)a, " +
+			" t_nb_book b where a.book_code = b.code order by a.total desc ",
+			countQuery = " select count(*) from ( " +
+					" select b.* from " +
+					" (select book_code, count(*), sum(tag_count) total from t_nb_book_tag bt where tag_code in :tagCodes " +
+					" and exists(select 1 from (select distinct book_code from t_nb_user_book where sharable = :sharable and user_code = :userCode) ub where bt.book_code = ub.book_code) " +
+					" group by book_code having count(*) = :size)a, " +
+					" t_nb_book b where a.book_code = b.code order by a.total desc " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllByTagCodeAndSharableAndUserCode(@Param("tagCodes") List<String> tagCodes, @Param("size") Integer size, @Param("sharable") Integer sharable, @Param("userCode") String userCode, Pageable pageable);
+
 	/***********************************************************************************************************************************************************************/
 
 	/**
@@ -113,4 +195,22 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 			nativeQuery = true)
 	Page<TNBBook> findAllBySearch(@Param("search") String search, Pageable pageable);
 
+	/**
+	 * 通过搜索框和用户编号查询
+	 *
+	 * @param search
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select n.* from " +
+			" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+			" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode ",
+			countQuery = " select count(*) from ( " +
+					" select n.* from " +
+					" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+					" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllBySearchAndUserCode(@Param("search") String search, @Param("userCode") String userCode, Pageable pageable);
 }

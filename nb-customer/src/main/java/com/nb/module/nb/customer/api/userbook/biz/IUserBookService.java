@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
+import java.util.List;
+
 public interface IUserBookService {
 
 	/**
@@ -27,5 +29,7 @@ public interface IUserBookService {
 
 	Page<UserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, @PageableDefault Pageable pageable);
 
-	Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable);
+	Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable);
+
+	Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
 }

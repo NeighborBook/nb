@@ -37,9 +37,4 @@ public class TNBUserBookServiceImpl extends DataServiceImpl<TNBUserBook, Integer
 		return repository.findAllByBookCodeAndSharable(bookCode, sharable, pageable);
 	}
 
-	@Override
-	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBUserBook> findAllByUserCode(String userCode, Pageable pageable) {
-		return repository.findAllByUserCode(userCode, pageable);
-	}
 }

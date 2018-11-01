@@ -1,7 +1,6 @@
 package com.nb.module.nb.customer.api.userbook.biz.impl;
 
 import com.nb.module.nb.customer.api.book.biz.IBookService;
-import com.nb.module.nb.customer.api.book.domain.BookMinInfo;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
@@ -15,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookService {
@@ -61,10 +62,15 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable) {
-		return userBookService.findAllByUserCode(userCode, pageable).map(e -> {
-			UserBookMinInfo userBookMinInfo = new UserBookMinInfo(e.getUserCode(), new BookMinInfo(bookService.findOneByCode(e.getBookCode())), e.getBookCount(), e.getSharable());
-			return userBookMinInfo;
-		});
+	public Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable) {
+		return bookService.findAllByTagCodeAndUserCode(tagCodes, sharable, userCode, pageable)
+				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable())));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable) {
+		return bookService.findAllBySearchAndUserCode(search, userCode, pageable)
+				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable())));
 	}
 }
