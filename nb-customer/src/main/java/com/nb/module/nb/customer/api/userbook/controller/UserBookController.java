@@ -41,7 +41,7 @@ public class UserBookController extends BaseController {
 	}
 
 	@ApiOperation(value = "通过标签和用户编号分页查询", notes = "通过标签和用户编号分页查询")
-	@RequestMapping(value = "/findAllBySearchAndUserCode", method = RequestMethod.POST)
+	@RequestMapping(value = "/findAllByTagCodeAndUserCode", method = RequestMethod.POST)
 	public JsonContainer<Page<UserBookMinInfo>> findAllByTagCodeAndUserCode(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllByTagCodeAndUserCode(tagCodes, sharable, userCode, pageable));
 	}
