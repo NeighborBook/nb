@@ -33,8 +33,8 @@ public class TNBUserBookServiceImpl extends DataServiceImpl<TNBUserBook, Integer
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBUserBook> findAllByBookCode(String bookCode, Pageable pageable) {
-		return repository.findAllByBookCode(bookCode, pageable);
+	public Page<TNBUserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable) {
+		return repository.findAllByBookCodeAndSharable(bookCode, sharable, pageable);
 	}
 
 	@Override

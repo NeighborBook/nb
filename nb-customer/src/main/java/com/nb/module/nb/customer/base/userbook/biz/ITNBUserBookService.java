@@ -14,7 +14,7 @@ public interface ITNBUserBookService extends IDataService<TNBUserBook, Integer> 
 
 	List<TNBUserBook> findAllByUserCodeOrderByBookCountDesc(String userCode);
 
-	Page<TNBUserBook> findAllByBookCode(String bookCode, Pageable pageable);
+	Page<TNBUserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable);
 
 	Page<TNBUserBook> findAllByUserCode(String userCode, Pageable pageable);
 

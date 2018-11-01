@@ -25,7 +25,7 @@ public interface IUserBookService {
 	 */
 	void save(UserBook vo);
 
-	Page<UserBook> findAllByBookCode(String bookCode, @PageableDefault Pageable pageable);
+	Page<UserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, @PageableDefault Pageable pageable);
 
 	Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable);
 }
