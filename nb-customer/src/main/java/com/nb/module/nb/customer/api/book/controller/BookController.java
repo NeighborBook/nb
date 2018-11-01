@@ -46,8 +46,8 @@ public class BookController extends BaseController {
 
 	@ApiOperation(value = "通过标签分页查询", notes = "通过标签分页查询")
 	@RequestMapping(value = "/findAllByTagCode", method = RequestMethod.POST)
-	public JsonContainer<Page<BookMinInfo>> findAllByTagCode(@RequestBody @NotNull List<String> tagCodes, @PageableDefault Pageable pageable) {
-		return setSuccessMessage(service.findAllByTagCode(tagCodes, pageable));
+	public JsonContainer<Page<BookMinInfo>> findAllByTagCode(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByTagCode(tagCodes, sharable, pageable));
 	}
 
 	@ApiOperation(value = "通过搜索框分页查询", notes = "通过搜索框分页查询")

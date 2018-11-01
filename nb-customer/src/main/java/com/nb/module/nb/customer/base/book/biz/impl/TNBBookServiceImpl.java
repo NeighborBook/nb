@@ -48,11 +48,22 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBBook> findAllByTagCode(List<String> tagCodes, Integer size, Pageable pageable) {
+	public Page<TNBBook> findAllByTagCode(List<String> tagCodes, Integer size, Integer sharable, Pageable pageable) {
+		Page<TNBBook> result;
 		if (null == tagCodes || tagCodes.isEmpty()) {
-			return findAll(pageable);
+			if (null == sharable) {
+				result = findAll(pageable);
+			} else {
+				result = repository.findAllBySharable(sharable, pageable);
+			}
+		} else {
+			if (null == sharable) {
+				result = repository.findAllByTagCode(tagCodes, size, pageable);
+			} else {
+				result = repository.findAllByTagCodeAndSharable(tagCodes, size, sharable, pageable);
+			}
 		}
-		return repository.findAllByTagCode(tagCodes, size, pageable);
+		return result;
 	}
 
 	@Override
