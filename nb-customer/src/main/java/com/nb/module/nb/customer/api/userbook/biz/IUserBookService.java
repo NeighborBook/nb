@@ -5,6 +5,7 @@ import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 public interface IUserBookService {
 
@@ -23,6 +24,8 @@ public interface IUserBookService {
 	 * @param vo
 	 */
 	void save(UserBook vo);
+
+	Page<UserBook> findAllByBookCode(String bookCode, @PageableDefault Pageable pageable);
 
 	Page<UserBookMinInfo> findAllByUserCode(String userCode, Pageable pageable);
 }

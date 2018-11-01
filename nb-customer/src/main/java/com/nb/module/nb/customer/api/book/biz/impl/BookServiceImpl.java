@@ -6,6 +6,7 @@ import com.nb.module.nb.customer.api.book.domain.Book;
 import com.nb.module.nb.customer.api.book.domain.BookMinInfo;
 import com.nb.module.nb.customer.api.book.domain.Translator;
 import com.nb.module.nb.customer.api.tag.biz.ITagService;
+import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.base.author.biz.ITNBAuthorService;
 import com.nb.module.nb.customer.base.author.domain.TNBAuthor;
 import com.nb.module.nb.customer.base.book.biz.ITNBBookService;
@@ -36,6 +37,8 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 	@Autowired
 	private ITagService tagService;
 	@Autowired
+	private IUserBookService userBookService;
+	@Autowired
 	private IPathService pathService;
 
 	@Override
@@ -62,6 +65,8 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 		book.setTranslators(map(translatorService.findAllByCode(e.getCode()), s -> new Translator(s.getTranslator())));
 		// 标签
 		book.setBookTags(tagService.findAllByBookCodeOrderByTagCountDesc(e.getCode()));
+		// 用户书
+		book.setUserBooks(userBookService.findAllByBookCode(book.getCode(), null));
 		return book;
 	}
 

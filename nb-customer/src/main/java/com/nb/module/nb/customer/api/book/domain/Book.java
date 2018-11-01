@@ -1,7 +1,9 @@
 package com.nb.module.nb.customer.api.book.domain;
 
 import com.nb.module.nb.customer.api.tag.domain.BookTag;
+import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -54,6 +56,7 @@ public class Book {
 
 	private List<BookTag> bookTags;
 
+	private Page<UserBook> userBooks;
 
 	public Book() {
 	}

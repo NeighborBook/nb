@@ -15,7 +15,7 @@ public interface ITNBUserBookRepository extends IDataRepository<TNBUserBook, Int
 
 	List<TNBUserBook> findAllByUserCodeOrderByBookCountDesc(String userCode);
 
-	List<TNBUserBook> findAllByBookCode(String bookCode);
+	Page<TNBUserBook> findAllByBookCode(String bookCode, Pageable pageable);
 
 	Page<TNBUserBook> findAllByUserCode(String userCode, Pageable pageable);
 }
