@@ -2,3 +2,7 @@ eureka:
   instance:
     #实例ip
     ip-address: 127.0.0.1
+sync:
+  cron:
+    api:
+      taggroup: 0 10 0 * * ?

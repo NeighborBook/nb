@@ -2,3 +2,7 @@ eureka:
   instance:
     #实例ip 配置在sh中
     ip-address:
+sync:
+  cron:
+    api:
+      taggroup: 0 10 0 * * ?

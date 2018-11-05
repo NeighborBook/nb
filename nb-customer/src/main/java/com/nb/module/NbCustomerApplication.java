@@ -11,6 +11,7 @@ import com.zjk.module.common.redis.annotation.EnableCommonRedisConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -22,6 +23,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @EnableCommonDataConfiguration
 @EnableCommonRedisConfiguration
 @EnableRegisterRunner
+@EnableScheduling
 public class NbCustomerApplication {
 
 	public static void main(String[] args) {

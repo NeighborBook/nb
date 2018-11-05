@@ -12,6 +12,7 @@ import com.zjk.module.common.redis.biz.IRedisService;
 import com.zjk.module.common.redis.constant.RedisConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +75,7 @@ public class TagGroupServiceImpl extends CommonServiceImpl implements ITagGroupS
 	}
 
 	@Override
+	@Scheduled(cron = "${sync.cron.api.taggroup}")
 	public void refresh() {
 		// 可见列表
 		List<TagGroup> visibleTagGroups = map(tagGroupService.findAllByVisibleOrderByPosition(TagGroupConstant.VISIBLE), e -> {
