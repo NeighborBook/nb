@@ -14,11 +14,14 @@ public class UserBookMinInfo {
 
 	private Integer sharable;
 
-	public UserBookMinInfo(String userCode, BookMinInfo bookMinInfo, Integer bookCount, Integer sharable) {
+	private Integer lentAmount;
+
+	public UserBookMinInfo(String userCode, BookMinInfo bookMinInfo, Integer bookCount, Integer sharable, Integer lentAmount) {
 		this.userCode = userCode;
 		this.bookMinInfo = bookMinInfo;
 		this.bookCount = bookCount;
 		this.sharable = sharable;
+		this.lentAmount = lentAmount;
 	}
 
 	public UserBookMinInfo() {

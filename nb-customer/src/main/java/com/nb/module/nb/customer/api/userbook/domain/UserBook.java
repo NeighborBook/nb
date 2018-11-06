@@ -17,11 +17,14 @@ public class UserBook {
 
 	private Integer sharable;
 
-	public UserBook(@NotBlank String userCode, @NotBlank String bookCode, Integer bookCount, Integer sharable) {
+	private Integer lentAmount;
+
+	public UserBook(@NotBlank String userCode, @NotBlank String bookCode, Integer bookCount, Integer sharable, Integer lentAmount) {
 		this.userCode = userCode;
 		this.bookCode = bookCode;
 		this.bookCount = bookCount;
 		this.sharable = sharable;
+		this.lentAmount = lentAmount;
 	}
 
 	public UserBook() {

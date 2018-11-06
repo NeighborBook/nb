@@ -32,7 +32,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	}
 
 	private UserBook convert(TNBUserBook e) {
-		UserBook userBook = new UserBook(e.getUserCode(), e.getBookCode(), e.getBookCount(), e.getSharable());
+		UserBook userBook = new UserBook(e.getUserCode(), e.getBookCode(), e.getBookCount(), e.getSharable(), e.getLentAmount());
 		return userBook;
 	}
 
@@ -64,13 +64,13 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable) {
 		return bookService.findAllByTagCodeAndUserCode(tagCodes, sharable, userCode, pageable)
-				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable())));
+				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable(), s.getLentAmount())));
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable) {
 		return bookService.findAllBySearchAndUserCode(search, userCode, pageable)
-				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable())));
+				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable(), s.getLentAmount())));
 	}
 }

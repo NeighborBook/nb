@@ -19,4 +19,6 @@ public class TNBUserBook extends DataEntity {
 
 	private Integer sharable;
 
+	private Integer lentAmount;
+
 }
