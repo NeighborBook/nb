@@ -7,6 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = "orderborrow")
 public interface ITNBOrderBorrowRepository extends IDataRepository<TNBOrderBorrow, Integer> {
 
-	TNBOrderBorrow findOneByCode(String code);
+	TNBOrderBorrow findOneByOrderCode(String code);
 
 }

@@ -17,8 +17,8 @@ public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, I
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public TNBOrderBorrow findOneByCode(String code) {
-		return repository.findOneByCode(code);
+	public TNBOrderBorrow findOneByOrderCode(String code) {
+		return repository.findOneByOrderCode(code);
 	}
 
 }

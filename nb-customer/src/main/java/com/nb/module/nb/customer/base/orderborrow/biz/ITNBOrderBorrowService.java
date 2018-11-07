@@ -6,6 +6,6 @@ import com.zjk.module.common.data.biz.IDataService;
 
 public interface ITNBOrderBorrowService extends IDataService<TNBOrderBorrow, Integer> {
 
-	TNBOrderBorrow findOneByCode(String code);
+	TNBOrderBorrow findOneByOrderCode(String code);
 
 }
