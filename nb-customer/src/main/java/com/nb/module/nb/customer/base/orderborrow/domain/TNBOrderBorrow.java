@@ -24,6 +24,9 @@ public class TNBOrderBorrow extends DataEntity {
 	private Integer count;
 
 	@Column(columnDefinition = "timestamp")
+	private Date startBorrowDate;
+
+	@Column(columnDefinition = "timestamp")
 	private Date initialReturnDate;
 
 	@Column(columnDefinition = "timestamp")
