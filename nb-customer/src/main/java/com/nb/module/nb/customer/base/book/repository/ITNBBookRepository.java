@@ -185,11 +185,11 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	 * @return
 	 */
 	@Query(value = " select n.* from " +
-			" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+			" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
 			" t_nb_book n where m.code = n.code ",
 			countQuery = " select count(*) from ( " +
 					" select n.* from " +
-					" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+					" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
 					" t_nb_book n where m.code = n.code " +
 					" ) countQuery ",
 			nativeQuery = true)
@@ -204,11 +204,11 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	 * @return
 	 */
 	@Query(value = " select n.* from " +
-			" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+			" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
 			" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode ",
 			countQuery = " select count(*) from ( " +
 					" select n.* from " +
-					" (select distinct b.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
+					" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
 					" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode " +
 					" ) countQuery ",
 			nativeQuery = true)
