@@ -8,7 +8,9 @@ public enum CustomerSerialCode implements ISerialCode {
 	/******************** 权限 ********************/
 	NBBOOK("NBBOOK", "书"),
 	NBTAG("NBTAG", "标签"),
-	NBTAGGROUP("NBTAGGROUP", "标签组");
+	NBTAGGROUP("NBTAGGROUP", "标签组"),
+	NBORDERFORM("NBORDERFORM", "订单")
+	;
 
 	private String serialGroup;
 
