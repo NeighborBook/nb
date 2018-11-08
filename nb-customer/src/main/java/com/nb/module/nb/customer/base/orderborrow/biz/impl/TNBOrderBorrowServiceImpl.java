@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, Integer> implements ITNBOrderBorrowService {
 
@@ -21,4 +23,9 @@ public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, I
 		return repository.findOneByOrderCode(code);
 	}
 
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public List<TNBOrderBorrow> findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(String fromUserCode, String bookCode, String toUserCode, Integer orderStatus) {
+		return repository.findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(fromUserCode, bookCode, toUserCode, orderStatus);
+	}
 }

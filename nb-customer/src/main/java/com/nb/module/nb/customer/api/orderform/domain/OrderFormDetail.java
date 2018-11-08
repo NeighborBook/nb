@@ -13,4 +13,13 @@ public class OrderFormDetail {
 
 	private Integer orderDetailStatus;
 
+	public OrderFormDetail(Date created, Integer orderDetailType, Integer orderDetailStatus) {
+		this.created = created;
+		this.orderDetailType = orderDetailType;
+		this.orderDetailStatus = orderDetailStatus;
+	}
+
+	public OrderFormDetail() {
+
+	}
 }

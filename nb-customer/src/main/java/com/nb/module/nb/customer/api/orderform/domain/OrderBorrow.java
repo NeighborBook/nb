@@ -27,4 +27,18 @@ public class OrderBorrow {
 
 	private Date actualReturnDate;
 
+	public OrderBorrow(@NotBlank String fromUserCode, @NotBlank String bookCode, @NotBlank String toUserCode, Integer count, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
+		this.fromUserCode = fromUserCode;
+		this.bookCode = bookCode;
+		this.toUserCode = toUserCode;
+		this.count = count;
+		this.startBorrowDate = startBorrowDate;
+		this.initialReturnDate = initialReturnDate;
+		this.expectedReturnDate = expectedReturnDate;
+		this.actualReturnDate = actualReturnDate;
+	}
+
+	public OrderBorrow() {
+
+	}
 }
