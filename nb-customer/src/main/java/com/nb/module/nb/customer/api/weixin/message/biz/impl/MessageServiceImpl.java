@@ -1,7 +1,8 @@
 package com.nb.module.nb.customer.api.weixin.message.biz.impl;
 
-import com.nb.module.nb.customer.api.weixin.message.biz.IWeixinMessageService;
+import com.nb.module.nb.customer.api.weixin.message.biz.IMessageService;
 import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
+import com.nb.module.partner.weixin.client.api.message.biz.IWeixinMessageService;
 import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplate;
 import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplateData;
 import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplateResult;
@@ -16,10 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class WeixinMessageServiceImpl extends CommonServiceImpl implements IWeixinMessageService {
+public class MessageServiceImpl extends CommonServiceImpl implements IMessageService {
 
 	@Autowired
-	private com.nb.module.partner.weixin.client.api.message.biz.IWeixinMessageService weixinMessageService;
+	private IWeixinMessageService weixinMessageService;
 	@Autowired
 	private ITokenService tokenService;
 

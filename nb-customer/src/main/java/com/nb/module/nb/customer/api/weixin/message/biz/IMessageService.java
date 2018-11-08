@@ -5,7 +5,8 @@ import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTempl
 
 import java.util.Date;
 
-public interface IWeixinMessageService {
+public interface IMessageService {
+
 	void templateSend(WeixinMessageTemplate template);
 
 	void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate);
