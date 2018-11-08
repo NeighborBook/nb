@@ -13,10 +13,19 @@ public class OrderFormDetail {
 
 	private Integer orderDetailStatus;
 
-	public OrderFormDetail(Date created, Integer orderDetailType, Integer orderDetailStatus) {
+	private String remark;
+
+	public OrderFormDetail(Date created, Integer orderDetailType, Integer orderDetailStatus, String remark) {
 		this.created = created;
 		this.orderDetailType = orderDetailType;
 		this.orderDetailStatus = orderDetailStatus;
+		this.remark = remark;
+	}
+
+	public OrderFormDetail(Integer orderDetailType, Integer orderDetailStatus, String remark) {
+		this.orderDetailType = orderDetailType;
+		this.orderDetailStatus = orderDetailStatus;
+		this.remark = remark;
 	}
 
 	public OrderFormDetail() {

@@ -33,4 +33,17 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		return user;
 	}
 
+	@Override
+	public String findOpenidByCode(String userCode) {
+		User user = findOneByCode(userCode);
+		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
+		return (String) map.get(WeixinLoginConstant.OPENID);
+	}
+
+	@Override
+	public String findNicknameByCode(String userCode) {
+		User user = findOneByCode(userCode);
+		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
+		return (String) map.get(WeixinLoginConstant.NICKNAME);
+	}
 }

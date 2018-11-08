@@ -21,7 +21,7 @@ public class TNBOrderBorrow extends DataEntity {
 
 	private String toUserCode;
 
-	private Integer count;
+	private Integer bookCount;
 
 	@Column(columnDefinition = "timestamp")
 	private Date startBorrowDate;

@@ -1,6 +1,7 @@
 package com.nb.module.nb.customer.api.orderform.controller;
 
 import com.nb.module.nb.customer.api.orderform.biz.IOrderFormService;
+import com.nb.module.nb.customer.api.orderform.domain.BorrowApply;
 import com.nb.module.nb.customer.api.orderform.domain.OrderBorrow;
 import com.nb.module.nb.customer.api.orderform.domain.OrderForm;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
@@ -25,7 +26,7 @@ public class OrderFormController extends BaseController {
 
 	@ApiOperation(value = "借书", notes = "借书")
 	@RequestMapping(value = "/borrow", method = RequestMethod.POST)
-	public JsonContainer<OrderForm<OrderBorrow>> borrow(@RequestBody @Validated OrderBorrow orderBorrow) {
-		return setSuccessMessage(service.borrow(orderBorrow));
+	public JsonContainer<OrderForm<OrderBorrow>> borrow(@RequestBody @Validated BorrowApply borrowApply) {
+		return setSuccessMessage(service.borrow(borrowApply));
 	}
 }

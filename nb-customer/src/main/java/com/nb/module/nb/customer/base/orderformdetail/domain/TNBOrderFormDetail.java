@@ -17,4 +17,5 @@ public class TNBOrderFormDetail extends DataEntity {
 
 	private Integer orderDetailStatus;
 
+	private String remark;
 }
