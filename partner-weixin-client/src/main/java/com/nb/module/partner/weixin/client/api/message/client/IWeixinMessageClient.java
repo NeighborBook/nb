@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "message", url = WeixinConstant.WEIXIN_URL)
-@RequestMapping("/cgi-bin")
+@RequestMapping("/cgi-bin/message")
 public interface IWeixinMessageClient {
 
 	@RequestMapping(value = "/template/send", method = RequestMethod.POST)
