@@ -13,6 +13,6 @@ public class WeixinMessageTemplate {
 
 	private String url;
 
-	private Map<String, Map<String, String>> data;
+	private Map<String, WeixinMessageTemplateData> data;
 
 }
