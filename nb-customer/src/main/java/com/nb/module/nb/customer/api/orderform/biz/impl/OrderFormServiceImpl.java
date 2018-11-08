@@ -1,5 +1,6 @@
 package com.nb.module.nb.customer.api.orderform.biz.impl;
 
+import com.nb.module.nb.customer.api.book.biz.IBookService;
 import com.nb.module.nb.customer.api.orderform.biz.IOrderFormService;
 import com.nb.module.nb.customer.api.orderform.constant.OrderFormConstant;
 import com.nb.module.nb.customer.api.orderform.domain.BorrowApply;
@@ -41,6 +42,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private IMessageService weixinMessageService;
 	@Autowired
 	private IWeixinUserService weixinUserService;
+	@Autowired
+	private IBookService bookService;
 
 	private OrderForm<OrderBorrow> convert(TNBOrderBorrow e) {
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
@@ -128,7 +131,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
 		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getToUserCode()),
 				weixinUserService.findNicknameByCode(orderForm.getOrder().getFromUserCode()),
-				"XXXXXXBOOK",
+				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
 				orderForm.getOrder().getStartBorrowDate());
 	}
 
