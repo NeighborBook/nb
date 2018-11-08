@@ -10,7 +10,7 @@ public enum WeixinCode implements IBusinessCode {
 	WX0002("WX0002", "生成JSAPI_TICKET失败", "生成JSAPI_TICKET失败"),
 	WX0003("WX0003", "生成授权ACCESS_TOKEN失败", "生成授权ACCESS_TOKEN失败"),
 	WX0004("WX0004", "获取用户信息失败", "获取用户信息失败"),
-	;
+	WX0005("WX0005", "发送模板消息失败", "发送模板消息失败");
 
 	private String clazz;
 
