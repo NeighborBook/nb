@@ -30,7 +30,7 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 
 	@Override
 	public void templateSend(WeixinMessageTemplate template) {
-		AccessToken accessToken = tokenService.accessToken();
+		AccessToken accessToken = tokenService.accessToken(false);
 		WeixinMessageTemplateResult result = weixinMessageService.templateSend(accessToken.getAccessToken(), template);
 	}
 
