@@ -37,7 +37,7 @@ public class OrderFormConstant {
 	public static final Integer ORDER_DETAIL_TYPE_START_BORROW_APPLICATION = 1;
 
 	/****************************************************************************/
-	// ORDER_STATUS
+	// ORDER_DETAIL_STATUS
 
 	/**
 	 * 同意
