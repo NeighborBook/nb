@@ -7,11 +7,11 @@ import java.util.Date;
 @Data
 public class OrderBorrow {
 
-	private String fromUserCode;
+	private String ownerUserCode;
 
 	private String bookCode;
 
-	private String toUserCode;
+	private String borrowerUserCode;
 
 	private Integer bookCount;
 
@@ -23,10 +23,10 @@ public class OrderBorrow {
 
 	private Date actualReturnDate;
 
-	public OrderBorrow(String fromUserCode, String bookCode, String toUserCode, Integer bookCount, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
-		this.fromUserCode = fromUserCode;
+	public OrderBorrow(String ownerUserCode, String bookCode, String borrowerUserCode, Integer bookCount, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
+		this.ownerUserCode = ownerUserCode;
 		this.bookCode = bookCode;
-		this.toUserCode = toUserCode;
+		this.borrowerUserCode = borrowerUserCode;
 		this.bookCount = bookCount;
 		this.startBorrowDate = startBorrowDate;
 		this.initialReturnDate = initialReturnDate;

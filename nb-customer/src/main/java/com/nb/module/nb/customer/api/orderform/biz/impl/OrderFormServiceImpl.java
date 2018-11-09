@@ -49,7 +49,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
 		OrderForm<OrderBorrow> orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
 		orderForm.setDetails(map(orderFormDetailService.findAllByCode(e.getOrderCode()), s -> new OrderFormDetail(s.getCreated(), s.getOrderDetailType(), s.getOrderDetailStatus(), s.getRemark())));
-		orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getFromUserCode(), s.getBookCode(), s.getToUserCode(), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
+		orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), s.getBookCode(), s.getBorrowerUserCode(), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
 		return orderForm;
 	}
 
@@ -58,16 +58,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		calendar.setTime(borrowApply.getStartBorrowDate());
 		calendar.add(Calendar.WEEK_OF_YEAR, 1);
 		Date initialReturnDate = calendar.getTime();
-		return new OrderBorrow(borrowApply.getFromUserCode(), borrowApply.getBookCode(), borrowApply.getToUserCode(), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
+		return new OrderBorrow(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
 	}
 
 	private TNBOrderBorrow convert(OrderForm<OrderBorrow> orderForm) {
 		OrderBorrow orderBorrow = orderForm.getOrder();
 		TNBOrderBorrow po = new TNBOrderBorrow();
 		po.setOrderCode(orderForm.getCode());
-		po.setFromUserCode(orderBorrow.getFromUserCode());
+		po.setOwnerUserCode(orderBorrow.getOwnerUserCode());
 		po.setBookCode(orderBorrow.getBookCode());
-		po.setToUserCode(orderBorrow.getToUserCode());
+		po.setBorrowerUserCode(orderBorrow.getBorrowerUserCode());
 		po.setBookCount(orderBorrow.getBookCount());
 		po.setStartBorrowDate(orderBorrow.getStartBorrowDate());
 		po.setInitialReturnDate(orderBorrow.getInitialReturnDate());
@@ -103,8 +103,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public List<OrderForm<OrderBorrow>> findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(String fromUserCode, String bookCode, String toUserCode, Integer orderStatus) {
-		return map(orderBorrowService.findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(fromUserCode, bookCode, toUserCode, orderStatus), e -> convert(e));
+	public List<OrderForm<OrderBorrow>> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus) {
+		return map(orderBorrowService.findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(ownerUserCode, bookCode, borrowerUserCode, orderStatus), e -> convert(e));
 	}
 
 	@Override
@@ -125,16 +125,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	}
 
 	private void checkOrder(BorrowApply borrowApply) {
-		List<OrderForm<OrderBorrow>> list = findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(borrowApply.getFromUserCode(), borrowApply.getBookCode(), borrowApply.getToUserCode(), OrderFormConstant.ORDER_STATUS_START);
+		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
 		// 同一本书只能发起一次借书请求
 		if (null != list && !list.isEmpty()) {
-			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getFromUserCode(), borrowApply.getBookCode(), borrowApply.getToUserCode()});
+			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
 		}
 	}
 
 	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
-		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getToUserCode()),
-				weixinUserService.findNicknameByCode(orderForm.getOrder().getFromUserCode()),
+		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getOwnerUserCode()),
+				weixinUserService.findNicknameByCode(orderForm.getOrder().getBorrowerUserCode()),
 				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
 				orderForm.getOrder().getStartBorrowDate());
 	}

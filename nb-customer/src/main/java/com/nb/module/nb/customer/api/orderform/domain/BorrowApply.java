@@ -9,13 +9,13 @@ import java.util.Date;
 public class BorrowApply {
 
 	@NotBlank
-	private String fromUserCode;
+	private String ownerUserCode;
 
 	@NotBlank
 	private String bookCode;
 
 	@NotBlank
-	private String toUserCode;
+	private String borrowerUserCode;
 
 	private Integer bookCount;
 

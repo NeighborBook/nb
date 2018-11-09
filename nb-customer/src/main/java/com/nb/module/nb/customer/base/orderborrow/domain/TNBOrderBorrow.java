@@ -15,11 +15,11 @@ public class TNBOrderBorrow extends DataEntity {
 
 	private String orderCode;
 
-	private String fromUserCode;
+	private String ownerUserCode;
 
 	private String bookCode;
 
-	private String toUserCode;
+	private String borrowerUserCode;
 
 	private Integer bookCount;
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IOrderFormService {
 
-	List<OrderForm<OrderBorrow>> findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(String fromUserCode, String bookCode, String toUserCode, Integer orderStatus);
+	List<OrderForm<OrderBorrow>> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus);
 
 	OrderForm<OrderBorrow> borrow(BorrowApply borrowApply);
 
