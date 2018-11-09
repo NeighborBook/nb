@@ -27,9 +27,9 @@ public class TokenServiceImpl extends CommonServiceImpl implements ITokenService
 	private IRedisService redisService;
 
 	@Override
-	public AccessToken accessToken() {
+	public AccessToken accessToken(boolean refresh) {
 		AccessToken accessToken = (AccessToken) redisService.get(TokenConstant.WEIXIN_ACCESS_TOKEN);
-		if (null == accessToken) {
+		if (null == accessToken || refresh) {
 			accessToken = weixinTokenService.accessToken(TokenConstant.GRAND_TYPE, holder.getAppId(), holder.getAppSecret());
 			// 放入缓存
 			redisService.set2Redis(TokenConstant.WEIXIN_ACCESS_TOKEN, accessToken, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
@@ -41,7 +41,7 @@ public class TokenServiceImpl extends CommonServiceImpl implements ITokenService
 	public JsapiTicket getTicket() {
 		JsapiTicket jsapiTicket = (JsapiTicket) redisService.get(TokenConstant.WEIXIN_JSAPI_TICKET);
 		if (null == jsapiTicket) {
-			jsapiTicket = weixinTokenService.getTicket(accessToken().getAccessToken(), TokenConstant.JS_API);
+			jsapiTicket = weixinTokenService.getTicket(accessToken(false).getAccessToken(), TokenConstant.JS_API);
 			// 放入缓存
 			redisService.set2Redis(TokenConstant.WEIXIN_JSAPI_TICKET, jsapiTicket, WeixinConstant.WEIXIN_EXPIRES_IN, TimeUnit.SECONDS);
 		}

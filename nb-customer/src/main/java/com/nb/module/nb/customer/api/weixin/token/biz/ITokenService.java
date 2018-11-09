@@ -7,7 +7,7 @@ import com.nb.module.partner.weixin.client.util.Sign;
 
 public interface ITokenService {
 
-	AccessToken accessToken();
+	AccessToken accessToken(boolean refresh);
 
 	JsapiTicket getTicket();
 

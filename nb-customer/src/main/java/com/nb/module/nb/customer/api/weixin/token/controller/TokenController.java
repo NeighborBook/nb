@@ -28,8 +28,8 @@ public class TokenController extends BaseController {
 
 	@ApiOperation(value = "获取accessToken", notes = "获取accessToken")
 	@RequestMapping(value = "/accessToken", method = RequestMethod.GET)
-	public JsonContainer<AccessToken> accessToken() {
-		return setSuccessMessage(service.accessToken());
+	public JsonContainer<AccessToken> accessToken(@RequestParam(required = false) boolean refresh) {
+		return setSuccessMessage(service.accessToken(refresh));
 	}
 
 	@ApiOperation(value = "获取ticket", notes = "获取ticket")
