@@ -112,20 +112,24 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	public OrderForm<OrderBorrow> borrow(BorrowApply borrowApply) {
 		OrderForm<OrderBorrow> orderForm;
 		// 检查订单申请
+		checkOrder(borrowApply);
+		// 创建订单
+		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
+		orderForm.setOrder(convert(borrowApply));
+		orderForm.getDetails().add(new OrderFormDetail(OrderFormConstant.ORDER_DETAIL_TYPE_START_BORROW_APPLICATION, OrderFormConstant.ORDER_DETAIL_STATUS_AGREE, borrowApply.getRemark()));
+		// 保存订单
+		save(orderForm, e -> orderBorrowService.save(convert(e)));
+		// 发送消息
+		sendBookLendingReminder(orderForm);
+		return orderForm;
+	}
+
+	private void checkOrder(BorrowApply borrowApply) {
 		List<OrderForm<OrderBorrow>> list = findAllByFromUserCodeAndBookCodeAndToUserCodeAndOrderStatus(borrowApply.getFromUserCode(), borrowApply.getBookCode(), borrowApply.getToUserCode(), OrderFormConstant.ORDER_STATUS_START);
-		if (null == list || list.isEmpty()) {
-			// 创建订单
-			orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
-			orderForm.setOrder(convert(borrowApply));
-			orderForm.getDetails().add(new OrderFormDetail(OrderFormConstant.ORDER_DETAIL_TYPE_START_BORROW_APPLICATION, OrderFormConstant.ORDER_DETAIL_STATUS_AGREE, borrowApply.getRemark()));
-			// 保存订单
-			save(orderForm, e -> orderBorrowService.save(convert(e)));
-			// 发送消息
-			sendBookLendingReminder(orderForm);
-		} else {
+		// 同一本书只能发起一次借书请求
+		if (null != list && !list.isEmpty()) {
 			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getFromUserCode(), borrowApply.getBookCode(), borrowApply.getToUserCode()});
 		}
-		return orderForm;
 	}
 
 	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
