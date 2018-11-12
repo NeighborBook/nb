@@ -193,15 +193,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
 		// 订单
 		OrderForm<OrderBorrow> orderForm = findOrderBorrowByOrderCodeAndCheck(orderFlow.getOrderCode());
-
 		// 订单明细类型
 		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
 				new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()}));
-
 		// 订单明细状态
 		OrderDetailStatusConstant orderDetailStatusConstant = checkIfNullThrowException(OrderDetailStatusConstant.findOneByKey(orderFlow.getOrderDetailStatus()),
 				new BusinessException(OrderFormCode.OF0006, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailStatus()}));
-
 		// 发送用户
 		String userCode = null;
 		if (OrderFormConstant.SEND_TO_OWNER.equalsIgnoreCase(orderDetailTypeBorrowConstant.getSendTo())) {
@@ -213,13 +210,18 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 			throw new BusinessException(OrderFormCode.OF0007, new Object[]{orderFlow.getOrderCode()});
 		}
 		// 保存订单明细
-		save(orderFlow.getOrderCode(), new OrderFormDetail(orderDetailTypeBorrowConstant.getKey(), orderDetailStatusConstant.getKey(), orderFlow.getRemark()));
+		OrderFormDetail detail = new OrderFormDetail(orderDetailTypeBorrowConstant.getKey(), orderDetailStatusConstant.getKey(), orderFlow.getRemark());
+		save(orderFlow.getOrderCode(), detail);
+		orderForm.getDetails().add(detail);
 		// 订单状态
 		String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
 		// 借书流程
 		switch (OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType())) {
 			// 确认借书申请
 			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+					// TODO
+				}
 				break;
 		}
 		// 发送消息
