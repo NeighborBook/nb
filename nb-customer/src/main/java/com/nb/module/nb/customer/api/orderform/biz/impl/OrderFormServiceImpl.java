@@ -8,6 +8,8 @@ import com.nb.module.nb.customer.api.orderform.domain.OrderBorrow;
 import com.nb.module.nb.customer.api.orderform.domain.OrderForm;
 import com.nb.module.nb.customer.api.orderform.domain.OrderFormDetail;
 import com.nb.module.nb.customer.api.orderform.exception.OrderFormCode;
+import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
+import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.weixin.message.biz.IMessageService;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.nb.customer.base.orderborrow.biz.ITNBOrderBorrowService;
@@ -44,6 +46,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private IWeixinUserService weixinUserService;
 	@Autowired
 	private IBookService bookService;
+	@Autowired
+	private IUserBookService userBookService;
 
 	private OrderForm<OrderBorrow> convert(TNBOrderBorrow e) {
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
@@ -101,6 +105,18 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		consumer.accept(orderForm);
 	}
 
+	private void checkOrder(BorrowApply borrowApply) {
+		UserBook userBook = userBookService.findOneByUserCodeAndBookCode(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+		// 没有这本书
+		if (null == userBook) {
+			throw new BusinessException(OrderFormCode.OF0002, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode()});
+		}
+		// 这本书没有库存拉
+		if (userBook.getBookCount() <= userBook.getLentAmount()) {
+			throw new BusinessException(OrderFormCode.OF0003, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount()});
+		}
+	}
+
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<OrderForm<OrderBorrow>> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus) {
@@ -112,7 +128,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	public OrderForm<OrderBorrow> borrow(BorrowApply borrowApply) {
 		OrderForm<OrderBorrow> orderForm;
 		// 检查订单申请
-		checkOrder(borrowApply);
+		checkOrderBorrow(borrowApply);
 		// 创建订单
 		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
 		orderForm.setOrder(convert(borrowApply));
@@ -124,7 +140,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return orderForm;
 	}
 
-	private void checkOrder(BorrowApply borrowApply) {
+	private void checkOrderBorrow(BorrowApply borrowApply) {
+		checkOrder(borrowApply);
 		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
 		// 同一本书只能发起一次借书请求
 		if (null != list && !list.isEmpty()) {
