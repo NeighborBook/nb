@@ -3,10 +3,7 @@ package com.nb.module.nb.customer.api.orderform.biz.impl;
 import com.nb.module.nb.customer.api.book.biz.IBookService;
 import com.nb.module.nb.customer.api.orderform.biz.IOrderFormService;
 import com.nb.module.nb.customer.api.orderform.constant.OrderFormConstant;
-import com.nb.module.nb.customer.api.orderform.domain.BorrowApply;
-import com.nb.module.nb.customer.api.orderform.domain.OrderBorrow;
-import com.nb.module.nb.customer.api.orderform.domain.OrderForm;
-import com.nb.module.nb.customer.api.orderform.domain.OrderFormDetail;
+import com.nb.module.nb.customer.api.orderform.domain.*;
 import com.nb.module.nb.customer.api.orderform.exception.OrderFormCode;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
@@ -156,4 +153,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				orderForm.getOrder().getStartBorrowDate());
 	}
 
+	@Override
+	@Transactional
+	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
+		return null;
+	}
 }
