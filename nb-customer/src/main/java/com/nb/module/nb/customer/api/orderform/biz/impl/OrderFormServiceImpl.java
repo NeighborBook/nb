@@ -114,6 +114,24 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		}
 	}
 
+	private void checkOrderBorrow(BorrowApply borrowApply) {
+		checkOrder(borrowApply);
+		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
+		// 同一本书只能发起一次借书请求
+		if (null != list && !list.isEmpty()) {
+			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
+		}
+	}
+
+	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
+		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getOwnerUserCode()),
+				weixinUserService.findNicknameByCode(orderForm.getOrder().getBorrowerUserCode()),
+				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
+				orderForm.getOrder().getStartBorrowDate());
+	}
+
+	/*****************************************************************************************************************/
+
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<OrderForm<OrderBorrow>> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus) {
@@ -135,22 +153,6 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 发送消息
 		sendBookLendingReminder(orderForm);
 		return orderForm;
-	}
-
-	private void checkOrderBorrow(BorrowApply borrowApply) {
-		checkOrder(borrowApply);
-		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
-		// 同一本书只能发起一次借书请求
-		if (null != list && !list.isEmpty()) {
-			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
-		}
-	}
-
-	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
-		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getOwnerUserCode()),
-				weixinUserService.findNicknameByCode(orderForm.getOrder().getBorrowerUserCode()),
-				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
-				orderForm.getOrder().getStartBorrowDate());
 	}
 
 	@Override
