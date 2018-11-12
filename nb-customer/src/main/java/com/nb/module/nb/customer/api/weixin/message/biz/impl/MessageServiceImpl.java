@@ -38,7 +38,6 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 		WeixinMessageTemplateResult result = weixinMessageService.templateSend(accessToken.getAccessToken(), template);
 	}
 
-
 	@Override
 	public void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate) {
 		WeixinMessageTemplateDataMap data = provider.prepareBorrowData("有人向您提出借书申请！", fromUserName, bookName, YYYYMMDD.format(startBorrowDate), "感谢您的分享！请点击进入详情页确认!");

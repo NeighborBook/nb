@@ -2,6 +2,8 @@ package com.nb.module.nb.customer.api.orderform.biz.impl;
 
 import com.nb.module.nb.customer.api.book.biz.IBookService;
 import com.nb.module.nb.customer.api.orderform.biz.IOrderFormService;
+import com.nb.module.nb.customer.api.orderform.constant.OrderDetailStatusConstant;
+import com.nb.module.nb.customer.api.orderform.constant.OrderDetailTypeBorrowConstant;
 import com.nb.module.nb.customer.api.orderform.constant.OrderFormConstant;
 import com.nb.module.nb.customer.api.orderform.domain.*;
 import com.nb.module.nb.customer.api.orderform.exception.OrderFormCode;
@@ -17,6 +19,7 @@ import com.nb.module.nb.customer.base.orderformdetail.biz.ITNBOrderFormDetailSer
 import com.nb.module.nb.customer.base.orderformdetail.domain.TNBOrderFormDetail;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -135,6 +138,13 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				orderForm.getOrder().getStartBorrowDate());
 	}
 
+	private void sendBookLendingStatusReminder(OrderForm<OrderBorrow> orderForm, String userCode, String status) {
+		weixinMessageService.sendBookLendingStatusReminder(weixinUserService.findOpenidByCode(userCode),
+				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
+				status,
+				new Date());
+	}
+
 	/*****************************************************************************************************************/
 
 	@Override
@@ -158,7 +168,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 创建订单
 		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
 		orderForm.setOrder(convert(borrowApply));
-		orderForm.getDetails().add(new OrderFormDetail(OrderFormConstant.ORDER_DETAIL_TYPE_START_BORROW_APPLICATION, OrderFormConstant.ORDER_DETAIL_STATUS_AGREE, borrowApply.getRemark()));
+		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW_START_BORROW_APPLICATION.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 发送消息
@@ -169,20 +179,38 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Override
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
-		OrderForm<OrderBorrow> orderForm = findOrderBorrowByOrderCode(orderFlow.getOrderCode());
-		// 订单不存在
-		if (null == orderForm) {
-			throw new BusinessException(OrderFormCode.OF0004, new Object[]{orderFlow.getOrderCode()});
-		}
+		// 订单
+		OrderForm<OrderBorrow> orderForm = checkIfNullThrowException(findOrderBorrowByOrderCode(orderFlow.getOrderCode()),
+				new BusinessException(OrderFormCode.OF0004, new Object[]{orderFlow.getOrderCode()}));
 
-		// 借书流程
-		switch (orderFlow.getOrderDetailType()) {
-			// 确认借书申请
-			case OrderFormConstant.ORDER_DETAIL_TYPE_CONFIRM_BORROW_APPLICATION:
-				break;
-			default:
-				throw new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()});
+		// 订单明细类型
+		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
+				new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()}));
+
+		// 订单明细状态
+		OrderDetailStatusConstant orderDetailStatusConstant = checkIfNullThrowException(OrderDetailStatusConstant.findOneByKey(orderFlow.getOrderDetailStatus()),
+				new BusinessException(OrderFormCode.OF0006, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailStatus()}));
+
+		// 发送用户
+		String userCode = null;
+		if (OrderFormConstant.SEND_TO_OWNER.equalsIgnoreCase(orderDetailTypeBorrowConstant.getSendTo())) {
+			userCode = orderForm.getOrder().getOwnerUserCode();
+		} else if (OrderFormConstant.SEND_TO_BORROWER.equalsIgnoreCase(orderDetailTypeBorrowConstant.getSendTo())) {
+			userCode = orderForm.getOrder().getBorrowerUserCode();
 		}
+		if (StringUtils.isBlank(userCode)) {
+			throw new BusinessException(OrderFormCode.OF0007, new Object[]{orderFlow.getOrderCode()});
+		}
+		// 订单状态
+		String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
+		// 借书流程
+		switch (OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType())) {
+			// 确认借书申请
+			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
+				break;
+		}
+		// 发送消息
+		sendBookLendingStatusReminder(orderForm, userCode, status);
 		return orderForm;
 	}
 
