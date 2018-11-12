@@ -82,27 +82,29 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private <T> void save(OrderForm<T> orderForm, Consumer<OrderForm<T>> consumer) {
 		// 订单主体
-		TNBOrderForm orderFormPO = orderFormService.newInstance();
-		orderFormPO.setOrderType(orderForm.getOrderType());
-		orderFormPO.setOrderStatus(orderForm.getOrderStatus());
-		orderFormService.save(orderFormPO);
+		TNBOrderForm po = orderFormService.newInstance();
+		po.setOrderType(orderForm.getOrderType());
+		po.setOrderStatus(orderForm.getOrderStatus());
+		orderFormService.save(po);
 
-		orderForm.setCreated(orderFormPO.getCreated());
-		orderForm.setUpdated(orderFormPO.getUpdated());
-		orderForm.setCode(orderFormPO.getCode());
+		orderForm.setCreated(po.getCreated());
+		orderForm.setUpdated(po.getUpdated());
+		orderForm.setCode(po.getCode());
 		// 订单明细
-		orderForm.getDetails().forEach(e -> {
-			TNBOrderFormDetail detail = new TNBOrderFormDetail();
-			detail.setCode(orderFormPO.getCode());
-			detail.setOrderDetailType(e.getOrderDetailType());
-			detail.setOrderDetailStatus(e.getOrderDetailStatus());
-			detail.setRemark(e.getRemark());
-			orderFormDetailService.save(detail);
-
-			e.setCreated(detail.getCreated());
-		});
+		orderForm.getDetails().forEach(e -> save(po.getCode(), e));
 		// 订单
 		consumer.accept(orderForm);
+	}
+
+	private void save(String orderCode, OrderFormDetail orderFormDetail) {
+		TNBOrderFormDetail po = new TNBOrderFormDetail();
+		po.setCode(orderCode);
+		po.setOrderDetailType(orderFormDetail.getOrderDetailType());
+		po.setOrderDetailStatus(orderFormDetail.getOrderDetailStatus());
+		po.setRemark(orderFormDetail.getRemark());
+		orderFormDetailService.save(po);
+
+		orderFormDetail.setCreated(po.getCreated());
 	}
 
 	private void checkOrder(BorrowApply borrowApply) {
@@ -167,6 +169,20 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Override
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
-		return null;
+		OrderForm<OrderBorrow> orderForm = findOrderBorrowByOrderCode(orderFlow.getOrderCode());
+		// 订单不存在
+		if (null == orderForm) {
+			throw new BusinessException(OrderFormCode.OF0004, new Object[]{orderFlow.getOrderCode()});
+		}
+		// 借书流程
+		switch (orderFlow.getOrderDetailType()) {
+			// 确认借书申请
+			case OrderFormConstant.ORDER_DETAIL_TYPE_CONFIRM_BORROW_APPLICATION:
+				break;
+			default:
+				throw new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()});
+		}
+		return orderForm;
 	}
+
 }

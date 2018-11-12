@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 public class OrderFlow {
 
 	@NotBlank
-	private String code;
+	private String orderCode;
 
 	@NotNull
 	private Integer orderDetailType;
