@@ -48,9 +48,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private OrderForm<OrderBorrow> convert(TNBOrderBorrow e) {
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
-		OrderForm<OrderBorrow> orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
-		orderForm.setDetails(map(orderFormDetailService.findAllByCode(e.getOrderCode()), s -> new OrderFormDetail(s.getCreated(), s.getOrderDetailType(), s.getOrderDetailStatus(), s.getRemark())));
-		orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), s.getBookCode(), s.getBorrowerUserCode(), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
+		OrderForm<OrderBorrow> orderForm = null;
+		if (null != orderFormPO) {
+			orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
+			orderForm.setDetails(map(orderFormDetailService.findAllByCode(e.getOrderCode()), s -> new OrderFormDetail(s.getCreated(), s.getOrderDetailType(), s.getOrderDetailStatus(), s.getRemark())));
+			orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), s.getBookCode(), s.getBorrowerUserCode(), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
+		}
 		return orderForm;
 	}
 
@@ -131,6 +134,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	}
 
 	/*****************************************************************************************************************/
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public OrderForm<OrderBorrow> findOrderBorrowByOrderCode(String orderCode) {
+		return mapOneIfNotNull(orderBorrowService.findOneByOrderCode(orderCode), e -> convert(e));
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)

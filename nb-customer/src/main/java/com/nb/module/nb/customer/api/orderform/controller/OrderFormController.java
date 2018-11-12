@@ -11,10 +11,9 @@ import com.zjk.module.common.base.domain.JsonContainer;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
 
 @Validated
 @CreateApiDocs
@@ -24,6 +23,12 @@ public class OrderFormController extends BaseController {
 
 	@Autowired
 	private IOrderFormService service;
+
+	@ApiOperation(value = "借书详情", notes = "借书详情")
+	@RequestMapping(value = "/borrow/{orderCode}", method = RequestMethod.GET)
+	public JsonContainer<OrderForm<OrderBorrow>> findOrderBorrowByOrderCode(@RequestParam @NotBlank String orderCode) {
+		return setSuccessMessage(service.findOrderBorrowByOrderCode(orderCode));
+	}
 
 	@ApiOperation(value = "借书", notes = "借书")
 	@RequestMapping(value = "/borrow", method = RequestMethod.POST)
