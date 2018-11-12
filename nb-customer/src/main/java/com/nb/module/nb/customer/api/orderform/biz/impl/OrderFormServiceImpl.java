@@ -49,6 +49,18 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Autowired
 	private IUserBookService userBookService;
 
+	private OrderForm<OrderBorrow> findOrderBorrowByOrderCodeAndCheck(String orderCode) {
+		OrderForm<OrderBorrow> orderForm = checkIfNullThrowException(findOrderBorrowByOrderCode(orderCode),
+				new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
+		switch (orderForm.getOrderStatus()) {
+			case OrderFormConstant.ORDER_STATUS_CANCEL:
+				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderCode});
+			case OrderFormConstant.ORDER_STATUS_END:
+				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderCode});
+		}
+		return orderForm;
+	}
+
 	private OrderForm<OrderBorrow> convert(TNBOrderBorrow e) {
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
 		OrderForm<OrderBorrow> orderForm = null;
@@ -180,8 +192,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
 		// 订单
-		OrderForm<OrderBorrow> orderForm = checkIfNullThrowException(findOrderBorrowByOrderCode(orderFlow.getOrderCode()),
-				new BusinessException(OrderFormCode.OF0004, new Object[]{orderFlow.getOrderCode()}));
+		OrderForm<OrderBorrow> orderForm = findOrderBorrowByOrderCodeAndCheck(orderFlow.getOrderCode());
 
 		// 订单明细类型
 		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
@@ -201,6 +212,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		if (StringUtils.isBlank(userCode)) {
 			throw new BusinessException(OrderFormCode.OF0007, new Object[]{orderFlow.getOrderCode()});
 		}
+		// 保存订单明细
+		save(orderFlow.getOrderCode(), new OrderFormDetail(orderDetailTypeBorrowConstant.getKey(), orderDetailStatusConstant.getKey(), orderFlow.getRemark()));
 		// 订单状态
 		String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
 		// 借书流程

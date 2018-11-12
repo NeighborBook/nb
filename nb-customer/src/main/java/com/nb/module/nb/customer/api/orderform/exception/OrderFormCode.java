@@ -12,7 +12,9 @@ public enum OrderFormCode implements IBusinessCode {
 	OF0004("OF0004", "订单不存在。orderCode:{0}", "订单不存在"),
 	OF0005("OF0005", "订单明细类型不存在。orderCode:{0}, orderDetailType:{1}", "订单明细类型不存在"),
 	OF0006("OF0006", "订单明细状态不存在。orderCode:{0}, orderDetailStatus:{1}", "订单明细状态不存在"),
-	OF0007("OF0007", "找不到信息发送人。orderCode:{0}", "找不到信息发送人");
+	OF0007("OF0007", "找不到信息发送人。orderCode:{0}", "找不到信息发送人"),
+	OF0008("OF0008", "订单已经取消。orderCode:{0}", "订单已经取消"),
+	OF0009("OF0009", "订单已经结束。orderCode:{0}", "订单已经结束");
 
 	private String clazz;
 
