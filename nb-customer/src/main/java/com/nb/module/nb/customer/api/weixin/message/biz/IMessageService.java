@@ -11,4 +11,6 @@ public interface IMessageService {
 
 	void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate);
 
+	void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date);
+
 }

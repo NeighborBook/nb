@@ -174,6 +174,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		if (null == orderForm) {
 			throw new BusinessException(OrderFormCode.OF0004, new Object[]{orderFlow.getOrderCode()});
 		}
+
 		// 借书流程
 		switch (orderFlow.getOrderDetailType()) {
 			// 确认借书申请

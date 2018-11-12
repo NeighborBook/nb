@@ -4,8 +4,9 @@ import com.nb.module.nb.customer.api.weixin.message.biz.IMessageService;
 import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
 import com.nb.module.partner.weixin.client.api.message.biz.IWeixinMessageService;
 import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplate;
-import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplateData;
+import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplateDataMap;
 import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTemplateResult;
+import com.nb.module.partner.weixin.client.api.message.provider.WeixinMessageTemplateProvider;
 import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class MessageServiceImpl extends CommonServiceImpl implements IMessageService {
+
+	@Autowired
+	private WeixinMessageTemplateProvider provider;
 
 	@Autowired
 	private IWeixinMessageService weixinMessageService;
@@ -25,7 +27,9 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 	private ITokenService tokenService;
 
 	public static final String BOOK_LENDING_REMINDER_TEMPLATE_ID = "-LGNf9vuHBh7qksNK5PtommL9bjDkEYMsD6eiOIquPw";
-	public static final String COLOR_173177 = "#173177";
+	public static final String BOOK_LENDING_STATUS_REMINDER_TEMPLATE_ID = "RGHNpgGk5LwDLeGHh25iSuCNGdOm2fcoCl9-Wt_gLdA";
+
+
 	public static final SimpleDateFormat YYYYMMDD = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
@@ -34,21 +38,16 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 		WeixinMessageTemplateResult result = weixinMessageService.templateSend(accessToken.getAccessToken(), template);
 	}
 
+
 	@Override
 	public void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate) {
-		WeixinMessageTemplate template = new WeixinMessageTemplate();
-		template.setTouser(toUserOpenid);
-		template.setTemplate_id(BOOK_LENDING_REMINDER_TEMPLATE_ID);
-		template.setUrl("http://upload.neighborbook.com.cn/");
+		WeixinMessageTemplateDataMap data = provider.prepareBorrowData("有人向您提出借书申请！", fromUserName, bookName, YYYYMMDD.format(startBorrowDate), "感谢您的分享！请点击进入详情页确认!");
+		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/", data));
+	}
 
-		Map<String, WeixinMessageTemplateData> data = new HashMap<>();
-		data.put("first", new WeixinMessageTemplateData("有人向您提出借书申请！", COLOR_173177));
-		data.put("keyword1", new WeixinMessageTemplateData(fromUserName, COLOR_173177));
-		data.put("keyword2", new WeixinMessageTemplateData(bookName, COLOR_173177));
-		data.put("keyword3", new WeixinMessageTemplateData(YYYYMMDD.format(startBorrowDate), COLOR_173177));
-		data.put("remark", new WeixinMessageTemplateData("感谢您的分享！请点击进入详情页确认!", COLOR_173177));
-		template.setData(data);
-
-		templateSend(template);
+	@Override
+	public void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date) {
+		WeixinMessageTemplateDataMap data = provider.prepareBorrowData("您的图书有了新的动态！", bookName, status, YYYYMMDD.format(date), "请点击进入详情页处理!");
+		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_STATUS_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/", data));
 	}
 }
