@@ -248,7 +248,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		save(orderFlow.getOrderCode(), detail);
 		orderForm.getDetails().add(detail);
 		// 订单状态
-		String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
+		// String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
+		String status = orderDetailTypeBorrowConstant.getValue();
 		// 借书流程
 		switch (orderDetailTypeBorrowConstant) {
 			// 确认借书申请
