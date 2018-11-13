@@ -25,11 +25,13 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	@Override
 	public User findOneByCode(String userCode) {
 		User user = userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN);
-		user.setMobile(StringUtils.EMPTY);
-		user.setEmail(StringUtils.EMPTY);
-		user.setPassword(StringUtils.EMPTY);
-		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
-		map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
+		if (null != user) {
+			user.setMobile(StringUtils.EMPTY);
+			user.setEmail(StringUtils.EMPTY);
+			user.setPassword(StringUtils.EMPTY);
+			LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
+			map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
+		}
 		return user;
 	}
 

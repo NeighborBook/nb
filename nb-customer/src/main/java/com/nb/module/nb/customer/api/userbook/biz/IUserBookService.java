@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.userbook.biz;
 
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,4 +33,7 @@ public interface IUserBookService {
 	Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable);
 
 	Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
+
+	Page<UserBookUserInfo> findAllUserInfoByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable);
+
 }

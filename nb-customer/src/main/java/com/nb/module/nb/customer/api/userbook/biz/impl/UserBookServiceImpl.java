@@ -5,6 +5,8 @@ import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
+import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.nb.customer.base.userbook.biz.ITNBUserBookService;
 import com.nb.module.nb.customer.base.userbook.domain.TNBUserBook;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
@@ -24,6 +26,8 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	private ITNBUserBookService userBookService;
 	@Autowired
 	private IBookService bookService;
+	@Autowired
+	private IWeixinUserService weixinUserService;
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
@@ -73,5 +77,12 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	public Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable) {
 		return bookService.findAllBySearchAndUserCode(search, userCode, pageable)
 				.map(e -> mapOneIfNotNull(userBookService.findOneByUserCodeAndBookCode(userCode, e.getCode()), s -> new UserBookMinInfo(s.getUserCode(), e, s.getBookCount(), s.getSharable(), s.getLentAmount())));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<UserBookUserInfo> findAllUserInfoByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable) {
+		return findAllByBookCodeAndSharable(bookCode, sharable, pageable)
+				.map(e -> new UserBookUserInfo(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCode(), e.getBookCount(), e.getSharable(), e.getLentAmount()));
 	}
 }

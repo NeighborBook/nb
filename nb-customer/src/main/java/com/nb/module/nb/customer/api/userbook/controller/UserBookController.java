@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.userbook.controller;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
@@ -48,7 +49,14 @@ public class UserBookController extends BaseController {
 
 	@ApiOperation(value = "通过搜索框和用户编号分页查询", notes = "通过搜索框和用户编号分页查询")
 	@RequestMapping(value = "/findAllBySearchAndUserCode", method = RequestMethod.POST)
-	public JsonContainer<Page<UserBookMinInfo>> findAllBySearchAndUserCode(@RequestParam @NotNull String search, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
+	public JsonContainer<Page<UserBookMinInfo>> findAllBySearchAndUserCode(@RequestParam @NotBlank String search, @RequestParam @NotBlank String userCode, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllBySearchAndUserCode(search, userCode, pageable));
 	}
+
+	@ApiOperation(value = "通过书本编号查询拥有数用户列表", notes = "通过书本编号查询拥有数用户列表")
+	@RequestMapping(value = "/findAllUserInfoByBookCodeAndSharable", method = RequestMethod.POST)
+	public JsonContainer<Page<UserBookUserInfo>> findAllUserInfoByBookCodeAndSharable(@RequestParam @NotBlank String bookCode, @RequestParam @NotNull Integer sharable, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllUserInfoByBookCodeAndSharable(bookCode, sharable, pageable));
+	}
+
 }
