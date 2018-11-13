@@ -49,14 +49,13 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Autowired
 	private IUserBookService userBookService;
 
-	private OrderForm<OrderBorrow> findOrderBorrowByOrderCodeAndCheck(String orderCode) {
-		OrderForm<OrderBorrow> orderForm = checkIfNullThrowException(findOrderBorrowByOrderCode(orderCode),
-				new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
+	private <T> OrderForm<T> checkOrderForm(OrderForm<T> orderForm) {
+		checkIfNullThrowException(orderForm, new BusinessException(OrderFormCode.OF0004, new Object[]{orderForm.getCode()}));
 		switch (orderForm.getOrderStatus()) {
 			case OrderFormConstant.ORDER_STATUS_CANCEL:
-				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderCode});
+				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderForm.getCode()});
 			case OrderFormConstant.ORDER_STATUS_END:
-				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderCode});
+				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderForm.getCode()});
 		}
 		return orderForm;
 	}
@@ -192,7 +191,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
 		// 订单
-		OrderForm<OrderBorrow> orderForm = findOrderBorrowByOrderCodeAndCheck(orderFlow.getOrderCode());
+		OrderForm<OrderBorrow> orderForm = checkOrderForm(findOrderBorrowByOrderCode(orderFlow.getOrderCode()));
 		// 订单明细类型
 		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
 				new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()}));
@@ -216,7 +215,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 订单状态
 		String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
 		// 借书流程
-		switch (OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType())) {
+		switch (orderDetailTypeBorrowConstant) {
 			// 确认借书申请
 			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
