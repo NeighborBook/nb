@@ -51,6 +51,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 			vo.setSharable(UserBookConstant.SHARABLE);
 		}
 		po.setSharable(vo.getSharable());
+		po.setLentAmount(vo.getLentAmount());
 		userBookService.save(po);
 	}
 

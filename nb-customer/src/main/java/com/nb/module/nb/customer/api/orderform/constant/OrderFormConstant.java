@@ -13,6 +13,13 @@ public class OrderFormConstant {
 	public static final String SEND_TO_BORROWER = "borrower";
 
 	/****************************************************************************/
+	// ORDER_OPERATE
+
+	public static final String ORDER_OPERATE_LOCK = "lock";
+
+	public static final String ORDER_OPERATE_UNLOCK = "unlock";
+
+	/****************************************************************************/
 	// ORDER_TYPE
 
 	/**
@@ -37,6 +44,5 @@ public class OrderFormConstant {
 	 * 订单结束
 	 */
 	public static final int ORDER_STATUS_END = 2;
-
 
 }

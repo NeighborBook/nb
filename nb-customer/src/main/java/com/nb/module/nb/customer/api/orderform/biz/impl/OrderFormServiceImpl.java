@@ -64,31 +64,35 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private <T> OrderForm<T> checkOrderForm(String orderCode, Function<String, OrderForm<T>> function) {
 		OrderForm<T> orderForm = checkIfNullThrowException(function.apply(orderCode), new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
 		switch (orderForm.getOrderStatus()) {
+			// 订单取消
 			case OrderFormConstant.ORDER_STATUS_CANCEL:
 				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderCode});
+				// 订单结束
 			case OrderFormConstant.ORDER_STATUS_END:
 				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderCode});
 		}
+		// 订单内容不存在
 		if (null == orderForm.getOrder()) {
 			throw new BusinessException(OrderFormCode.OF0010, new Object[]{orderCode});
 		}
 		return orderForm;
 	}
 
-	private void checkOrder(BorrowApply borrowApply) {
-		UserBook userBook = userBookService.findOneByUserCodeAndBookCode(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+	private UserBook checkUserBook(String userCode, String bookCode) {
+		UserBook userBook = userBookService.findOneByUserCodeAndBookCode(userCode, bookCode);
 		// 没有这本书
 		if (null == userBook) {
-			throw new BusinessException(OrderFormCode.OF0002, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode()});
+			throw new BusinessException(OrderFormCode.OF0002, new Object[]{userCode, bookCode});
 		}
+		return userBook;
+	}
+
+	private void checkOrderBorrow(BorrowApply borrowApply) {
+		UserBook userBook = checkUserBook(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
 		// 这本书没有库存拉
 		if (userBook.getBookCount() <= userBook.getLentAmount()) {
 			throw new BusinessException(OrderFormCode.OF0003, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount()});
 		}
-	}
-
-	private void checkOrderBorrow(BorrowApply borrowApply) {
-		checkOrder(borrowApply);
 		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
 		// 同一本书只能发起一次借书请求
 		if (null != list && !list.isEmpty()) {
@@ -175,6 +179,19 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		}
 	}
 
+	private void updateUserBook(OrderForm<OrderBorrow> orderForm, String operate) {
+		UserBook userBook = checkUserBook(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode());
+		// 锁定库存
+		if (OrderFormConstant.ORDER_OPERATE_LOCK.equals(operate)) {
+			userBook.setLentAmount(userBook.getLentAmount() + orderForm.getOrder().getBookCount());
+		}
+		// 释放库存
+		else if (OrderFormConstant.ORDER_OPERATE_UNLOCK.equals(operate)) {
+			userBook.setLentAmount(userBook.getLentAmount() - orderForm.getOrder().getBookCount());
+		}
+		userBookService.save(userBook);
+	}
+
 	/**************************************************************************************************************************************************************/
 
 	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
@@ -254,8 +271,13 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		switch (orderDetailTypeBorrowConstant) {
 			// 确认借书申请
 			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
+				// 同意
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
+					// 锁定库存
+					updateUserBook(orderForm, OrderFormConstant.ORDER_OPERATE_LOCK);
+				}
 				// 不同意
-				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					updateOrderForm(orderForm);
@@ -276,9 +298,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderForm(orderForm);
 				}
 				break;
+			//上家确认还书
 			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RETURN:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
+					// 释放库存
+					updateUserBook(orderForm, OrderFormConstant.ORDER_OPERATE_UNLOCK);
 					// 更新实际归还日期
 					orderForm.getOrder().setActualReturnDate(new Date());
 					updateOrderBorrow(orderForm);
