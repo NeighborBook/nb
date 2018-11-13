@@ -51,6 +51,15 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	/**************************************************************************************************************************************************************/
 
+	private Date addWeek(Date date, Integer amount) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.WEEK_OF_YEAR, amount);
+		return calendar.getTime();
+	}
+
+	/**************************************************************************************************************************************************************/
+
 	private <T> OrderForm<T> checkOrderForm(OrderForm<T> orderForm) {
 		checkIfNullThrowException(orderForm, new BusinessException(OrderFormCode.OF0004, new Object[]{orderForm.getCode()}));
 		switch (orderForm.getOrderStatus()) {
@@ -58,6 +67,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderForm.getCode()});
 			case OrderFormConstant.ORDER_STATUS_END:
 				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderForm.getCode()});
+		}
+		if (null == orderForm.getOrder()) {
+			throw new BusinessException(OrderFormCode.OF0010, new Object[]{orderForm.getCode()});
 		}
 		return orderForm;
 	}
@@ -97,10 +109,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	}
 
 	private OrderBorrow convert(BorrowApply borrowApply) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(borrowApply.getStartBorrowDate());
-		calendar.add(Calendar.WEEK_OF_YEAR, 1);
-		Date initialReturnDate = calendar.getTime();
+		Date initialReturnDate = addWeek(borrowApply.getStartBorrowDate(), 1);
 		return new OrderBorrow(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
 	}
 
@@ -148,11 +157,20 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		orderFormDetail.setCreated(po.getCreated());
 	}
 
-	private void updateOrderStatus(String orderCode, Integer orderStatus) {
-		TNBOrderForm po = orderFormService.findOneByCode(orderCode);
+	private <T> void updateOrderForm(OrderForm<T> orderForm) {
+		TNBOrderForm po = orderFormService.findOneByCode(orderForm.getCode());
 		if (null != po) {
-			po.setOrderStatus(orderStatus);
+			po.setOrderStatus(orderForm.getOrderStatus());
 			orderFormService.save(po);
+		}
+	}
+
+	private void updateOrderBorrow(OrderForm<OrderBorrow> orderForm) {
+		TNBOrderBorrow po = orderBorrowService.findOneByOrderCode(orderForm.getCode());
+		if (null != po) {
+			po.setExpectedReturnDate(orderForm.getOrder().getExpectedReturnDate());
+			po.setActualReturnDate(orderForm.getOrder().getActualReturnDate());
+			orderBorrowService.save(po);
 		}
 	}
 
@@ -237,15 +255,23 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				// 不同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 					// 订单结束
-					updateOrderStatus(orderForm.getCode(), OrderFormConstant.ORDER_STATUS_END);
+					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+					updateOrderForm(orderForm);
 				}
 				break;
 			// 上家确认续借
 			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RENEW:
+				// 同意
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
+					// 更新预计归还日期
+					orderForm.getOrder().setExpectedReturnDate(addWeek(orderForm.getOrder().getExpectedReturnDate(), 1));
+					updateOrderBorrow(orderForm);
+				}
 				// 不同意
-				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 					// 订单结束
-					updateOrderStatus(orderForm.getCode(), OrderFormConstant.ORDER_STATUS_END);
+					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+					updateOrderForm(orderForm);
 				}
 				break;
 		}
