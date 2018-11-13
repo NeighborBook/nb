@@ -274,6 +274,17 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderForm(orderForm);
 				}
 				break;
+			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RETURN:
+				// 同意
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
+					// 更新实际归还日期
+					orderForm.getOrder().setActualReturnDate(new Date());
+					updateOrderBorrow(orderForm);
+					// 订单结束
+					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+					updateOrderForm(orderForm);
+				}
+				break;
 		}
 		// 发送消息
 		sendBookLendingStatusReminder(orderForm, userCode, status);
