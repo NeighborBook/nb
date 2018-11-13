@@ -49,6 +49,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Autowired
 	private IUserBookService userBookService;
 
+	/**************************************************************************************************************************************************************/
+
 	private <T> OrderForm<T> checkOrderForm(OrderForm<T> orderForm) {
 		checkIfNullThrowException(orderForm, new BusinessException(OrderFormCode.OF0004, new Object[]{orderForm.getCode()}));
 		switch (orderForm.getOrderStatus()) {
@@ -59,6 +61,29 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		}
 		return orderForm;
 	}
+
+	private void checkOrder(BorrowApply borrowApply) {
+		UserBook userBook = userBookService.findOneByUserCodeAndBookCode(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+		// 没有这本书
+		if (null == userBook) {
+			throw new BusinessException(OrderFormCode.OF0002, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode()});
+		}
+		// 这本书没有库存拉
+		if (userBook.getBookCount() <= userBook.getLentAmount()) {
+			throw new BusinessException(OrderFormCode.OF0003, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount()});
+		}
+	}
+
+	private void checkOrderBorrow(BorrowApply borrowApply) {
+		checkOrder(borrowApply);
+		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
+		// 同一本书只能发起一次借书请求
+		if (null != list && !list.isEmpty()) {
+			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
+		}
+	}
+
+	/**************************************************************************************************************************************************************/
 
 	private OrderForm<OrderBorrow> convert(TNBOrderBorrow e) {
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
@@ -94,6 +119,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return po;
 	}
 
+	/**************************************************************************************************************************************************************/
+
 	private <T> void save(OrderForm<T> orderForm, Consumer<OrderForm<T>> consumer) {
 		// 订单主体
 		TNBOrderForm po = orderFormService.newInstance();
@@ -121,26 +148,15 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		orderFormDetail.setCreated(po.getCreated());
 	}
 
-	private void checkOrder(BorrowApply borrowApply) {
-		UserBook userBook = userBookService.findOneByUserCodeAndBookCode(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
-		// 没有这本书
-		if (null == userBook) {
-			throw new BusinessException(OrderFormCode.OF0002, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode()});
-		}
-		// 这本书没有库存拉
-		if (userBook.getBookCount() <= userBook.getLentAmount()) {
-			throw new BusinessException(OrderFormCode.OF0003, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount()});
+	private void updateOrderStatus(String orderCode, Integer orderStatus) {
+		TNBOrderForm po = orderFormService.findOneByCode(orderCode);
+		if (null != po) {
+			po.setOrderStatus(orderStatus);
+			orderFormService.save(po);
 		}
 	}
 
-	private void checkOrderBorrow(BorrowApply borrowApply) {
-		checkOrder(borrowApply);
-		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
-		// 同一本书只能发起一次借书请求
-		if (null != list && !list.isEmpty()) {
-			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
-		}
-	}
+	/**************************************************************************************************************************************************************/
 
 	private void sendBookLendingReminder(OrderForm<OrderBorrow> orderForm) {
 		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getOwnerUserCode()),
@@ -156,7 +172,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				new Date());
 	}
 
-	/*****************************************************************************************************************/
+	/**************************************************************************************************************************************************************/
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
@@ -218,8 +234,18 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		switch (orderDetailTypeBorrowConstant) {
 			// 确认借书申请
 			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
+				// 不同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
-					// TODO
+					// 订单结束
+					updateOrderStatus(orderForm.getCode(), OrderFormConstant.ORDER_STATUS_END);
+				}
+				break;
+			// 上家确认续借
+			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RENEW:
+				// 不同意
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+					// 订单结束
+					updateOrderStatus(orderForm.getCode(), OrderFormConstant.ORDER_STATUS_END);
 				}
 				break;
 		}
