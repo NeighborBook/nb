@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Service
 public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFormService {
@@ -60,16 +61,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	/**************************************************************************************************************************************************************/
 
-	private <T> OrderForm<T> checkOrderForm(OrderForm<T> orderForm) {
-		checkIfNullThrowException(orderForm, new BusinessException(OrderFormCode.OF0004, new Object[]{orderForm.getCode()}));
+	private <T> OrderForm<T> checkOrderForm(String orderCode, Function<String, OrderForm<T>> function) {
+		OrderForm<T> orderForm = checkIfNullThrowException(function.apply(orderCode), new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
 		switch (orderForm.getOrderStatus()) {
 			case OrderFormConstant.ORDER_STATUS_CANCEL:
-				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderForm.getCode()});
+				throw new BusinessException(OrderFormCode.OF0008, new Object[]{orderCode});
 			case OrderFormConstant.ORDER_STATUS_END:
-				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderForm.getCode()});
+				throw new BusinessException(OrderFormCode.OF0009, new Object[]{orderCode});
 		}
 		if (null == orderForm.getOrder()) {
-			throw new BusinessException(OrderFormCode.OF0010, new Object[]{orderForm.getCode()});
+			throw new BusinessException(OrderFormCode.OF0010, new Object[]{orderCode});
 		}
 		return orderForm;
 	}
@@ -225,7 +226,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
 		// 订单
-		OrderForm<OrderBorrow> orderForm = checkOrderForm(findOrderBorrowByOrderCode(orderFlow.getOrderCode()));
+		OrderForm<OrderBorrow> orderForm = checkOrderForm(orderFlow.getOrderCode(), e -> findOrderBorrowByOrderCode(e));
 		// 订单明细类型
 		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
 				new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()}));
