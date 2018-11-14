@@ -60,6 +60,12 @@
 			<artifactId>partner-aliyun-oss</artifactId>
 		</dependency>
 
+		<!-- partner bookschina client -->
+		<dependency>
+			<groupId>com.nb.module</groupId>
+			<artifactId>partner-bookschina-client</artifactId>
+		</dependency>
+
 		<!-- partner douban client -->
 		<dependency>
 			<groupId>com.nb.module</groupId>
