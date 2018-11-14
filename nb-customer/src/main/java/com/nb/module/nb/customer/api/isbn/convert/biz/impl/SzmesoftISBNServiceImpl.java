@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-@Order(2)
+@Order(3)
 public class SzmesoftISBNServiceImpl extends CommonServiceImpl implements IBookConvertService {
 
 	@Autowired

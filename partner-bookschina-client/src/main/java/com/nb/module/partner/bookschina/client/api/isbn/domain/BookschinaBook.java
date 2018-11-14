@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class BookschinaBook {
 
+	private String BOOK_ID;
+
 	private String BOOK_NAME;
 
 	private String BOOK_ISBN_INT;
