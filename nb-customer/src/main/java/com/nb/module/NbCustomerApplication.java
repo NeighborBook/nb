@@ -1,6 +1,7 @@
 package com.nb.module;
 
 import com.nb.module.partner.aliyun.annotation.EnableAliyunConfiguration;
+import com.nb.module.partner.bookschina.client.annotation.EnableBookschinaClientConfiguration;
 import com.nb.module.partner.douban.client.annotation.EnableDoubanClientConfiguration;
 import com.nb.module.partner.szmesoft.client.annotation.EnableSzmesoftClientConfiguration;
 import com.nb.module.partner.weixin.client.annotation.EnableWeixinClientConfiguration;
@@ -18,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCommonAuthorizationClientConfiguration
 @EnableAliyunConfiguration
 @EnableDoubanClientConfiguration
+@EnableBookschinaClientConfiguration
 @EnableSzmesoftClientConfiguration
 @EnableWeixinClientConfiguration
 @EnableCommonDataConfiguration
