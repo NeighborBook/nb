@@ -4,16 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.nb.module.nb.customer.api.book.domain.Author;
 import com.nb.module.nb.customer.api.book.domain.Book;
 import com.nb.module.nb.customer.api.isbn.convert.biz.IBookConvertService;
+import com.nb.module.nb.customer.api.isbn.convert.constant.BookConvertConstant;
 import com.nb.module.nb.customer.api.isbn.convert.exception.BookConvertCode;
+import com.nb.module.partner.aliyun.oss.biz.IUploadService;
+import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.nb.module.partner.bookschina.client.api.isbn.client.IBookschinaISBNClient;
 import com.nb.module.partner.bookschina.client.api.isbn.domain.BookschinaBook;
 import com.nb.module.partner.bookschina.client.api.isbn.domain.BookschinaResult;
+import com.zjk.module.common.base.adaptor.feign.impl.FeignAdaptorProvider;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +32,12 @@ public class BookschinaISBNServiclImpl extends CommonServiceImpl implements IBoo
 
 	@Autowired
 	private IBookschinaISBNClient client;
+	@Autowired
+	private IPathService pathService;
+	@Autowired
+	private IUploadService uploadService;
+	@Autowired
+	private FeignAdaptorProvider provider;
 
 	public static final String BOOKSCHINA = "bookschina";
 
@@ -51,11 +63,20 @@ public class BookschinaISBNServiclImpl extends CommonServiceImpl implements IBoo
 
 	private Book convert(BookschinaBook book) {
 		return mapOneIfNotNull(book, e -> {
+			String path = e.getBOOK_COVER();
+			if (StringUtils.isNotBlank(path) && !path.startsWith("http")) {
+				path = "http://www.bookschina.com" + path;
+			}
 			// 书
-			Book tmp = new Book(null, null, e.getPUBLISH_DATE(), null, e.getBOOK_COVER(), null, null, null,
+			Book tmp = new Book(null, null, e.getPUBLISH_DATE(), null, path, null, null, null,
 					null, e.getBOOK_ID(), e.getPUBLISH_NAME(), null, e.getBOOK_ISBN_INT(), e.getBOOK_NAME(), null, null, null,
 					null, e.getBOOK_PRICE(), BOOKSCHINA);
-
+			// 上传图片
+			try {
+				tmp.setImage(uploadImage(path));
+			} catch (Exception ex) {
+				log.warn(BookConvertConstant.UPLOAD_IMAGE_FAILURE + path, ex);
+			}
 			// 作者
 			List<Author> authors = new ArrayList<>();
 			authors.add(new Author(e.getAUTHOR_NAME()));
@@ -67,4 +88,12 @@ public class BookschinaISBNServiclImpl extends CommonServiceImpl implements IBoo
 			return tmp;
 		});
 	}
+
+	@SneakyThrows
+	private String uploadImage(String path) {
+		String filename = pathService.getFilename(path);
+		ResponseEntity<byte[]> result = provider.getBytes(path);
+		return uploadService.uploadByte(result.getBody(), filename);
+	}
+
 }
