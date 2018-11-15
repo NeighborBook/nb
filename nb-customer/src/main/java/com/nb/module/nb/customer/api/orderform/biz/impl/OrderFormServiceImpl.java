@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -213,24 +214,35 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	/**************************************************************************************************************************************************************/
 
+	private OrderForm<OrderBorrow> processWhenFindAllOrderBorrow(OrderForm<OrderBorrow> orderForm) {
+		// 订单明细取最后一个环节
+		if (null != orderForm.getDetails() && !orderForm.getDetails().isEmpty()) {
+			OrderFormDetail currentDetail = orderForm.getDetails().get(orderForm.getDetails().size() - 1);
+			List<OrderFormDetail> details = new ArrayList<>();
+			details.add(currentDetail);
+			orderForm.setDetails(details);
+		}
+		// 不要userBooks
+		BookMinInfo bookMinInfo = new BookMinInfo(bookService.findOneByCode(orderForm.getOrder().getBookCode()));
+		bookMinInfo.setUserBooks(null);
+		orderForm.getOrder().setBookMinInfo(bookMinInfo);
+		return orderForm;
+	}
+
+	/**************************************************************************************************************************************************************/
+
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<OrderForm<OrderBorrow>> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable) {
 		return orderBorrowService.findAllByOwnerUserCode(ownerUserCode, pageable)
-				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> {
-					s.getOrder().setBookMinInfo(new BookMinInfo(bookService.findOneByCode(s.getOrder().getBookCode())));
-					return s;
-				}));
+				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<OrderForm<OrderBorrow>> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable) {
 		return orderBorrowService.findAllByBorrowerUserCode(borrowerUserCode, pageable)
-				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> {
-					s.getOrder().setBookMinInfo(new BookMinInfo(bookService.findOneByCode(s.getOrder().getBookCode())));
-					return s;
-				}));
+				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
 	}
 
 	@Override
