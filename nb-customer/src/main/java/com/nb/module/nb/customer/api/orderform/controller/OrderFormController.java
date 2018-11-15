@@ -10,6 +10,9 @@ import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +27,21 @@ public class OrderFormController extends BaseController {
 	@Autowired
 	private IOrderFormService service;
 
+	@ApiOperation(value = "owner列表", notes = "owner列表")
+	@RequestMapping(value = "/borrow/owner/{ownerUserCode}", method = RequestMethod.GET)
+	public JsonContainer<Page<OrderForm<OrderBorrow>>> findAllByOwnerUserCode(@PathVariable @NotBlank String ownerUserCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByOwnerUserCode(ownerUserCode, pageable));
+	}
+
+	@ApiOperation(value = "borrower列表", notes = "borrower列表")
+	@RequestMapping(value = "/borrow/borrower/{borrowerUserCode}", method = RequestMethod.GET)
+	public JsonContainer<Page<OrderForm<OrderBorrow>>> findAllByBorrowerUserCode(@PathVariable @NotBlank String borrowerUserCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByBorrowerUserCode(borrowerUserCode, pageable));
+	}
+
 	@ApiOperation(value = "借书详情", notes = "借书详情")
 	@RequestMapping(value = "/borrow/{orderCode}", method = RequestMethod.GET)
-	public JsonContainer<OrderForm<OrderBorrow>> findOrderBorrowByOrderCode(@RequestParam @NotBlank String orderCode) {
+	public JsonContainer<OrderForm<OrderBorrow>> findOrderBorrowByOrderCode(@PathVariable @NotBlank String orderCode) {
 		return setSuccessMessage(service.findOrderBorrowByOrderCode(orderCode));
 	}
 

@@ -4,10 +4,16 @@ import com.nb.module.nb.customer.api.orderform.domain.BorrowApply;
 import com.nb.module.nb.customer.api.orderform.domain.OrderBorrow;
 import com.nb.module.nb.customer.api.orderform.domain.OrderFlow;
 import com.nb.module.nb.customer.api.orderform.domain.OrderForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IOrderFormService {
+
+	Page<OrderForm<OrderBorrow>> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable);
+
+	Page<OrderForm<OrderBorrow>> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable);
 
 	OrderForm<OrderBorrow> findOrderBorrowByOrderCode(String orderCode);
 

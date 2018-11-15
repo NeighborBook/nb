@@ -5,6 +5,8 @@ import com.nb.module.nb.customer.base.orderborrow.domain.TNBOrderBorrow;
 import com.nb.module.nb.customer.base.orderborrow.repository.ITNBOrderBorrowRepository;
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,5 +29,17 @@ public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, I
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<TNBOrderBorrow> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus) {
 		return repository.findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(ownerUserCode, bookCode, borrowerUserCode, orderStatus);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBOrderBorrow> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable) {
+		return repository.findAllByOwnerUserCode(ownerUserCode, pageable);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBOrderBorrow> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable) {
+		return repository.findAllByBorrowerUserCode(borrowerUserCode, pageable);
 	}
 }

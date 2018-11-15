@@ -1,5 +1,6 @@
 package com.nb.module.nb.customer.api.orderform.domain;
 
+import com.nb.module.nb.customer.api.book.domain.BookMinInfo;
 import lombok.Data;
 
 import java.util.Date;
@@ -22,6 +23,8 @@ public class OrderBorrow {
 	private Date expectedReturnDate;
 
 	private Date actualReturnDate;
+
+	private BookMinInfo bookMinInfo;
 
 	public OrderBorrow(String ownerUserCode, String bookCode, String borrowerUserCode, Integer bookCount, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
 		this.ownerUserCode = ownerUserCode;
