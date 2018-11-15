@@ -40,6 +40,11 @@ public class SzmesoftISBNServiceImpl extends CommonServiceImpl implements IBookC
 	public static final String URL = "http://isbn.szmesoft.com/ISBN/GetBookPhoto?ID=";
 
 	@Override
+	public String source() {
+		return SZMESOFT;
+	}
+
+	@Override
 	public Book findOneByISBN(String isbn) {
 		SzmesoftBook book;
 		try {

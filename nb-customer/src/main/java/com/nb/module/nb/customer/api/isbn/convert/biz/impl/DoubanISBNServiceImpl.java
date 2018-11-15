@@ -1,7 +1,6 @@
 package com.nb.module.nb.customer.api.isbn.convert.biz.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.nb.module.nb.customer.api.book.biz.IBookService;
 import com.nb.module.nb.customer.api.book.domain.Author;
 import com.nb.module.nb.customer.api.book.domain.Book;
 import com.nb.module.nb.customer.api.book.domain.Translator;
@@ -30,9 +29,6 @@ import org.springframework.stereotype.Service;
 public class DoubanISBNServiceImpl extends CommonServiceImpl implements IBookConvertService {
 
 	@Autowired
-	private IBookService bookService;
-
-	@Autowired
 	private IDoubanISBNClient client;
 	@Autowired
 	private IDoubanImageClient imageClient;
@@ -42,6 +38,11 @@ public class DoubanISBNServiceImpl extends CommonServiceImpl implements IBookCon
 	private IPathService pathService;
 
 	public static final String DOUBAN = "douban";
+
+	@Override
+	public String source() {
+		return DOUBAN;
+	}
 
 	@Override
 	public Book findOneByISBN(String isbn) {

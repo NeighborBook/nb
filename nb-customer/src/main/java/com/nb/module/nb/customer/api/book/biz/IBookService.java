@@ -24,6 +24,8 @@ public interface IBookService {
 	 */
 	void save(Book vo);
 
+	void update(Book vo);
+
 	Page<BookMinInfo> findAll(Pageable pageable);
 
 	String generatePresignedUrl(String path);

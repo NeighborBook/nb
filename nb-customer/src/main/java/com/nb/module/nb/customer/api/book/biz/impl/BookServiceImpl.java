@@ -120,6 +120,18 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 	}
 
 	@Override
+	@Transactional
+	public void update(Book vo) {
+		// 书
+		TNBBook bookPO = bookService.findOneByCode(vo.getCode());
+		if (null != bookPO) {
+			bookPO.setImage(vo.getImage());
+
+			bookService.save(bookPO);
+		}
+	}
+
+	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<BookMinInfo> findAll(Pageable pageable) {
 		return bookService.findAll(pageable).map(e -> new BookMinInfo(convert(e)));

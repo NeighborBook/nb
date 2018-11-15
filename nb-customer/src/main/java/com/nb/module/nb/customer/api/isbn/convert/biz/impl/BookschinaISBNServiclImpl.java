@@ -30,6 +30,11 @@ public class BookschinaISBNServiclImpl extends CommonServiceImpl implements IBoo
 	public static final String BOOKSCHINA = "bookschina";
 
 	@Override
+	public String source() {
+		return BOOKSCHINA;
+	}
+
+	@Override
 	public Book findOneByISBN(String isbn) {
 		BookschinaResult bookschinaResult;
 		try {
