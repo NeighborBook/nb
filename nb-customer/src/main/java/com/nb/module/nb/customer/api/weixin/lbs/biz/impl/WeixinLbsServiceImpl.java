@@ -1,6 +1,6 @@
 package com.nb.module.nb.customer.api.weixin.lbs.biz.impl;
 
-import com.nb.module.nb.customer.api.weixin.lbs.biz.ILbsService;
+import com.nb.module.nb.customer.api.weixin.lbs.biz.WeixinILbsService;
 import com.nb.module.partner.weixin.lbs.client.api.suggestion.biz.IWeixinLbsSuggestionService;
 import com.nb.module.partner.weixin.lbs.client.api.suggestion.domain.SuggestResult;
 import com.nb.module.partner.weixin.lbs.client.holder.WeixinLbsHolder;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LbsServiceImpl extends CommonServiceImpl implements ILbsService {
+public class WeixinLbsServiceImpl extends CommonServiceImpl implements WeixinILbsService {
 
 	@Autowired
 	private WeixinLbsHolder holder;

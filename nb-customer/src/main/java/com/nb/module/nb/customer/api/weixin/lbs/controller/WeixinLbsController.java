@@ -1,6 +1,6 @@
 package com.nb.module.nb.customer.api.weixin.lbs.controller;
 
-import com.nb.module.nb.customer.api.weixin.lbs.biz.ILbsService;
+import com.nb.module.nb.customer.api.weixin.lbs.biz.WeixinILbsService;
 import com.nb.module.partner.weixin.lbs.client.api.suggestion.domain.SuggestResult;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CreateApiDocs
 @RestController
 @RequestMapping("/api/weixin/lbs")
-public class LbsController extends BaseController {
+public class WeixinLbsController extends BaseController {
 
 	@Autowired
-	private ILbsService service;
+	private WeixinILbsService service;
 
 	@ApiOperation(value = "获取地理位置", notes = "获取地理位置")
 	@RequestMapping(value = "/suggestion", method = RequestMethod.GET)
