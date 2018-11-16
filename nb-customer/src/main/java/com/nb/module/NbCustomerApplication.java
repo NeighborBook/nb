@@ -5,6 +5,7 @@ import com.nb.module.partner.bookschina.client.annotation.EnableBookschinaClient
 import com.nb.module.partner.douban.client.annotation.EnableDoubanClientConfiguration;
 import com.nb.module.partner.szmesoft.client.annotation.EnableSzmesoftClientConfiguration;
 import com.nb.module.partner.weixin.client.annotation.EnableWeixinClientConfiguration;
+import com.nb.module.partner.weixin.lbs.client.annotation.EnableWeixinLbsClientConfiguration;
 import com.zjk.module.common.authorization.client.annotation.EnableCommonAuthorizationClientConfiguration;
 import com.zjk.module.common.base.annotation.EnableRegisterRunner;
 import com.zjk.module.common.data.annotation.EnableCommonDataConfiguration;
@@ -26,6 +27,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCommonRedisConfiguration
 @EnableRegisterRunner
 @EnableScheduling
+@EnableWeixinLbsClientConfiguration
 public class NbCustomerApplication {
 
 	public static void main(String[] args) {
