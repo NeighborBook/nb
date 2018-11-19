@@ -18,4 +18,11 @@ public interface IWeixinLbsSuggestionClient {
 							 @RequestParam(value = "policy") String policy,
 							 @RequestParam(value = "key") String key);
 
+	@RequestMapping(value = "/suggestion", method = RequestMethod.GET)
+	SuggestResult suggestion(@RequestParam(value = "keyword") String keyword,
+							 @RequestParam(value = "region") String region,
+							 @RequestParam(value = "region_fix") String region_fix,
+							 @RequestParam(value = "policy") String policy,
+							 @RequestParam(value = "key") String key,
+							 @RequestParam(value = "sn") String sn);
 }

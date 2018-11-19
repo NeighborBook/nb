@@ -5,6 +5,6 @@ import com.nb.module.partner.weixin.lbs.client.api.suggestion.domain.SuggestResu
 
 public interface WeixinILbsService {
 
-	SuggestResult suggestion(String keyword, String key);
+	SuggestResult suggestion(String keyword, String region);
 
 }

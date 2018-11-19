@@ -17,7 +17,7 @@ public class WeixinLbsServiceImpl extends CommonServiceImpl implements WeixinILb
 	private IWeixinLbsSuggestionService weixinLbsSuggestionService;
 
 	@Override
-	public SuggestResult suggestion(String keyword, String key) {
-		return weixinLbsSuggestionService.suggestion(keyword, key, holder.getKey(), holder.getSecretkey());
+	public SuggestResult suggestion(String keyword, String region) {
+		return weixinLbsSuggestionService.suggestion(keyword, region, holder.getKey(), holder.getSecretkey());
 	}
 }

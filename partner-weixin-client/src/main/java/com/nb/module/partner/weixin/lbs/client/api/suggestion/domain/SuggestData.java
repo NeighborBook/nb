@@ -15,6 +15,8 @@ public class SuggestData {
 
 	private String city;
 
+	private String district;
+
 	private String adcode;
 
 	private Integer type;

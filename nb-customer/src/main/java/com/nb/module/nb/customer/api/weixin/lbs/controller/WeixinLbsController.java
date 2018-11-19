@@ -24,8 +24,8 @@ public class WeixinLbsController extends BaseController {
 
 	@ApiOperation(value = "获取地理位置", notes = "获取地理位置")
 	@RequestMapping(value = "/suggestion", method = RequestMethod.GET)
-	public JsonContainer<SuggestResult> suggestion(@RequestParam String keyword, @RequestParam String key) {
-		return setSuccessMessage(service.suggestion(keyword, key));
+	public JsonContainer<SuggestResult> suggestion(@RequestParam String keyword, @RequestParam String region) {
+		return setSuccessMessage(service.suggestion(keyword, region));
 	}
 
 }
