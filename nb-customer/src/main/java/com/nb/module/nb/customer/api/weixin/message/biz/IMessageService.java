@@ -9,8 +9,8 @@ public interface IMessageService {
 
 	void templateSend(WeixinMessageTemplate template);
 
-	void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate);
+	void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate, String orderCode);
 
-	void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date);
+	void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date, String orderCode);
 
 }

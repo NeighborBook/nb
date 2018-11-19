@@ -39,14 +39,14 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 	}
 
 	@Override
-	public void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate) {
+	public void sendBookLendingReminder(String toUserOpenid, String fromUserName, String bookName, Date startBorrowDate, String orderCode) {
 		WeixinMessageTemplateDataMap data = provider.prepareBorrowData("有人向您提出借书申请！", fromUserName, bookName, YYYYMMDD.format(startBorrowDate), "感谢您的分享！请点击进入详情页确认!");
-		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/", data));
+		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/order_detail.php?order=" + orderCode, data));
 	}
 
 	@Override
-	public void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date) {
+	public void sendBookLendingStatusReminder(String toUserOpenid, String bookName, String status, Date date, String orderCode) {
 		WeixinMessageTemplateDataMap data = provider.prepareBorrowData("您的图书有了新的动态！", bookName, status, YYYYMMDD.format(date), "请点击进入详情页处理!");
-		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_STATUS_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/", data));
+		templateSend(provider.prepareTemplate(toUserOpenid, BOOK_LENDING_STATUS_REMINDER_TEMPLATE_ID, "http://upload.neighborbook.com.cn/order_detail.php?order=" + orderCode, data));
 	}
 }
