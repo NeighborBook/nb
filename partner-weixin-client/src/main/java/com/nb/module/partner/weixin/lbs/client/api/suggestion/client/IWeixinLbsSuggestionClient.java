@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/ws/place/v1")
 public interface IWeixinLbsSuggestionClient {
 
-	@RequestMapping(value = "/suggestion/", method = RequestMethod.GET)
+	@RequestMapping(value = "/suggestion", method = RequestMethod.GET)
 	SuggestResult suggestion(@RequestParam(value = "keyword") String keyword,
 							 @RequestParam(value = "region") String region,
 							 @RequestParam(value = "region_fix") String region_fix,
 							 @RequestParam(value = "policy") String policy,
-							 @RequestParam(value = "key") String key,
-							 @RequestParam(value = "sn") String sn);
+							 @RequestParam(value = "key") String key);
 
 }
