@@ -6,6 +6,7 @@ import com.nb.module.nb.customer.api.login.domain.LoginResult;
 import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.login.biz.IWeixinLoginService;
+import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.partner.aliyun.oss.biz.IUploadService;
 import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.nb.module.partner.weixin.client.api.image.client.IWeixinImageClient;
@@ -47,6 +48,8 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	private IUploadService uploadService;
 	@Autowired
 	private IPathService pathService;
+	@Autowired
+	private IWeixinUserService weixinUserService;
 
 	@Value("${login.weixin.role}")
 	private String role;
@@ -94,7 +97,7 @@ public class WeixinLoginServiceImpl extends LoginCommonServiceImpl implements IW
 	private LoginResult loginAndUpdate(AccessToken accessToken, HttpServletResponse response) {
 		User user = userService.loginSimple(accessToken.getOpenid(), WeixinPluginConstant.WEIXIN_PLUGIN);
 		user.getPlugin().put(WeixinPluginConstant.WEIXIN_PLUGIN, getUserWeixin(accessToken));
-		return login(userService.updateUser(user, WeixinPluginConstant.WEIXIN_PLUGIN), response);
+		return login(weixinUserService.updateUser(user), response);
 	}
 
 	/**

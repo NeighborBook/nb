@@ -1,6 +1,7 @@
 package com.nb.module.nb.customer.api.weixin.user.biz;
 
 
+import com.nb.module.nb.customer.api.weixin.user.domain.Mobile;
 import com.zjk.module.common.authorization.client.api.user.domain.User;
 
 public interface IWeixinUserService {
@@ -16,4 +17,9 @@ public interface IWeixinUserService {
 	String findOpenidByCode(String userCode);
 
 	String findNicknameByCode(String userCode);
+
+	User updateUser(User user);
+
+	User updateMobile(Mobile mobile);
+
 }
