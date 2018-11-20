@@ -69,7 +69,10 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		User user = findOneByCode(mobile.getUserCode());
 		// 手机验证
 		if (UserConstant.VERIFIED_MOBILE.equalsIgnoreCase(mobile.getVerificationCodeCheck().getVerifyType())) {
-			verifyService.check(mobile.getVerificationCodeCheck(), mobile.getMobile());
+			// TODO 添加后门，等短信实现后去除
+			if (!"6666".equalsIgnoreCase(mobile.getVerificationCodeCheck().getCode())) {
+				verifyService.check(mobile.getVerificationCodeCheck(), mobile.getMobile());
+			}
 			user.setMobileVerified(UserConstant.VERIFIED_1);
 		}
 		// 除此之外报错
