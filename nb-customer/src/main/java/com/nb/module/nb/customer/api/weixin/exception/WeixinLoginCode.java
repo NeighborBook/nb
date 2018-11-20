@@ -6,7 +6,8 @@ import com.zjk.module.common.base.exception.IBusinessCode;
 public enum WeixinLoginCode implements IBusinessCode {
 
 	/******************** isbn ********************/
-	WXL0001("WXL0001", "登陆类型不正确:{0}", "登陆类型不正确");
+	WXL0001("WXL0001", "登陆类型不正确:{0}", "登陆类型不正确"),
+	WXL0002("WXL0002", "用户编号不存在:{0}", "用户编号不存在");
 
 	private String clazz;
 

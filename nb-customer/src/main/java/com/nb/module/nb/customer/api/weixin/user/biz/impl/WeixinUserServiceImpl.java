@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.weixin.user.biz.impl;
 import com.nb.module.nb.customer.api.user.biz.IUserService;
 import com.nb.module.nb.customer.api.verify.biz.IVerifyService;
 import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
+import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.nb.customer.api.weixin.user.domain.Mobile;
 import com.nb.module.partner.aliyun.oss.path.IPathService;
@@ -32,14 +33,14 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 
 	@Override
 	public User findOneByCode(String userCode) {
-		User user = userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN);
-		if (null != user) {
-			user.setMobile(StringUtils.EMPTY);
-			user.setEmail(StringUtils.EMPTY);
-			user.setPassword(StringUtils.EMPTY);
-			LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
-			map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
-		}
+		User user = checkIfNullThrowException(userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN),
+				new BusinessException(WeixinLoginCode.WXL0002, new Object[]{userCode}));
+
+		user.setMobile(StringUtils.EMPTY);
+		user.setEmail(StringUtils.EMPTY);
+		user.setPassword(StringUtils.EMPTY);
+		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
+		map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
 		return user;
 	}
 
