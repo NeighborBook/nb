@@ -328,12 +328,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm.getOrder().setExpectedReturnDate(addWeek(orderForm.getOrder().getExpectedReturnDate(), 1));
 					updateOrderBorrow(orderForm);
 				}
-				// 不同意
-				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
-					// 订单结束
-					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
-					updateOrderForm(orderForm);
-				}
+//				// 不同意 不做任何处理
+//				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+//					// 订单结束
+//					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+//					updateOrderForm(orderForm);
+//				}
 				break;
 			//上家确认还书
 			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RETURN:
