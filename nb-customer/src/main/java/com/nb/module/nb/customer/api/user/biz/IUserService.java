@@ -52,6 +52,13 @@ public interface IUserService {
 	void existCode(String userCode);
 
 	/**
+	 * 校验手机号不存在
+	 *
+	 * @param mobile
+	 */
+	void isNotExistMobile(String mobile);
+
+	/**
 	 * 通过用户编号查询
 	 *
 	 * @param userCode

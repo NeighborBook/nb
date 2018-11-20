@@ -57,6 +57,11 @@ public class UserServiceImpl extends CommonServiceImpl implements IUserService {
 	}
 
 	@Override
+	public void isNotExistMobile(String mobile) {
+		checkJsonContainer(passportCheckClient.isNotExistMobile(mobile));
+	}
+
+	@Override
 	public User findOneByCode(String userCode, String plugin) {
 		return checkJsonContainer(passportClient.findOneByCode(userCode, plugin));
 	}

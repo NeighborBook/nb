@@ -66,6 +66,9 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	@Override
 	@Transactional
 	public User updateMobile(Mobile mobile) {
+		// 校验手机
+		userService.isNotExistMobile(mobile.getMobile());
+		// 查询用户
 		User user = findOneByCode(mobile.getUserCode());
 		// 手机验证
 		if (UserConstant.VERIFIED_MOBILE.equalsIgnoreCase(mobile.getVerificationCodeCheck().getVerifyType())) {

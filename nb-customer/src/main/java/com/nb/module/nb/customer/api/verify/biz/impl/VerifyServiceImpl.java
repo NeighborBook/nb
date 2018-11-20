@@ -24,18 +24,18 @@ public class VerifyServiceImpl extends CommonServiceImpl implements IVerifyServi
 //	@Autowired
 //	private ISMSClient smsClient;
 
-	private static final String MAIL_KEYWORD = "mail_{0}";
-	private static final String MAIL_SUBJECT = "Onlineleasing邮件验证码";
-	@Value("${verify.mailTemplateCode}")
-	private String mailTemplateCode;
-	@Value("${verify.mailEnTemplateCode}")
-	private String mailEnTemplateCode;
-
+//	private static final String MAIL_KEYWORD = "mail_{0}";
+//	private static final String MAIL_SUBJECT = "Onlineleasing邮件验证码";
+//	@Value("${verify.mailTemplateCode}")
+//	private String mailTemplateCode;
+//	@Value("${verify.mailEnTemplateCode}")
+//	private String mailEnTemplateCode;
+//
 	private static final String SMS_KEYWORD = "sms_{0}";
-	@Value("${verify.smsTemplateCode}")
-	private String smsTemplateCode;
-	@Value("${verify.smsEnTemplateCode}")
-	private String smsEnTemplateCode;
+//	@Value("${verify.smsTemplateCode}")
+//	private String smsTemplateCode;
+//	@Value("${verify.smsEnTemplateCode}")
+//	private String smsEnTemplateCode;
 
 	private static String VC = "0123456789";
 
