@@ -112,14 +112,14 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		if (null != orderFormPO) {
 			orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
 			orderForm.setDetails(map(orderFormDetailService.findAllByCode(e.getOrderCode()), s -> new OrderFormDetail(s.getCreated(), s.getOrderDetailType(), s.getOrderDetailStatus(), s.getRemark())));
-			orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), s.getBookCode(), s.getBorrowerUserCode(), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
+			orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), weixinUserService.findNicknameByCode(s.getOwnerUserCode()), s.getBookCode(), s.getBorrowerUserCode(), weixinUserService.findNicknameByCode(s.getBorrowerUserCode()), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
 		}
 		return orderForm;
 	}
 
 	private OrderBorrow convert(BorrowApply borrowApply) {
 		Date initialReturnDate = addWeek(borrowApply.getStartBorrowDate(), 1);
-		return new OrderBorrow(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
+		return new OrderBorrow(borrowApply.getOwnerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getOwnerUserCode()), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getBorrowerUserCode()), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
 	}
 
 	private TNBOrderBorrow convert(OrderForm<OrderBorrow> orderForm) {

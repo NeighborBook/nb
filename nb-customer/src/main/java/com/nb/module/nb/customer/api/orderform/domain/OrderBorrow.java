@@ -10,9 +10,13 @@ public class OrderBorrow {
 
 	private String ownerUserCode;
 
+	private String ownerUserName;
+
 	private String bookCode;
 
 	private String borrowerUserCode;
+
+	private String borrowerUserName;
 
 	private Integer bookCount;
 
@@ -26,10 +30,12 @@ public class OrderBorrow {
 
 	private BookMinInfo bookMinInfo;
 
-	public OrderBorrow(String ownerUserCode, String bookCode, String borrowerUserCode, Integer bookCount, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
+	public OrderBorrow(String ownerUserCode, String ownerUserName, String bookCode, String borrowerUserCode, String borrowerUserName, Integer bookCount, Date startBorrowDate, Date initialReturnDate, Date expectedReturnDate, Date actualReturnDate) {
 		this.ownerUserCode = ownerUserCode;
+		this.ownerUserName = ownerUserName;
 		this.bookCode = bookCode;
 		this.borrowerUserCode = borrowerUserCode;
+		this.borrowerUserName = borrowerUserName;
 		this.bookCount = bookCount;
 		this.startBorrowDate = startBorrowDate;
 		this.initialReturnDate = initialReturnDate;
