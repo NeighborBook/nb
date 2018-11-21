@@ -65,8 +65,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	/**************************************************************************************************************************************************************/
 
-	private <T> OrderForm<T> checkOrderForm(String orderCode, Function<String, OrderForm<T>> function) {
+	private <T> OrderForm<T> checkOrderForm(String orderCode, Date updated, Function<String, OrderForm<T>> function) {
 		OrderForm<T> orderForm = checkIfNullThrowException(function.apply(orderCode), new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
+		// 订单已经更新，请刷新页面
+		if (!(orderForm.getUpdated().getTime() == updated.getTime())) {
+			throw new BusinessException(OrderFormCode.OF0011, new Object[]{orderCode});
+		}
 		switch (orderForm.getOrderStatus()) {
 			// 订单取消
 			case OrderFormConstant.ORDER_STATUS_CANCEL:
@@ -280,7 +284,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
 		// 订单
-		OrderForm<OrderBorrow> orderForm = checkOrderForm(orderFlow.getOrderCode(), e -> findOrderBorrowByOrderCode(e));
+		OrderForm<OrderBorrow> orderForm = checkOrderForm(orderFlow.getOrderCode(), orderFlow.getUpdated(), e -> findOrderBorrowByOrderCode(e));
 		// 订单明细类型
 		OrderDetailTypeBorrowConstant orderDetailTypeBorrowConstant = checkIfNullThrowException(OrderDetailTypeBorrowConstant.findOneByKey(orderFlow.getOrderDetailType()),
 				new BusinessException(OrderFormCode.OF0005, new Object[]{orderFlow.getOrderCode(), orderFlow.getOrderDetailType()}));
@@ -317,7 +321,6 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
-					updateOrderForm(orderForm);
 				}
 				break;
 			// 上家确认续借
@@ -332,7 +335,6 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 //				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 //					// 订单结束
 //					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
-//					updateOrderForm(orderForm);
 //				}
 				break;
 			//上家确认还书
@@ -346,10 +348,10 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderBorrow(orderForm);
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
-					updateOrderForm(orderForm);
 				}
 				break;
 		}
+		updateOrderForm(orderForm);
 		// 发送消息
 		sendBookLendingStatusReminder(orderForm, userCode, status);
 		return orderForm;
