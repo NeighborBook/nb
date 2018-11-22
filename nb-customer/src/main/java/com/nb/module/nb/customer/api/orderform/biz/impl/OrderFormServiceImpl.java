@@ -189,6 +189,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private void updateOrderBorrow(OrderForm<OrderBorrow> orderForm) {
 		TNBOrderBorrow po = orderBorrowService.findOneByOrderCode(orderForm.getCode());
 		if (null != po) {
+			po.setStartBorrowDate(orderForm.getOrder().getStartBorrowDate());
+			po.setInitialReturnDate(orderForm.getOrder().getInitialReturnDate());
 			po.setExpectedReturnDate(orderForm.getOrder().getExpectedReturnDate());
 			po.setActualReturnDate(orderForm.getOrder().getActualReturnDate());
 			orderBorrowService.save(po);
@@ -331,7 +333,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm.getOrder().setStartBorrowDate(startBorrowDate);
 					// 初始归还日期
 					Date initialReturnDate = addDays(startBorrowDate, 10);
-					orderForm.getOrder().setExpectedReturnDate(initialReturnDate);
+					orderForm.getOrder().setInitialReturnDate(initialReturnDate);
 					// 预计归还日期 = 初始归还日期
 					orderForm.getOrder().setExpectedReturnDate(initialReturnDate);
 					// 更新订单明细

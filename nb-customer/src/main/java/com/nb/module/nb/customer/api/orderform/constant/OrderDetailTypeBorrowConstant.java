@@ -10,7 +10,7 @@ public enum OrderDetailTypeBorrowConstant {
 //	ORDER_DETAIL_TYPE_BORROW_OWNER_DELIVERY(3, "上家发货", OrderFormConstant.SEND_TO_BORROWER),
 
 //	ORDER_DETAIL_TYPE_BORROW_BORROWER_CONFIRM_DELIVERY(4, "下家确认收货", OrderFormConstant.SEND_TO_OWNER),
-	ORDER_DETAIL_TYPE_BORROW_BORROW_CONFIRM(4, "借阅", OrderFormConstant.SEND_TO_OWNER),
+	ORDER_DETAIL_TYPE_BORROW_BORROW_CONFIRM(4, "借阅", OrderFormConstant.SEND_TO_BORROWER),
 
 //	ORDER_DETAIL_TYPE_BORROW_BORROWER_RENEW(5, "下家续借", OrderFormConstant.SEND_TO_OWNER),
 	ORDER_DETAIL_TYPE_BORROW_RENEW(5, "发起续借申请", OrderFormConstant.SEND_TO_OWNER),
@@ -21,7 +21,7 @@ public enum OrderDetailTypeBorrowConstant {
 //	ORDER_DETAIL_TYPE_BORROW_BORROWER_RETURN(7, "下家还书", OrderFormConstant.SEND_TO_OWNER),
 
 //	ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RETURN(8, "上家确认还书", OrderFormConstant.SEND_TO_BORROWER);
-	ORDER_DETAIL_TYPE_BORROW_RETURN(8, "归还图书", OrderFormConstant.SEND_TO_BORROWER);
+	ORDER_DETAIL_TYPE_BORROW_RETURN(8, "归还图书", OrderFormConstant.SEND_TO_OWNER);
 
 
 	private int key;
