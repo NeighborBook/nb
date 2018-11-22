@@ -56,10 +56,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	/**************************************************************************************************************************************************************/
 
-	private Date addWeek(Date date, Integer amount) {
+//	private Date addWeeks(Date date, Integer amount) {
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.setTime(date);
+//		calendar.add(Calendar.WEEK_OF_YEAR, amount);
+//		return calendar.getTime();
+//	}
+	private Date addDays(Date date, Integer amount) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		calendar.add(Calendar.WEEK_OF_YEAR, amount);
+		calendar.add(Calendar.DAY_OF_YEAR, amount);
 		return calendar.getTime();
 	}
 
@@ -122,8 +128,10 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	}
 
 	private OrderBorrow convert(BorrowApply borrowApply) {
-		Date initialReturnDate = addWeek(borrowApply.getStartBorrowDate(), 1);
-		return new OrderBorrow(borrowApply.getOwnerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getOwnerUserCode()), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getBorrowerUserCode()), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
+//		Date initialReturnDate = addWeeks(borrowApply.getStartBorrowDate(), 1);
+//		return new OrderBorrow(borrowApply.getOwnerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getOwnerUserCode()), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getBorrowerUserCode()), borrowApply.getBookCount(), borrowApply.getStartBorrowDate(), initialReturnDate, initialReturnDate, null);
+		// 借书阶段不添加时间
+		return new OrderBorrow(borrowApply.getOwnerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getOwnerUserCode()), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), weixinUserService.findNicknameByCode(borrowApply.getBorrowerUserCode()), borrowApply.getBookCount(), null, null, null, null);
 	}
 
 	private TNBOrderBorrow convert(OrderForm<OrderBorrow> orderForm) {
@@ -272,7 +280,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 创建订单
 		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
 		orderForm.setOrder(convert(borrowApply));
-		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW_START_BORROW_APPLICATION.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
+		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW_BORROW.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 发送消息
@@ -306,39 +314,56 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		save(orderFlow.getOrderCode(), detail);
 		orderForm.getDetails().add(detail);
 		// 订单状态
-		// String status = orderDetailTypeBorrowConstant.getValue() + "--" + orderDetailStatusConstant.getValue();
+		// String status = orderDetailTypeBorrowConstant.getValue() + "--" + ;
 		String status = orderDetailTypeBorrowConstant.getValue();
 		// 借书流程
 		switch (orderDetailTypeBorrowConstant) {
-			// 确认借书申请
-			case ORDER_DETAIL_TYPE_BORROW_CONFIRM_BORROW_APPLICATION:
+			// 借阅
+			case ORDER_DETAIL_TYPE_BORROW_BORROW_CONFIRM:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 锁定库存
 					updateUserBook(orderForm, OrderFormConstant.ORDER_OPERATE_LOCK);
+
+					// 开始日期
+					Date startBorrowDate = new Date();
+					orderForm.getOrder().setStartBorrowDate(startBorrowDate);
+					// 初始归还日期
+					Date initialReturnDate = addDays(startBorrowDate, 10);
+					orderForm.getOrder().setExpectedReturnDate(initialReturnDate);
+					// 预计归还日期 = 初始归还日期
+					orderForm.getOrder().setExpectedReturnDate(initialReturnDate);
+					// 更新订单明细
+					updateOrderBorrow(orderForm);
+					// 订单状态
+					status = status + orderDetailStatusConstant.getValue();
 				}
 				// 不同意
 				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+					// 订单状态
+					status = status + orderDetailStatusConstant.getValue();
 				}
 				break;
-			// 上家确认续借
-			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RENEW:
+			// 续借
+			case ORDER_DETAIL_TYPE_BORROW_RENEW_CONFIRM:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 更新预计归还日期
-					orderForm.getOrder().setExpectedReturnDate(addWeek(orderForm.getOrder().getExpectedReturnDate(), 1));
+					orderForm.getOrder().setExpectedReturnDate(addDays(orderForm.getOrder().getExpectedReturnDate(), 10));
 					updateOrderBorrow(orderForm);
+					// 订单状态
+					status = status + orderDetailStatusConstant.getValue();
 				}
-//				// 不同意 不做任何处理
-//				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
-//					// 订单结束
-//					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
-//				}
+				// 不同意
+				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+					// 订单状态
+					status = status + orderDetailStatusConstant.getValue();
+				}
 				break;
-			//上家确认还书
-			case ORDER_DETAIL_TYPE_BORROW_OWNER_CONFIRM_RETURN:
+			// 归还图书
+			case ORDER_DETAIL_TYPE_BORROW_RETURN:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 释放库存
