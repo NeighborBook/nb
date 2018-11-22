@@ -214,7 +214,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		weixinMessageService.sendBookLendingReminder(weixinUserService.findOpenidByCode(orderForm.getOrder().getOwnerUserCode()),
 				weixinUserService.findNicknameByCode(orderForm.getOrder().getBorrowerUserCode()),
 				mapOneIfNotNull(bookService.findOneByCode(orderForm.getOrder().getBookCode()), e -> e.getTitle()),
-				orderForm.getOrder().getStartBorrowDate(),
+//				orderForm.getOrder().getStartBorrowDate(),
+				new Date(),
 				orderForm.getCode());
 	}
 

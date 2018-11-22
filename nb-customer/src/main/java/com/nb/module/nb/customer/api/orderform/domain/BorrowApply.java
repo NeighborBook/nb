@@ -19,7 +19,7 @@ public class BorrowApply {
 
 	private Integer bookCount;
 
-	private Date startBorrowDate;
+//	private Date startBorrowDate;
 
 	private String remark;
 }
