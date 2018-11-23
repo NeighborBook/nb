@@ -6,6 +6,9 @@ import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.nb.customer.api.weixin.user.domain.Mobile;
+import com.nb.module.nb.customer.api.weixin.user.domain.UserLocation;
+import com.nb.module.nb.customer.base.userlocation.biz.ITNBUserLocationService;
+import com.nb.module.nb.customer.base.userlocation.domain.TNBUserLocation;
 import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.zjk.module.common.authorization.client.api.user.constant.UserConstant;
 import com.zjk.module.common.authorization.client.api.user.domain.User;
@@ -16,6 +19,7 @@ import com.zjk.module.common.base.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
@@ -30,15 +34,22 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	private IPathService pathService;
 	@Autowired
 	private IVerifyService verifyService;
+	@Autowired
+	private ITNBUserLocationService userLocationService;
 
 	@Override
 	public User findOneByCode(String userCode) {
-		User user = checkIfNullThrowException(userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN),
-				new BusinessException(WeixinLoginCode.WXL0002, new Object[]{userCode}));
-
+		User user = findFullOneByCode(userCode);
 		user.setMobile(StringUtils.EMPTY);
 		user.setEmail(StringUtils.EMPTY);
 		user.setPassword(StringUtils.EMPTY);
+		return user;
+	}
+
+	@Override
+	public User findFullOneByCode(String userCode) {
+		User user = checkIfNullThrowException(userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN),
+				new BusinessException(WeixinLoginCode.WXL0002, new Object[]{userCode}));
 		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
 		map.put(WeixinLoginConstant.HDADIMGURL, pathService.generatePresignedUrl(pathService.getFilename((String) map.get(WeixinLoginConstant.HDADIMGURL)), Calendar.MONTH, 1));
 		return user;
@@ -85,5 +96,34 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 			throw new BusinessException(VerificationCodeErrorCode.VC0004);
 		}
 		return updateUser(user);
+	}
+
+	@Override
+	@Transactional
+	public void saveUserLocation(UserLocation userLocation) {
+		// 保存userLocation
+		TNBUserLocation po = userLocationService.findOneByUserCode(userLocation.getUserCode());
+		if (null == po) {
+			po = new TNBUserLocation();
+			po.setUserCode(userLocation.getUserCode());
+		}
+		po.setTitle(userLocation.getTitle());
+		po.setAddress(userLocation.getAddress());
+		po.setProvince(userLocation.getProvince());
+		po.setCity(userLocation.getCity());
+		po.setDistrict(userLocation.getDistrict());
+		po.setAdcode(userLocation.getAdcode());
+		po.setType(userLocation.getType());
+		po.setLat(userLocation.getLat());
+		po.setLng(userLocation.getLng());
+		po.setLbsId(userLocation.getLbsId());
+		userLocationService.save(po);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UserLocation findUserLocationByCode(String userCode) {
+		return mapOneIfNotNull(userLocationService.findOneByUserCode(userCode),
+				e -> new UserLocation(e.getUserCode(), e.getTitle(), e.getAddress(), e.getProvince(), e.getCity(), e.getDistrict(), e.getAdcode(), e.getType(), e.getLat(), e.getLng(), e.getLbsId()));
 	}
 }

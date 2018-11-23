@@ -2,6 +2,7 @@ package com.nb.module.nb.customer.api.weixin.user.biz;
 
 
 import com.nb.module.nb.customer.api.weixin.user.domain.Mobile;
+import com.nb.module.nb.customer.api.weixin.user.domain.UserLocation;
 import com.zjk.module.common.authorization.client.api.user.domain.User;
 
 public interface IWeixinUserService {
@@ -14,6 +15,8 @@ public interface IWeixinUserService {
 	 */
 	User findOneByCode(String userCode);
 
+	User findFullOneByCode(String userCode);
+
 	String findOpenidByCode(String userCode);
 
 	String findNicknameByCode(String userCode);
@@ -22,4 +25,7 @@ public interface IWeixinUserService {
 
 	User updateMobile(Mobile mobile);
 
+	void saveUserLocation(UserLocation userLocation);
+
+	UserLocation findUserLocationByCode(String userCode);
 }
