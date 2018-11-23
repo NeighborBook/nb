@@ -42,14 +42,14 @@ public class WeixinUserController extends BaseController {
 	}
 
 	@ApiOperation(value = "更新用户地址信息", notes = "更新用户地址信息")
-	@RequestMapping(value = "/updateUserLocation", method = RequestMethod.POST)
+	@RequestMapping(value = "/saveUserLocation", method = RequestMethod.POST)
 	public JsonContainer saveUserLocation(@RequestBody @Validated UserLocation userLocation) {
 		service.saveUserLocation(userLocation);
 		return setSuccessMessage();
 	}
 
 	@ApiOperation(value = "获取用户地址信息", notes = "获取用户地址信息")
-	@RequestMapping(value = "/userlocation/{userCode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/userLocation/{userCode}", method = RequestMethod.GET)
 	public JsonContainer<UserLocation> findUserLocationByCode(@PathVariable @NotBlank String userCode) {
 		return setSuccessMessage(service.findUserLocationByCode(userCode));
 	}
