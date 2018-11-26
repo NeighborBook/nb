@@ -40,9 +40,9 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	@Override
 	public User findOneByCode(String userCode) {
 		User user = findFullOneByCode(userCode);
-		user.setMobile(StringUtils.EMPTY);
-		user.setEmail(StringUtils.EMPTY);
-		user.setPassword(StringUtils.EMPTY);
+		user.setMobile(null);
+		user.setEmail(null);
+		user.setPassword(null);
 		return user;
 	}
 
@@ -81,7 +81,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		// 校验手机
 		userService.isNotExistMobile(mobile.getMobile());
 		// 查询用户
-		User user = findOneByCode(mobile.getUserCode());
+		User user = findFullOneByCode(mobile.getUserCode());
 		// 手机验证
 		if (UserConstant.VERIFIED_MOBILE.equalsIgnoreCase(mobile.getVerificationCodeCheck().getVerifyType())) {
 			// TODO 添加后门，等短信实现后去除
