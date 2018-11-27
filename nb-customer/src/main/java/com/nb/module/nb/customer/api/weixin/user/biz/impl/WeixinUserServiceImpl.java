@@ -16,7 +16,6 @@ import com.zjk.module.common.authorization.client.exception.VerificationCodeErro
 import com.zjk.module.common.authorization.client.weixin.plugin.api.passport.constant.WeixinPluginConstant;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -95,7 +94,9 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		else {
 			throw new BusinessException(VerificationCodeErrorCode.VC0004);
 		}
-		return updateUser(user);
+//		return updateUser(user);
+		// 只保存默认部分
+		return userService.updateUser(user, null);
 	}
 
 	@Override
