@@ -17,6 +17,8 @@ public interface IWeixinUserService {
 
 	User findFullOneByCode(String userCode);
 
+	User findFullOneWithPassowrdByCode(String userCode);
+
 	String findOpenidByCode(String userCode);
 
 	String findNicknameByCode(String userCode);

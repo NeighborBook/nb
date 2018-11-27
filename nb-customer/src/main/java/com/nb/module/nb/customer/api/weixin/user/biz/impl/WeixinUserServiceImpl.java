@@ -41,12 +41,18 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		User user = findFullOneByCode(userCode);
 		user.setMobile(null);
 		user.setEmail(null);
-		user.setPassword(null);
 		return user;
 	}
 
 	@Override
 	public User findFullOneByCode(String userCode) {
+		User user = findFullOneWithPassowrdByCode(userCode);
+		user.setPassword(null);
+		return user;
+	}
+
+	@Override
+	public User findFullOneWithPassowrdByCode(String userCode) {
 		User user = checkIfNullThrowException(userService.findOneByCode(userCode, WeixinPluginConstant.WEIXIN_PLUGIN),
 				new BusinessException(WeixinLoginCode.WXL0002, new Object[]{userCode}));
 		LinkedHashMap map = (LinkedHashMap) user.getPlugin().get(WeixinPluginConstant.WEIXIN_PLUGIN);
@@ -80,7 +86,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		// 校验手机
 		userService.isNotExistMobile(mobile.getMobile());
 		// 查询用户
-		User user = findFullOneByCode(mobile.getUserCode());
+		User user = findFullOneWithPassowrdByCode(mobile.getUserCode());
 		// 手机验证
 		if (UserConstant.VERIFIED_MOBILE.equalsIgnoreCase(mobile.getVerificationCodeCheck().getVerifyType())) {
 			// TODO 添加后门，等短信实现后去除
