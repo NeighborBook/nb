@@ -101,12 +101,20 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return userBook;
 	}
 
-	private void checkOrderBorrow(BorrowApply borrowApply) {
-		UserBook userBook = checkUserBook(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+	private void checkStock(String ownerUserCode, String bookCode, Integer bookCount, Integer lentAmount, Integer lentBookCount) {
 		// 这本书没有库存拉
-		if (userBook.getBookCount() <= userBook.getLentAmount()) {
-			throw new BusinessException(OrderFormCode.OF0003, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount()});
+		if (bookCount - lentAmount < lentBookCount) {
+			throw new BusinessException(OrderFormCode.OF0003, new Object[]{ownerUserCode, bookCode, bookCount, lentAmount});
 		}
+	}
+
+	private void checkOrderBorrow(BorrowApply borrowApply) {
+		// 至少借一本书
+		if (borrowApply.getBookCount() < 1) {
+			throw new BusinessException(OrderFormCode.OF0012, new Object[]{borrowApply.getBookCount()});
+		}
+		UserBook userBook = checkUserBook(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+		checkStock(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount(), borrowApply.getBookCount());
 		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
 		// 同一本书只能发起一次借书请求
 		if (null != list && !list.isEmpty()) {
@@ -199,6 +207,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private void updateUserBook(OrderForm<OrderBorrow> orderForm, String operate) {
 		UserBook userBook = checkUserBook(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode());
+		checkStock(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode(), userBook.getBookCount(), userBook.getLentAmount(), orderForm.getOrder().getBookCount());
 		// 锁定库存
 		if (OrderFormConstant.ORDER_OPERATE_LOCK.equals(operate)) {
 			userBook.setLentAmount(userBook.getLentAmount() + orderForm.getOrder().getBookCount());
