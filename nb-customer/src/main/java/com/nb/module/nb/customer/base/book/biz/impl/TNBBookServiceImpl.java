@@ -68,6 +68,26 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBBook> findAllByTagCodeAndUserCodeNot(List<String> tagCodes, Integer size, Integer sharable, String userCode, Pageable pageable) {
+		Page<TNBBook> result;
+		if (null == tagCodes || tagCodes.isEmpty()) {
+			if (null == sharable) {
+				result = repository.findAllByUserCodeNot(userCode, pageable);
+			} else {
+				result = repository.findAllBySharableAndUserCodeNot(sharable, userCode, pageable);
+			}
+		} else {
+			if (null == sharable) {
+				result = repository.findAllByTagCodeAndUserCodeNot(tagCodes, size, userCode, pageable);
+			} else {
+				result = repository.findAllByTagCodeAndSharableAndUserCodeNot(tagCodes, size, sharable, userCode, pageable);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<TNBBook> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer size, Integer sharable, String userCode, Pageable pageable) {
 		Page<TNBBook> result;
 		if (null == tagCodes || tagCodes.isEmpty()) {
@@ -93,6 +113,15 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 			return findAll(pageable);
 		}
 		return repository.findAllBySearch(SpecificationUtil.like(SpecificationOperate.LIKE, search), pageable);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBBook> findAllBySearchAndUserCodeNot(String search, String userCode, Pageable pageable) {
+		if (StringUtils.isBlank(search)) {
+			return repository.findAllByUserCodeNot(userCode, pageable);
+		}
+		return repository.findAllBySearchAndUserCodeNot(SpecificationUtil.like(SpecificationOperate.LIKE, search), userCode, pageable);
 	}
 
 	@Override

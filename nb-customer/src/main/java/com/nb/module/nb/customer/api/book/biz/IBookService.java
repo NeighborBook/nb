@@ -32,9 +32,13 @@ public interface IBookService {
 
 	Page<BookMinInfo> findAllByTagCode(List<String> tagCodes, Integer sharable, Pageable pageable);
 
+	Page<BookMinInfo> findAllByTagCodeAndUserCodeNot(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable);
+
 	Page<BookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable);
 
 	Page<BookMinInfo> findAllBySearch(String search, Pageable pageable);
+
+	Page<BookMinInfo> findAllBySearchAndUserCodeNot(String search, String userCode, Pageable pageable);
 
 	Page<BookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
 }

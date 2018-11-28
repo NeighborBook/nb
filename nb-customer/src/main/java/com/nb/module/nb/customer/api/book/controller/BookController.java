@@ -44,13 +44,25 @@ public class BookController extends BaseController {
 		return setSuccessMessage(service.findAll(pageable));
 	}
 
-	@ApiOperation(value = "通过标签分页查询", notes = "通过标签分页查询")
+	@ApiOperation(value = "通过标签，是否共享和用户编号(!=)分页查询", notes = "通过标签，是否共享和用户编号(!=)分页查询")
+	@RequestMapping(value = "/findAllByTagCodeAndUserCodeNot", method = RequestMethod.POST)
+	public JsonContainer<Page<BookMinInfo>> findAllByTagCodeAndUserCodeNot(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @RequestParam String userCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByTagCodeAndUserCodeNot(tagCodes, sharable, userCode, pageable));
+	}
+
+	@ApiOperation(value = "通过标签和是否共享分页查询", notes = "通过标签和是否共享分页查询")
 	@RequestMapping(value = "/findAllByTagCode", method = RequestMethod.POST)
 	public JsonContainer<Page<BookMinInfo>> findAllByTagCode(@RequestBody @NotNull List<String> tagCodes, @RequestParam(required = false) Integer sharable, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllByTagCode(tagCodes, sharable, pageable));
 	}
 
-	@ApiOperation(value = "通过搜索框分页查询", notes = "通过搜索框分页查询")
+	@ApiOperation(value = "通过搜索框和用户编号(!=)分页查询", notes = "通过搜索框和用户编号(!=)分页查询")
+	@RequestMapping(value = "/findAllBySearchAndUserCodeNot", method = RequestMethod.POST)
+	public JsonContainer<Page<BookMinInfo>> findAllBySearchAndUserCodeNot(@RequestParam @NotNull String search, @RequestParam String userCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllBySearchAndUserCodeNot(search, userCode, pageable));
+	}
+
+	@ApiOperation(value = "通过搜索框和用户编号分页查询", notes = "通过搜索框和用户编号分页查询")
 	@RequestMapping(value = "/findAllBySearch", method = RequestMethod.POST)
 	public JsonContainer<Page<BookMinInfo>> findAllBySearch(@RequestParam @NotNull String search, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllBySearch(search, pageable));

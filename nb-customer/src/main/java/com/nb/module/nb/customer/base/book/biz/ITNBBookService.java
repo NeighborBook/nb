@@ -17,9 +17,13 @@ public interface ITNBBookService extends IDataService<TNBBook, Integer> {
 
 	Page<TNBBook> findAllByTagCode(List<String> tagCodes, Integer size, Integer sharable, Pageable pageable);
 
+	Page<TNBBook> findAllByTagCodeAndUserCodeNot(List<String> tagCodes, Integer size, Integer sharable, String userCode, Pageable pageable);
+
 	Page<TNBBook> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer size, Integer sharable, String userCode, Pageable pageable);
 
 	Page<TNBBook> findAllBySearch(String search, Pageable pageable);
+
+	Page<TNBBook> findAllBySearchAndUserCodeNot(String search, String userCode, Pageable pageable);
 
 	Page<TNBBook> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
 }
