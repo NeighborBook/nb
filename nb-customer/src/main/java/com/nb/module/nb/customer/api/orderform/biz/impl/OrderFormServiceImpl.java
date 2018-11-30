@@ -114,6 +114,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 			throw new BusinessException(OrderFormCode.OF0012, new Object[]{borrowApply.getBookCount()});
 		}
 		UserBook userBook = checkUserBook(borrowApply.getOwnerUserCode(), borrowApply.getBookCode());
+		// 检查库存
 		checkStock(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), userBook.getBookCount(), userBook.getLentAmount(), borrowApply.getBookCount());
 		List<OrderForm<OrderBorrow>> list = findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_STATUS_START);
 		// 同一本书只能发起一次借书请求
@@ -207,9 +208,10 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private void updateUserBook(OrderForm<OrderBorrow> orderForm, String operate) {
 		UserBook userBook = checkUserBook(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode());
-		checkStock(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode(), userBook.getBookCount(), userBook.getLentAmount(), orderForm.getOrder().getBookCount());
 		// 锁定库存
 		if (OrderFormConstant.ORDER_OPERATE_LOCK.equals(operate)) {
+			// 检查库存
+			checkStock(orderForm.getOrder().getOwnerUserCode(), orderForm.getOrder().getBookCode(), userBook.getBookCount(), userBook.getLentAmount(), orderForm.getOrder().getBookCount());
 			userBook.setLentAmount(userBook.getLentAmount() + orderForm.getOrder().getBookCount());
 		}
 		// 释放库存
