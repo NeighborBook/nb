@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Data
 public class TNBUserBonusDetail extends DataEntity {
 
+	private String code;
+
 	private String userCode;
 
 	@Column(columnDefinition = "decimal(15,0)")

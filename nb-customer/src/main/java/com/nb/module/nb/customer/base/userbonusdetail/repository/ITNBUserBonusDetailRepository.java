@@ -9,6 +9,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = "userbonusdetail")
 public interface ITNBUserBonusDetailRepository extends IDataRepository<TNBUserBonusDetail, Integer> {
 
-	Page<TNBUserBonusDetail> findOneByUserCode(String userCode, Pageable pageable);
+	TNBUserBonusDetail findOneByCode(String bonusCode);
+
+	Page<TNBUserBonusDetail> findAllByUserCode(String userCode, Pageable pageable);
 
 }

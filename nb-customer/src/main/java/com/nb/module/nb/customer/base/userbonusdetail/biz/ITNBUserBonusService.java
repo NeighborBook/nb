@@ -7,6 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 public interface ITNBUserBonusService extends IDataService<TNBUserBonusDetail, Integer> {
 
-	Page<TNBUserBonusDetail> findOneByUserCode(String userCode, Pageable pageable);
+	TNBUserBonusDetail newInstance();
+
+	TNBUserBonusDetail findOneByCode(String code);
+
+	Page<TNBUserBonusDetail> findAllByUserCode(String userCode, Pageable pageable);
 
 }

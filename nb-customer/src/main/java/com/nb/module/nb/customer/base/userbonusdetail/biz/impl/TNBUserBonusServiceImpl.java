@@ -3,6 +3,8 @@ package com.nb.module.nb.customer.base.userbonusdetail.biz.impl;
 import com.nb.module.nb.customer.base.userbonusdetail.biz.ITNBUserBonusService;
 import com.nb.module.nb.customer.base.userbonusdetail.domain.TNBUserBonusDetail;
 import com.nb.module.nb.customer.base.userbonusdetail.repository.ITNBUserBonusDetailRepository;
+import com.nb.module.nb.customer.serialcode.CustomerSerialCode;
+import com.zjk.module.common.authorization.client.api.serialcode.client.ISerialCodeClient;
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +19,25 @@ public class TNBUserBonusServiceImpl extends DataServiceImpl<TNBUserBonusDetail,
 	@Autowired
 	private ITNBUserBonusDetailRepository repository;
 
+	@Autowired
+	private ISerialCodeClient codeClient;
+
+	@Override
+	public TNBUserBonusDetail newInstance() {
+		TNBUserBonusDetail po = new TNBUserBonusDetail();
+		po.setCode(checkJsonContainer(codeClient.next(CustomerSerialCode.NBUSERBONUS.getSerialGroup())));
+		return po;
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBUserBonusDetail> findOneByUserCode(String userCode, Pageable pageable) {
-		return repository.findOneByUserCode(userCode, pageable);
+	public TNBUserBonusDetail findOneByCode(String bonusCode) {
+		return repository.findOneByCode(bonusCode);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBUserBonusDetail> findAllByUserCode(String userCode, Pageable pageable) {
+		return repository.findAllByUserCode(userCode, pageable);
 	}
 }
