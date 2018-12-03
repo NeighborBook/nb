@@ -17,10 +17,10 @@ public class TNBUserBonusDetail extends DataEntity {
 
 	private String userCode;
 
+	private Integer type;
+
 	@Column(columnDefinition = "decimal(15,0)")
 	private BigDecimal bonus;
-
-	private Integer type;
 
 	private String remark;
 

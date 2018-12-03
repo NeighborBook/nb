@@ -294,7 +294,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 创建订单
 		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
 		orderForm.setOrder(convert(borrowApply));
-		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW_BORROW.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
+		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 发送消息
@@ -333,7 +333,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 借书流程
 		switch (orderDetailTypeBorrowConstant) {
 			// 借阅
-			case ORDER_DETAIL_TYPE_BORROW_BORROW_CONFIRM:
+			case ORDER_DETAIL_TYPE_BORROW_CONFIRM:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 锁定库存
@@ -361,7 +361,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				}
 				break;
 			// 续借
-			case ORDER_DETAIL_TYPE_BORROW_RENEW_CONFIRM:
+			case ORDER_DETAIL_TYPE_RENEW_CONFIRM:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 更新预计归还日期
@@ -377,7 +377,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				}
 				break;
 			// 归还图书
-			case ORDER_DETAIL_TYPE_BORROW_RETURN:
+			case ORDER_DETAIL_TYPE_RETURN:
 				// 同意
 				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
 					// 释放库存
