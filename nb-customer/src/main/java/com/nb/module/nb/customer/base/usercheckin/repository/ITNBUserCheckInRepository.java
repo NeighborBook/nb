@@ -16,7 +16,7 @@ public interface ITNBUserCheckInRepository extends IDataRepository<TNBUserCheckI
 
 	Page<TNBUserCheckIn> findAllByUserCode(String userCode, Pageable pageable);
 
-	@Query(value = "select * from t_nb_user_check_in where user_code = ?1 and date_format(updated, '%Y-%m-%d') = date_format(?2, %Y-%m-%d)", nativeQuery = true)
+	@Query(value = "select * from t_nb_user_check_in where user_code = ?1 and date_format(check_in, '%Y-%m-%d') = date_format(?2, '%Y-%m-%d')", nativeQuery = true)
 	TNBUserCheckIn findOneByUserCodeAndCheckIn(String userCode, Date checkIn);
 
 }
