@@ -74,7 +74,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private <T> OrderForm<T> checkOrderForm(String orderCode, Date updated, Function<String, OrderForm<T>> function) {
 		OrderForm<T> orderForm = checkIfNullThrowException(function.apply(orderCode), new BusinessException(OrderFormCode.OF0004, new Object[]{orderCode}));
 		// 订单已经更新，请刷新页面
-		if (!(orderForm.getUpdated().getTime() == updated.getTime())) {
+		if (orderForm.getUpdated().getTime() != updated.getTime()) {
 			throw new BusinessException(OrderFormCode.OF0011, new Object[]{orderCode});
 		}
 		switch (orderForm.getOrderStatus()) {

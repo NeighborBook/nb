@@ -1,6 +1,6 @@
 package com.nb.module.nb.customer.base.userbonusdetail.biz.impl;
 
-import com.nb.module.nb.customer.base.userbonusdetail.biz.ITNBUserBonusService;
+import com.nb.module.nb.customer.base.userbonusdetail.biz.ITNBUserBonusDetailService;
 import com.nb.module.nb.customer.base.userbonusdetail.domain.TNBUserBonusDetail;
 import com.nb.module.nb.customer.base.userbonusdetail.repository.ITNBUserBonusDetailRepository;
 import com.nb.module.nb.customer.serialcode.CustomerSerialCode;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class TNBUserBonusServiceImpl extends DataServiceImpl<TNBUserBonusDetail, Integer> implements ITNBUserBonusService {
+public class TNBUserBonusDetailServiceImpl extends DataServiceImpl<TNBUserBonusDetail, Integer> implements ITNBUserBonusDetailService {
 
 	@Autowired
 	private ITNBUserBonusDetailRepository repository;
