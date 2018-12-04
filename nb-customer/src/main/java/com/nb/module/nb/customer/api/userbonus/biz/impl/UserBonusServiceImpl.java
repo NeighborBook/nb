@@ -76,6 +76,7 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 		po.setType(userBonusDetail.getType());
 		po.setBonus(userBonusDetail.getBonus());
 		po.setRemark(userBonusDetail.getRemark());
+		po.setBizCode(userBonusDetail.getBizCode());
 		userBonusDetailService.save(po);
 
 		userBonusDetail.setCode(po.getCode());
