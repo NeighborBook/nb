@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-
 @Service
 public class UserCheckInServiceImpl extends CommonServiceImpl implements IUserCheckInService {
 
@@ -29,10 +27,10 @@ public class UserCheckInServiceImpl extends CommonServiceImpl implements IUserCh
 	@Override
 	@Transactional
 	public UserBonus checkIn(UserCheckIn userCheckIn) {
-		TNBUserCheckIn po = userCheckInService.findOneByUserCodeAndCheckIn(userCheckIn.getUserCode(), userCheckIn.getCheckIn());
+		TNBUserCheckIn po = userCheckInService.findOneByUserCodeAndCheckIn(userCheckIn.getBaseUserBonus().getUserCode(), userCheckIn.getCheckIn());
 		if (null != po) {
-			throw new BusinessException(UserCheckInCode.UCI0001, new Object[]{userCheckIn.getUserCode(), userCheckIn.getCheckIn()});
+			throw new BusinessException(UserCheckInCode.UCI0001, new Object[]{userCheckIn.getBaseUserBonus().getUserCode(), userCheckIn.getCheckIn()});
 		}
-		return userBonusService.operate(new UserBonusTemplate(userCheckIn.getUpdated(), userCheckIn.getUserCode(), UserBonusConstant.USER_BONUS_CHECK_IN, BigDecimal.ZERO, userCheckIn.getRemark()));
+		return userBonusService.operate(new UserBonusTemplate(userCheckIn.getBaseUserBonus(), UserBonusConstant.USER_BONUS_CHECK_IN));
 	}
 }

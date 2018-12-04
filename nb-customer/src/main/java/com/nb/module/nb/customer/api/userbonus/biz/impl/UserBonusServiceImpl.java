@@ -111,7 +111,7 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 	@Override
 	@Transactional
 	public UserBonus adjust(Adjust adjust) {
-		return operate(new UserBonusTemplate(adjust.getUpdated(), adjust.getUserCode(), UserBonusConstant.USER_BONUS_ADJUST, adjust.getExtraBonus(), adjust.getRemark()));
+		return operate(new UserBonusTemplate(adjust.getBaseUserBonus(), UserBonusConstant.USER_BONUS_ADJUST, adjust.getExtraBonus()));
 	}
 
 	@Override

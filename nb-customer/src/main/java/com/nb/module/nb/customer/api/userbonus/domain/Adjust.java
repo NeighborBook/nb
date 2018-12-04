@@ -2,22 +2,15 @@ package com.nb.module.nb.customer.api.userbonus.domain;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 public class Adjust {
 
-	@NotNull
-	private Date updated;
-
-	@NotBlank
-	private String userCode;
-
 	private BigDecimal extraBonus;
 
-	private String remark;
+	@Valid
+	private BaseUserBonus baseUserBonus;
 
 }
