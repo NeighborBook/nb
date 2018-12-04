@@ -18,7 +18,7 @@ public enum UserBonusConstant {
 
 	USER_BONUS_INVITE_FRIEND(6, "邀请好友", new BigDecimal(50)),
 
-	USER_BONUS_SIGN(7, "签到", new BigDecimal(5));
+	USER_BONUS_CHECK_IN(7, "签到", new BigDecimal(5));
 
 	private Integer key;
 
