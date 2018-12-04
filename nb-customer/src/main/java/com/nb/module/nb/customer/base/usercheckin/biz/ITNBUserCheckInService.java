@@ -9,6 +9,10 @@ import java.util.Date;
 
 public interface ITNBUserCheckInService extends IDataService<TNBUserCheckIn, Integer> {
 
+	TNBUserCheckIn newInstance();
+
+	TNBUserCheckIn findOneByCode(String code);
+
 	Page<TNBUserCheckIn> findAllByUserCode(String userCode, Pageable pageable);
 
 	TNBUserCheckIn findOneByUserCodeAndCheckIn(String userCode, Date checkIn);

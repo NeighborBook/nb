@@ -13,6 +13,8 @@ import java.util.Date;
 @Data
 public class TNBUserCheckIn extends DataEntity {
 
+	private String code;
+
 	private String userCode;
 
 	@Column(columnDefinition = "timestamp")

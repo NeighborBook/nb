@@ -20,13 +20,16 @@ public class UserBonusDetail {
 
 	private String remark;
 
-	public UserBonusDetail(String code, Date created, String userCode, Integer type, BigDecimal bonus, String remark) {
+	private String bizCode;
+
+	public UserBonusDetail(String code, Date created, String userCode, Integer type, BigDecimal bonus, String remark, String bizCode) {
 		this.code = code;
 		this.created = created;
 		this.userCode = userCode;
 		this.type = type;
 		this.bonus = bonus;
 		this.remark = remark;
+		this.bizCode = bizCode;
 	}
 
 	public UserBonusDetail() {

@@ -24,4 +24,5 @@ public class TNBUserBonusDetail extends DataEntity {
 
 	private String remark;
 
+	private String bizCode;
 }

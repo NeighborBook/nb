@@ -22,11 +22,14 @@ public class UserBonusTemplate {
 
 	private String remark;
 
+	private String bizCode;
+
 	public UserBonusTemplate(@Validated BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant) {
 		this.updated = baseUserBonus.getUpdated();
 		this.userCode = baseUserBonus.getUserCode();
 		this.userBonusConstant = userBonusConstant;
 		this.remark = baseUserBonus.getRemark();
+		this.bizCode = baseUserBonus.getBizCode();
 	}
 
 	public UserBonusTemplate(@Validated BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant, BigDecimal extraBonus) {
@@ -37,9 +40,10 @@ public class UserBonusTemplate {
 			this.extraBonus = extraBonus;
 		}
 		this.remark = baseUserBonus.getRemark();
+		this.bizCode = baseUserBonus.getBizCode();
 	}
 
-	public UserBonusTemplate(@NotNull Date updated, String userCode, UserBonusConstant userBonusConstant, BigDecimal extraBonus, String remark) {
+	public UserBonusTemplate(@NotNull Date updated, String userCode, UserBonusConstant userBonusConstant, BigDecimal extraBonus, String remark, String bizCode) {
 		this.updated = updated;
 		this.userCode = userCode;
 		this.userBonusConstant = userBonusConstant;
@@ -47,6 +51,7 @@ public class UserBonusTemplate {
 			this.extraBonus = extraBonus;
 		}
 		this.remark = remark;
+		this.bizCode = bizCode;
 	}
 
 	public UserBonusTemplate() {

@@ -18,4 +18,17 @@ public class BaseUserBonus {
 	private String userCode;
 
 	private String remark;
+
+	private String bizCode;
+
+	public BaseUserBonus() {
+	}
+
+	public BaseUserBonus(@NotNull Date updated, @NotBlank String userCode, String remark, String bizCode) {
+
+		this.updated = updated;
+		this.userCode = userCode;
+		this.remark = remark;
+		this.bizCode = bizCode;
+	}
 }

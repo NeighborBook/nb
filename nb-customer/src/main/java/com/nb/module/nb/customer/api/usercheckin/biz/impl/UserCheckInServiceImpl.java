@@ -30,6 +30,13 @@ public class UserCheckInServiceImpl extends CommonServiceImpl implements IUserCh
 		TNBUserCheckIn po = userCheckInService.findOneByUserCodeAndCheckIn(userCheckIn.getBaseUserBonus().getUserCode(), userCheckIn.getCheckIn());
 		if (null != po) {
 			throw new BusinessException(UserCheckInCode.UCI0001, new Object[]{userCheckIn.getBaseUserBonus().getUserCode(), userCheckIn.getCheckIn()});
+		} else {
+			po = userCheckInService.newInstance();
+			po.setUserCode(userCheckIn.getBaseUserBonus().getUserCode());
+			po.setCheckIn(userCheckIn.getCheckIn());
+			userCheckInService.save(po);
+
+			userCheckIn.getBaseUserBonus().setBizCode(po.getCode());
 		}
 		return userBonusService.operate(new UserBonusTemplate(userCheckIn.getBaseUserBonus(), UserBonusConstant.USER_BONUS_CHECK_IN));
 	}

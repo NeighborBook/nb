@@ -12,6 +12,8 @@ import java.util.Date;
 @RepositoryRestResource(path = "usercheckin")
 public interface ITNBUserCheckInRepository extends IDataRepository<TNBUserCheckIn, Integer> {
 
+	TNBUserCheckIn findOneByCode(String code);
+
 	Page<TNBUserCheckIn> findAllByUserCode(String userCode, Pageable pageable);
 
 	@Query(value = "select * from t_nb_user_check_in where user_code = ?1 and date_format(updated, '%Y-%m-%d') = date_format(?2, %Y-%m-%d)", nativeQuery = true)

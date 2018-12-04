@@ -31,8 +31,8 @@ public class TNBUserBonusDetailServiceImpl extends DataServiceImpl<TNBUserBonusD
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public TNBUserBonusDetail findOneByCode(String bonusCode) {
-		return repository.findOneByCode(bonusCode);
+	public TNBUserBonusDetail findOneByCode(String code) {
+		return repository.findOneByCode(code);
 	}
 
 	@Override

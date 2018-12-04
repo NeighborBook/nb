@@ -52,7 +52,7 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 		}
 		// 当前积分
 		userBonus.setCurrentBonus(userBonus.getCurrentBonus().add(realBonus));
-		return new UserBonusDetail(null, null, userBonus.getUserCode(), userBonusTemplate.getUserBonusConstant().getKey(), realBonus, userBonusTemplate.getRemark());
+		return new UserBonusDetail(null, null, userBonus.getUserCode(), userBonusTemplate.getUserBonusConstant().getKey(), realBonus, userBonusTemplate.getRemark(), userBonusTemplate.getBizCode());
 	}
 
 	/**************************************************************************************************************************************************************/
@@ -93,7 +93,7 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBonusDetail> findAllUserBonusDetailByUserCode(String userCode, Pageable pageable) {
-		return userBonusDetailService.findAllByUserCode(userCode, pageable).map(e -> new UserBonusDetail(e.getCode(), e.getCreated(), e.getUserCode(), e.getType(), e.getBonus(), e.getRemark()));
+		return userBonusDetailService.findAllByUserCode(userCode, pageable).map(e -> new UserBonusDetail(e.getCode(), e.getCreated(), e.getUserCode(), e.getType(), e.getBonus(), e.getRemark(), e.getBizCode()));
 	}
 
 	/**************************************************************************************************************************************************************/
