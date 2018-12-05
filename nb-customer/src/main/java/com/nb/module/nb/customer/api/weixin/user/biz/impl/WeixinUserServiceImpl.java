@@ -1,6 +1,10 @@
 package com.nb.module.nb.customer.api.weixin.user.biz.impl;
 
 import com.nb.module.nb.customer.api.user.biz.IUserService;
+import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
+import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
 import com.nb.module.nb.customer.api.verify.biz.IVerifyService;
 import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
@@ -16,6 +20,7 @@ import com.zjk.module.common.authorization.client.exception.VerificationCodeErro
 import com.zjk.module.common.authorization.client.weixin.plugin.api.passport.constant.WeixinPluginConstant;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,6 +40,9 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	private IVerifyService verifyService;
 	@Autowired
 	private ITNBUserLocationService userLocationService;
+
+	@Autowired
+	private IUserBonusService userBonusService;
 
 	@Override
 	public User findOneByCode(String userCode) {
@@ -83,6 +91,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	@Override
 	@Transactional
 	public User updateMobile(Mobile mobile) {
+		UserBonus userBonus = null;
 		// 校验手机
 		userService.isNotExistMobile(mobile.getMobile());
 		// 查询用户
@@ -93,6 +102,10 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 			if (!"6666".equalsIgnoreCase(mobile.getVerificationCodeCheck().getCode())) {
 				verifyService.check(mobile.getVerificationCodeCheck(), mobile.getMobile());
 			}
+			// 如果用户手机原本是null，则认为是注册，送积分
+			if (StringUtils.isBlank(user.getMobile()) && null != mobile.getBaseUserBonus()) {
+				userBonus = userBonusService.operate(new UserBonusTemplate(mobile.getBaseUserBonus(), UserBonusConstant.USER_BONUS_REGISTER));
+			}
 			user.setMobile(mobile.getMobile());
 			user.setMobileVerified(UserConstant.VERIFIED_1);
 		}
@@ -100,9 +113,9 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		else {
 			throw new BusinessException(VerificationCodeErrorCode.VC0004);
 		}
-//		return updateUser(user);
 		// 只保存默认部分
-		return userService.updateUser(user, null);
+		user = userService.updateUser(user, null);
+		return userBonusService.addUserBonusToUser(user, userBonus);
 	}
 
 	@Override

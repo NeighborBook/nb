@@ -11,6 +11,7 @@ import com.nb.module.nb.customer.base.userbonus.biz.ITNBUserBonusService;
 import com.nb.module.nb.customer.base.userbonus.domain.TNBUserBonus;
 import com.nb.module.nb.customer.base.userbonusdetail.biz.ITNBUserBonusDetailService;
 import com.nb.module.nb.customer.base.userbonusdetail.domain.TNBUserBonusDetail;
+import com.zjk.module.common.authorization.client.api.user.domain.User;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 
 	@Autowired
 	private ITNBUserBonusDetailService userBonusDetailService;
+
+	public static final String USER_BONUS = "user_bonus";
 
 	private UserBonus checkUserBonus(UserBonusTemplate userBonusTemplate) {
 		// 用户积分不存在，请初始化
@@ -128,5 +131,11 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 		// 保存userBonusDetail;
 		saveUserBonusDetail(userBonusDetail);
 		return userBonus;
+	}
+
+	@Override
+	public User addUserBonusToUser(User user, UserBonus userBonus) {
+		user.getPlugin().put(USER_BONUS, userBonus);
+		return user;
 	}
 }
