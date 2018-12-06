@@ -12,13 +12,13 @@ public enum UserBonusConstant {
 
 	USER_BONUS_REGISTER(3, "注册赠送", new BigDecimal(50)),
 
-	USER_BONUS_ADD_BOOK(4, "添加图书", new BigDecimal(10)),
+	USER_BONUS_ADD_BOOK(4, "添加图书", new BigDecimal(5)),
 
 	USER_BONUS_SHARE(5, "分享", new BigDecimal(10)),
 
 	USER_BONUS_INVITE_FRIEND(6, "邀请好友", new BigDecimal(50)),
 
-	USER_BONUS_CHECK_IN(7, "签到", new BigDecimal(5)),
+	USER_BONUS_CHECK_IN(7, "签到", new BigDecimal(2)),
 
 	USER_BONUS_BORROW_AGREE(8, "借阅同意", new BigDecimal(10)),
 
