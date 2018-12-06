@@ -4,7 +4,7 @@ public enum OrderDetailStatusConstant {
 
 	ORDER_DETAIL_STATUS_AGREE(1, "同意"),
 
-	ORDER_DETAIL_STATUS_DISAGREE(0, "不同意");
+	ORDER_DETAIL_STATUS_DENY(0, "不同意");
 
 
 	private Integer key;

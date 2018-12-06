@@ -353,7 +353,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					status = status + orderDetailStatusConstant.getValue();
 				}
 				// 不同意
-				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DENY.equals(orderDetailStatusConstant)) {
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 订单状态
@@ -371,7 +371,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					status = status + orderDetailStatusConstant.getValue();
 				}
 				// 不同意
-				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DISAGREE.equals(orderDetailStatusConstant)) {
+				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DENY.equals(orderDetailStatusConstant)) {
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
 				}
