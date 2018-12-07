@@ -25,6 +25,7 @@ import com.nb.module.nb.customer.base.orderformdetail.biz.ITNBOrderFormDetailSer
 import com.nb.module.nb.customer.base.orderformdetail.domain.TNBOrderFormDetail;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
+import com.zjk.module.common.base.util.DifferentDays;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,6 +63,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	@Autowired
 	private IUserBonusService userBonusService;
+
+	private static final BigDecimal MINUS_TEN = new BigDecimal(-10);
 
 	/**************************************************************************************************************************************************************/
 
@@ -265,6 +269,27 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return orderForm;
 	}
 
+	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant) {
+		return processUserBonus(orderForm, baseUserBonus, userBonusConstant, BigDecimal.ZERO);
+	}
+
+	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant, BigDecimal extraBonus) {
+		UserBonus userBonus = userBonusService.operate(new UserBonusTemplate(baseUserBonus, userBonusConstant, extraBonus));
+		orderForm.setUserBonus(userBonus);
+		return orderForm;
+	}
+
+	private BigDecimal processExpireBonus(BigDecimal bonus, OrderForm<OrderBorrow> orderForm) {
+		BigDecimal extraBonus = BigDecimal.ZERO;
+		int differentDays = DifferentDays.differentDays(orderForm.getOrder().getExpectedReturnDate(), orderForm.getOrder().getActualReturnDate());
+		// 0 - 10天之间进行计算
+		if (0 < differentDays && differentDays <= 10) {
+			BigDecimal expireBonus = MINUS_TEN.multiply(new BigDecimal(differentDays));
+			extraBonus = bonus.add(expireBonus);
+		}
+		return extraBonus;
+	}
+
 	/**************************************************************************************************************************************************************/
 
 	@Override
@@ -307,8 +332,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 借阅扣除积分
 		borrowApply.getBaseUserBonus().setBizCode(orderForm.getCode());
-		UserBonus userBonus = userBonusService.operate(new UserBonusTemplate(borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW));
-		orderForm.setUserBonus(userBonus);
+		orderForm = processUserBonus(orderForm, borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW);
 		// 发送消息
 		sendBookLendingReminder(orderForm);
 		return orderForm;
@@ -317,7 +341,6 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Override
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
-		UserBonus userBonus;
 		// 订单
 		OrderForm<OrderBorrow> orderForm = checkOrderForm(orderFlow.getOrderCode(), orderFlow.getUpdated(), e -> findOrderBorrowByOrderCode(e));
 		// 订单明细类型
@@ -366,8 +389,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					status = status + orderDetailStatusConstant.getValue();
 					// 归还图书加回积分，如果逾期则扣积分
 					orderFlow.getBaseUserBonus().setBizCode(orderForm.getCode());
-					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE));
-					orderForm.setUserBonus(userBonus);
+					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE);
 				}
 				// 不同意
 				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DENY.equals(orderDetailStatusConstant)) {
@@ -378,8 +400,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 归还图书加回积分，如果逾期则扣积分
 					BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userCode);
 					targetBaseUserBonus.setBizCode(orderForm.getCode());
-					userBonus = userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_AGREE));
-					orderForm.setUserBonus(userBonus);
+					orderForm = processUserBonus(orderForm, targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_DENY);
 				}
 				break;
 			// 续借
@@ -411,8 +432,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 归还图书加回积分，如果逾期则扣积分
 					orderFlow.getBaseUserBonus().setBizCode(orderForm.getCode());
-					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN));
-					orderForm.setUserBonus(userBonus);
+					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN, processExpireBonus(UserBonusConstant.USER_BONUS_RETURN.getBonus(), orderForm));
 				}
 				break;
 		}
