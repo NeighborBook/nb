@@ -6,3 +6,4 @@ sync:
   cron:
     api:
       taggroup: 0 10 0 * * ?
+      userbookexpire: 0 0 12 * * ?
