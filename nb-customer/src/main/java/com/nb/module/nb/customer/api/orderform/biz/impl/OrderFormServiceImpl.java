@@ -306,6 +306,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 借阅扣除积分
+		borrowApply.getBaseUserBonus().setBizCode(orderForm.getCode());
 		UserBonus userBonus = userBonusService.operate(new UserBonusTemplate(borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW));
 		orderForm.setUserBonus(userBonus);
 		// 发送消息
@@ -364,6 +365,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
 					// 归还图书加回积分，如果逾期则扣积分
+					orderFlow.getBaseUserBonus().setBizCode(orderForm.getCode());
 					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE));
 					orderForm.setUserBonus(userBonus);
 				}
@@ -374,8 +376,8 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
 					// 归还图书加回积分，如果逾期则扣积分
-					// TODO 添加目标人的baseUserBonus
-					BaseUserBonus targetBaseUserBonus = null;
+					BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userCode);
+					targetBaseUserBonus.setBizCode(orderForm.getCode());
 					userBonus = userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_AGREE));
 					orderForm.setUserBonus(userBonus);
 				}
@@ -408,6 +410,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 归还图书加回积分，如果逾期则扣积分
+					orderFlow.getBaseUserBonus().setBizCode(orderForm.getCode());
 					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN));
 					orderForm.setUserBonus(userBonus);
 				}

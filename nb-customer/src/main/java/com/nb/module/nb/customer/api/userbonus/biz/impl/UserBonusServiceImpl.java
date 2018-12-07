@@ -2,10 +2,7 @@ package com.nb.module.nb.customer.api.userbonus.biz.impl;
 
 import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
 import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
-import com.nb.module.nb.customer.api.userbonus.domain.Adjust;
-import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
-import com.nb.module.nb.customer.api.userbonus.domain.UserBonusDetail;
-import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
+import com.nb.module.nb.customer.api.userbonus.domain.*;
 import com.nb.module.nb.customer.api.userbonus.exception.UserBonusCode;
 import com.nb.module.nb.customer.base.userbonus.biz.ITNBUserBonusService;
 import com.nb.module.nb.customer.base.userbonus.domain.TNBUserBonus;
@@ -98,6 +95,12 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBonusDetail> findAllUserBonusDetailByUserCode(String userCode, Pageable pageable) {
 		return userBonusDetailService.findAllByUserCode(userCode, pageable).map(e -> new UserBonusDetail(e.getCode(), e.getCreated(), e.getUserCode(), e.getType(), e.getBonus(), e.getRemark(), e.getBizCode()));
+	}
+
+	@Override
+	@Transactional
+	public BaseUserBonus findOneBaseUserBonusByUserCode(String userCode) {
+		return mapOneIfNotNull(findOneOrInitByUserCode(userCode), e -> new BaseUserBonus(e.getUpdated(), e.getUserCode(), null, null));
 	}
 
 	/**************************************************************************************************************************************************************/
