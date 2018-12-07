@@ -1,5 +1,6 @@
 package com.nb.module.nb.customer.api.orderform.domain;
 
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class OrderForm<T> {
 	private List<OrderFormDetail> details = new ArrayList<>();
 
 	private T order;
+
+	private UserBonus userBonus;
 
 	public OrderForm(Date created, Date updated, String code, Integer orderType, Integer orderStatus) {
 		this.created = created;

@@ -8,6 +8,11 @@ import com.nb.module.nb.customer.api.orderform.constant.OrderDetailTypeBorrowCon
 import com.nb.module.nb.customer.api.orderform.constant.OrderFormConstant;
 import com.nb.module.nb.customer.api.orderform.domain.*;
 import com.nb.module.nb.customer.api.orderform.exception.OrderFormCode;
+import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
+import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
+import com.nb.module.nb.customer.api.userbonus.domain.BaseUserBonus;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.weixin.message.biz.IMessageService;
@@ -53,6 +58,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private IBookService bookService;
 	@Autowired
 	private IUserBookService userBookService;
+
+	@Autowired
+	private IUserBonusService userBonusService;
 
 	/**************************************************************************************************************************************************************/
 
@@ -297,6 +305,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
+		// 借阅扣除积分
+		UserBonus userBonus = userBonusService.operate(new UserBonusTemplate(borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW));
+		orderForm.setUserBonus(userBonus);
 		// 发送消息
 		sendBookLendingReminder(orderForm);
 		return orderForm;
@@ -305,6 +316,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Override
 	@Transactional
 	public OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow) {
+		UserBonus userBonus;
 		// 订单
 		OrderForm<OrderBorrow> orderForm = checkOrderForm(orderFlow.getOrderCode(), orderFlow.getUpdated(), e -> findOrderBorrowByOrderCode(e));
 		// 订单明细类型
@@ -351,6 +363,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderBorrow(orderForm);
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
+					// 归还图书加回积分，如果逾期则扣积分
+					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE));
+					orderForm.setUserBonus(userBonus);
 				}
 				// 不同意
 				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DENY.equals(orderDetailStatusConstant)) {
@@ -358,6 +373,11 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
+					// 归还图书加回积分，如果逾期则扣积分
+					// TODO 添加目标人的baseUserBonus
+					BaseUserBonus targetBaseUserBonus = null;
+					userBonus = userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_AGREE));
+					orderForm.setUserBonus(userBonus);
 				}
 				break;
 			// 续借
@@ -387,6 +407,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderBorrow(orderForm);
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
+					// 归还图书加回积分，如果逾期则扣积分
+					userBonus = userBonusService.operate(new UserBonusTemplate(orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN));
+					orderForm.setUserBonus(userBonus);
 				}
 				break;
 		}
