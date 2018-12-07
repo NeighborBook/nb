@@ -29,7 +29,13 @@
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
 		</dependency>
-		
+
+		<!-- aliyun dysmsapi -->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>
