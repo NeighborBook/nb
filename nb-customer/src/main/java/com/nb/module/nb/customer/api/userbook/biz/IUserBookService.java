@@ -1,6 +1,7 @@
 package com.nb.module.nb.customer.api.userbook.biz;
 
 
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
@@ -26,7 +27,7 @@ public interface IUserBookService {
 	 *
 	 * @param vo
 	 */
-	void save(UserBook vo);
+	UserBonus save(UserBook vo);
 
 	Page<UserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, @PageableDefault Pageable pageable);
 

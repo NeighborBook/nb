@@ -1,6 +1,10 @@
 package com.nb.module.nb.customer.api.userbook.biz.impl;
 
 import com.nb.module.nb.customer.api.book.biz.IBookService;
+import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
+import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
@@ -29,6 +33,9 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	@Autowired
 	private IWeixinUserService weixinUserService;
 
+	@Autowired
+	private IUserBonusService userBonusService;
+
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public UserBook findOneByUserCodeAndBookCode(String userCode, String bookCode) {
@@ -42,18 +49,22 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 
 	@Override
 	@Transactional
-	public void save(UserBook vo) {
+	public UserBonus save(UserBook vo) {
+		UserBonus userBonus = null;
+		// 没有sharable则默认 1-可共享的
+		if (null == vo.getSharable()) {
+			vo.setSharable(UserBookConstant.SHARABLE);
+		}
+		// 查询db
 		TNBUserBook po = userBookService.findOneByUserCodeAndBookCode(vo.getUserCode(), vo.getBookCode());
 		if (null == po) {
 			po = new TNBUserBook();
 			po.setUserCode(vo.getUserCode());
 			po.setBookCode(vo.getBookCode());
+			// 如果是第一次绑定，并且shareable = 1-可共享的，则送积分
+			userBonus = userBonusService.operate(new UserBonusTemplate(vo.getBaseUserBonus(), UserBonusConstant.USER_BONUS_ADD_BOOK));
 		}
 		po.setBookCount(vo.getBookCount());
-		// 没有sharable则默认 1-可共享的
-		if (null == vo.getSharable()) {
-			vo.setSharable(UserBookConstant.SHARABLE);
-		}
 		po.setSharable(vo.getSharable());
 		// lentAmount默认0
 		if (null == vo.getLentAmount()) {
@@ -61,6 +72,8 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 		}
 		po.setLentAmount(vo.getLentAmount());
 		userBookService.save(po);
+
+		return userBonus;
 	}
 
 	@Override

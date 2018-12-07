@@ -1,5 +1,6 @@
 package com.nb.module.nb.customer.api.userbook.controller;
 
+import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
@@ -36,9 +37,8 @@ public class UserBookController extends BaseController {
 
 	@ApiOperation(value = "保存用户图书关系", notes = "保存用户图书关系")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public JsonContainer save(@RequestBody @Validated UserBook userBook) {
-		service.save(userBook);
-		return setSuccessMessage();
+	public JsonContainer<UserBonus> save(@RequestBody @Validated UserBook userBook) {
+		return setSuccessMessage(service.save(userBook));
 	}
 
 	@ApiOperation(value = "通过标签和用户编号分页查询", notes = "通过标签和用户编号分页查询")
