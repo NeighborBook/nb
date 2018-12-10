@@ -47,7 +47,7 @@ public class DySmsApiServiceImpl extends CommonServiceImpl implements IDySmsApiS
 		}
 		//请求不成功
 		if (sendSmsResponse.getCode() == null || !sendSmsResponse.getCode().equals("OK")) {
-			throw new BusinessException(DySmsApiCode.DS0002, null, dySmsApi);
+			throw new BusinessException(DySmsApiCode.DS0002, null, sendSmsResponse);
 		}
 	}
 }

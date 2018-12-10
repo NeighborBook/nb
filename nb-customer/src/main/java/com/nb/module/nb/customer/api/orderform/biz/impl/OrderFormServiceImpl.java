@@ -269,14 +269,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return orderForm;
 	}
 
-	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant) {
-		return processUserBonus(orderForm, baseUserBonus, userBonusConstant, BigDecimal.ZERO);
+	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant, boolean flag) {
+		return processUserBonus(orderForm, baseUserBonus, userBonusConstant, BigDecimal.ZERO, flag);
 	}
 
-	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant, BigDecimal extraBonus) {
+	private <T> OrderForm<T> processUserBonus(OrderForm<T> orderForm, BaseUserBonus baseUserBonus, UserBonusConstant userBonusConstant, BigDecimal extraBonus, boolean flag) {
 		baseUserBonus.setBizCode(orderForm.getCode());
 		UserBonus userBonus = userBonusService.operate(new UserBonusTemplate(baseUserBonus, userBonusConstant, extraBonus));
-		orderForm.setUserBonus(userBonus);
+		if (flag) {
+			orderForm.setUserBonus(userBonus);
+		}
 		return orderForm;
 	}
 
@@ -332,7 +334,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		// 保存订单
 		save(orderForm, e -> orderBorrowService.save(convert(e)));
 		// 借阅扣除积分
-		orderForm = processUserBonus(orderForm, borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW);
+		orderForm = processUserBonus(orderForm, borrowApply.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW, true);
 		// 发送消息
 		sendBookLendingReminder(orderForm);
 		return orderForm;
@@ -388,7 +390,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
 					// 归还图书加回积分，如果逾期则扣积分
-					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE);
+					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE, true);
 				}
 				// 不同意
 				else if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_DENY.equals(orderDetailStatusConstant)) {
@@ -398,7 +400,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					status = status + orderDetailStatusConstant.getValue();
 					// 归还图书加回积分，如果逾期则扣积分
 					BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userCode);
-					orderForm = processUserBonus(orderForm, targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_DENY);
+					orderForm = processUserBonus(orderForm, targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_DENY, false);
 				}
 				break;
 			// 续借
@@ -429,7 +431,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 订单结束
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 归还图书加回积分，如果逾期则扣积分
-					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN, processExpireBonus(UserBonusConstant.USER_BONUS_RETURN.getBonus(), orderForm));
+					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN, processExpireBonus(UserBonusConstant.USER_BONUS_RETURN.getBonus(), orderForm), true);
 				}
 				break;
 		}
