@@ -20,6 +20,9 @@ public class Mobile extends BaseVerificationCodeCheck {
 	@NotBlank
 	private String mobile;
 
+	@ApiModelProperty(value = "分享用户编号")
+	private String sharedFromUserCode;
+
 	@Valid
 	@NotNull
 	private BaseUserBonus baseUserBonus;
