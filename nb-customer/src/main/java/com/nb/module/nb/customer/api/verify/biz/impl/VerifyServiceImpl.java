@@ -49,7 +49,7 @@ public class VerifyServiceImpl extends CommonServiceImpl implements IVerifyServi
 		Map<String, Object> model = new HashMap<>();
 		model.put("code", verificationCode.getCode());
 		dySmsApiService.sendSMS(new DySmsApi(mobile, signName, smsTemplateCode, model, null));
-		log.info(verificationCode.getCode());
+//		log.info(verificationCode.getCode());
 		// 返回键
 		return verificationCode.getKey();
 	}

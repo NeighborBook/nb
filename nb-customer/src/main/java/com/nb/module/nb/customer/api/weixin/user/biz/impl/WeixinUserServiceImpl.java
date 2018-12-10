@@ -98,10 +98,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		User user = findFullOneWithPassowrdByCode(mobile.getUserCode());
 		// 手机验证
 		if (UserConstant.VERIFIED_MOBILE.equalsIgnoreCase(mobile.getVerificationCodeCheck().getVerifyType())) {
-			// TODO 添加后门，等短信实现后去除
-			if (!"6666".equalsIgnoreCase(mobile.getVerificationCodeCheck().getCode())) {
-				verifyService.check(mobile.getVerificationCodeCheck(), mobile.getMobile());
-			}
+			verifyService.check(mobile.getVerificationCodeCheck(), mobile.getMobile());
 			// 如果用户手机原本是null，则认为是注册，送积分
 			if (StringUtils.isBlank(user.getMobile()) && null != mobile.getBaseUserBonus()) {
 				userBonus = userBonusService.operate(new UserBonusTemplate(mobile.getBaseUserBonus(), UserBonusConstant.USER_BONUS_REGISTER));
