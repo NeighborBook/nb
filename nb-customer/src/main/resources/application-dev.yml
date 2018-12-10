@@ -7,3 +7,7 @@ sync:
     api:
       taggroup: 0 10 0 * * ?
       userbookexpire: 0 0 12 * * ?
+
+verify:
+  signName: 邻里爱读书
+  smsTemplateCode: SMS_152506400
