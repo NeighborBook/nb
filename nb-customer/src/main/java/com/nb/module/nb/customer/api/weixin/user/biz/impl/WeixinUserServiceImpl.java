@@ -3,8 +3,11 @@ package com.nb.module.nb.customer.api.weixin.user.biz.impl;
 import com.nb.module.nb.customer.api.user.biz.IUserService;
 import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
 import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
+import com.nb.module.nb.customer.api.userbonus.domain.BaseUserBonus;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
+import com.nb.module.nb.customer.api.userintro.biz.IUserIntroService;
+import com.nb.module.nb.customer.api.userintro.domain.UserIntro;
 import com.nb.module.nb.customer.api.verify.biz.IVerifyService;
 import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
@@ -43,6 +46,8 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 
 	@Autowired
 	private IUserBonusService userBonusService;
+	@Autowired
+	private IUserIntroService userIntroService;
 
 	@Override
 	public User findOneByCode(String userCode) {
@@ -102,6 +107,10 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 			// 如果用户手机原本是null，则认为是注册，送积分
 			if (StringUtils.isBlank(user.getMobile()) && null != mobile.getBaseUserBonus()) {
 				userBonus = userBonusService.operate(new UserBonusTemplate(mobile.getBaseUserBonus(), UserBonusConstant.USER_BONUS_REGISTER));
+				// 如果shareFromUserCode存在，则给邀请人加分，并保存关系
+				if (null != mobile.getUserIntro()) {
+					saveUserIntro(mobile.getUserIntro());
+				}
 			}
 			user.setMobile(mobile.getMobile());
 			user.setMobileVerified(UserConstant.VERIFIED_1);
@@ -113,6 +122,17 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		// 只保存默认部分
 		user = userService.updateUser(user, null);
 		return userBonusService.addUserBonusToUser(user, userBonus);
+	}
+
+	private void saveUserIntro(UserIntro userIntro) {
+		if (StringUtils.isNotBlank(userIntro.getUserCode()) && StringUtils.isNotBlank(userIntro.getUserCode())) {
+			// 保存对象
+			userIntroService.save(userIntro);
+			// 添加积分
+			BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userIntro.getIntroUserCode());
+			targetBaseUserBonus.setBizCode(userIntro.getUserCode());
+			userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_INVITE_FRIEND));
+		}
 	}
 
 	@Override
