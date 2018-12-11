@@ -34,6 +34,7 @@ public class UserShareServiceImpl extends CommonServiceImpl implements IUserShar
 		TNBUserShare po = userShareService.newInstance();
 		po.setUserCode(userShare.getBaseUserBonus().getUserCode());
 		po.setShareDate(userShare.getShareDate());
+		po.setSource(userShare.getSource());
 		userShareService.save(po);
 		// 如果当天没有分享记录，则加积分
 		if (null == pos || pos.isEmpty()) {

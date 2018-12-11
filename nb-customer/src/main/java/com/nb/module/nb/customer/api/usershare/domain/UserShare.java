@@ -13,6 +13,8 @@ public class UserShare {
 	@NotNull
 	private Date shareDate;
 
+	private String source;
+
 	@Valid
 	@NotNull
 	private BaseUserBonus baseUserBonus;

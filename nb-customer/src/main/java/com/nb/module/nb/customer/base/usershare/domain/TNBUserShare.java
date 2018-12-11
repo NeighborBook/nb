@@ -20,4 +20,5 @@ public class TNBUserShare extends DataEntity {
 	@Column(columnDefinition = "timestamp")
 	private Date shareDate;
 
+	private String source;
 }
