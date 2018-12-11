@@ -107,7 +107,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 			// 如果用户手机原本是null，则认为是注册，送积分
 			if (StringUtils.isBlank(user.getMobile()) && null != mobile.getBaseUserBonus()) {
 				userBonus = userBonusService.operate(new UserBonusTemplate(mobile.getBaseUserBonus(), UserBonusConstant.USER_BONUS_REGISTER));
-				// 如果shareFromUserCode存在，则给邀请人加分，并保存关系
+				// 如果UserIntro存在，则给邀请人加分，并保存关系
 				if (null != mobile.getUserIntro()) {
 					saveUserIntro(mobile.getUserIntro());
 				}
@@ -125,7 +125,7 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	}
 
 	private void saveUserIntro(UserIntro userIntro) {
-		if (StringUtils.isNotBlank(userIntro.getUserCode()) && StringUtils.isNotBlank(userIntro.getUserCode())) {
+		if (StringUtils.isNotBlank(userIntro.getUserCode()) && StringUtils.isNotBlank(userIntro.getIntroUserCode())) {
 			// 保存对象
 			userIntroService.save(userIntro);
 			// 添加积分
