@@ -21,7 +21,7 @@ public class PartnerAuthorizationServiceImpl extends CommonServiceImpl implement
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<PartnerAuthorization> findAll(Pageable pageable) {
-		return partnerAuthorizationService.findAll(pageable).map(e -> new PartnerAuthorization(e.getCode(), e.getUsername(), e.getPassword(), e.getUsage()));
+		return partnerAuthorizationService.findAll(pageable).map(e -> new PartnerAuthorization(e.getCode(), e.getUsername(), e.getPassword(), e.getPurpose()));
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class PartnerAuthorizationServiceImpl extends CommonServiceImpl implement
 		}
 		po.setUsername(partnerAuthorization.getUsername());
 		po.setPassword(partnerAuthorization.getPassword());
-		po.setUsage(partnerAuthorization.getUsage());
+		po.setPurpose(partnerAuthorization.getPurpose());
 		partnerAuthorizationService.save(po);
 	}
 }

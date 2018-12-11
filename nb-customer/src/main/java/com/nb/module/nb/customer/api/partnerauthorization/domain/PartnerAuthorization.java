@@ -16,13 +16,13 @@ public class PartnerAuthorization {
 	private String password;
 
 	@NotBlank
-	private String usage;
+	private String purpose;
 
-	public PartnerAuthorization(String code, String username, String password, String usage) {
+	public PartnerAuthorization(String code, @NotBlank String username, @NotBlank String password, @NotBlank String purpose) {
 		this.code = code;
 		this.username = username;
 		this.password = password;
-		this.usage = usage;
+		this.purpose = purpose;
 	}
 
 	public PartnerAuthorization() {

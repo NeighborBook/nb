@@ -17,6 +17,6 @@ public class TNBPartnerAuthorization extends DataEntity {
 
 	private String password;
 
-	private String usage;
+	private String purpose;
 
 }
