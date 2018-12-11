@@ -1,13 +1,13 @@
-package com.nb.module.nb.customer.api.usersharedetail.biz.impl;
+package com.nb.module.nb.customer.api.usershare.biz.impl;
 
 import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
 import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
-import com.nb.module.nb.customer.api.usersharedetail.biz.IUserShareService;
-import com.nb.module.nb.customer.api.usersharedetail.domain.UserShare;
-import com.nb.module.nb.customer.base.usersharedetail.biz.ITNBUserShareService;
-import com.nb.module.nb.customer.base.usersharedetail.domain.TNBUserShare;
+import com.nb.module.nb.customer.api.usershare.biz.IUserShareService;
+import com.nb.module.nb.customer.api.usershare.domain.UserShare;
+import com.nb.module.nb.customer.base.usershare.biz.ITNBUserShareService;
+import com.nb.module.nb.customer.base.usershare.domain.TNBUserShare;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

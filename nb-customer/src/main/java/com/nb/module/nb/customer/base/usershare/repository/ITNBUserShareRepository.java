@@ -1,6 +1,6 @@
-package com.nb.module.nb.customer.base.usersharedetail.repository;
+package com.nb.module.nb.customer.base.usershare.repository;
 
-import com.nb.module.nb.customer.base.usersharedetail.domain.TNBUserShare;
+import com.nb.module.nb.customer.base.usershare.domain.TNBUserShare;
 import com.zjk.module.common.data.repository.IDataRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.Date;
 import java.util.List;
 
-@RepositoryRestResource(path = "usersharedetail")
+@RepositoryRestResource(path = "usershare")
 public interface ITNBUserShareRepository extends IDataRepository<TNBUserShare, Integer> {
 
 	TNBUserShare findOneByCode(String code);

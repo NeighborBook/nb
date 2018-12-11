@@ -1,8 +1,8 @@
-package com.nb.module.nb.customer.api.usersharedetail.controller;
+package com.nb.module.nb.customer.api.usershare.controller;
 
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
-import com.nb.module.nb.customer.api.usersharedetail.biz.IUserShareService;
-import com.nb.module.nb.customer.api.usersharedetail.domain.UserShare;
+import com.nb.module.nb.customer.api.usershare.biz.IUserShareService;
+import com.nb.module.nb.customer.api.usershare.domain.UserShare;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;

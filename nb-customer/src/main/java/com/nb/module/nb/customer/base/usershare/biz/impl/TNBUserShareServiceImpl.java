@@ -1,8 +1,8 @@
-package com.nb.module.nb.customer.base.usersharedetail.biz.impl;
+package com.nb.module.nb.customer.base.usershare.biz.impl;
 
-import com.nb.module.nb.customer.base.usersharedetail.biz.ITNBUserShareService;
-import com.nb.module.nb.customer.base.usersharedetail.domain.TNBUserShare;
-import com.nb.module.nb.customer.base.usersharedetail.repository.ITNBUserShareRepository;
+import com.nb.module.nb.customer.base.usershare.biz.ITNBUserShareService;
+import com.nb.module.nb.customer.base.usershare.domain.TNBUserShare;
+import com.nb.module.nb.customer.base.usershare.repository.ITNBUserShareRepository;
 import com.nb.module.nb.customer.serialcode.CustomerSerialCode;
 import com.zjk.module.common.authorization.client.api.serialcode.client.ISerialCodeClient;
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;

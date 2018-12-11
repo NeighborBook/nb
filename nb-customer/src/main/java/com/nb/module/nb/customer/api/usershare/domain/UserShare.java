@@ -1,4 +1,4 @@
-package com.nb.module.nb.customer.api.usersharedetail.domain;
+package com.nb.module.nb.customer.api.usershare.domain;
 
 import com.nb.module.nb.customer.api.userbonus.domain.BaseUserBonus;
 import lombok.Data;

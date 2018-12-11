@@ -1,6 +1,6 @@
-package com.nb.module.nb.customer.base.usersharedetail.biz;
+package com.nb.module.nb.customer.base.usershare.biz;
 
-import com.nb.module.nb.customer.base.usersharedetail.domain.TNBUserShare;
+import com.nb.module.nb.customer.base.usershare.domain.TNBUserShare;
 import com.zjk.module.common.data.biz.IDataService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

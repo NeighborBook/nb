@@ -1,4 +1,4 @@
-package com.nb.module.nb.customer.base.usersharedetail.domain;
+package com.nb.module.nb.customer.base.usershare.domain;
 
 import com.zjk.module.common.data.domain.DataEntity;
 import lombok.Data;
