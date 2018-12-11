@@ -11,7 +11,8 @@ public enum CustomerSerialCode implements ISerialCode {
 	NBTAGGROUP("NBTAGGROUP", "标签组"),
 	NBORDERFORM("NBORDERFORM", "订单"),
 	NBUSERBONUS("NBUSERBONUS", "用户积分"),
-	NBUSERCHECKIN("NBUSERCHECKIN", "用户积分");
+	NBUSERCHECKIN("NBUSERCHECKIN", "用户签到"),
+	NBUSERSHARE("NBUSERSHARE", "用户分享");
 
 	private String serialGroup;
 
