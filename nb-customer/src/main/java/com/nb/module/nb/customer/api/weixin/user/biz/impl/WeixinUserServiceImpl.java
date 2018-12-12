@@ -3,7 +3,6 @@ package com.nb.module.nb.customer.api.weixin.user.biz.impl;
 import com.nb.module.nb.customer.api.user.biz.IUserService;
 import com.nb.module.nb.customer.api.userbonus.biz.IUserBonusService;
 import com.nb.module.nb.customer.api.userbonus.constant.UserBonusConstant;
-import com.nb.module.nb.customer.api.userbonus.domain.BaseUserBonus;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
 import com.nb.module.nb.customer.api.userintro.biz.IUserIntroService;
@@ -129,10 +128,10 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 			if (StringUtils.isNotBlank(userIntro.getUserCode()) && StringUtils.isNotBlank(userIntro.getIntroUserCode())) {
 				// 保存对象
 				userIntroService.save(userIntro);
-				// 添加积分
-				BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userIntro.getIntroUserCode());
-				targetBaseUserBonus.setBizCode(userIntro.getUserCode());
-				userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_INVITE_FRIEND));
+				// 添加积分，基于微信政策，邀请好友不加分
+//				BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userIntro.getIntroUserCode());
+//				targetBaseUserBonus.setBizCode(userIntro.getUserCode());
+//				userBonusService.operate(new UserBonusTemplate(targetBaseUserBonus, UserBonusConstant.USER_BONUS_INVITE_FRIEND));
 			}
 		}
 	}
