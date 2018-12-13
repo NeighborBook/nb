@@ -287,11 +287,11 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	 */
 	@Query(value = " select n.* from " +
 			" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
-			" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code != :userCode ",
+			" t_nb_book n where m.code = n.code and exists (select distinct book_code from t_nb_user_book where user_code != :userCode) ",
 			countQuery = " select count(*) from ( " +
 					" select n.* from " +
 					" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
-					" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code != :userCode " +
+					" t_nb_book n where m.code = n.code and exists (select distinct book_code from t_nb_user_book where user_code != :userCode) " +
 					" ) countQuery ",
 			nativeQuery = true)
 	Page<TNBBook> findAllBySearchAndUserCodeNot(@Param("search") String search, @Param("userCode") String userCode, Pageable pageable);
@@ -306,11 +306,11 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	 */
 	@Query(value = " select n.* from " +
 			" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
-			" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode ",
+			" t_nb_book n where m.code = n.code and exists (select distinct book_code from t_nb_user_book where user_code = :userCode) ",
 			countQuery = " select count(*) from ( " +
 					" select n.* from " +
 					" (select distinct a.code from t_nb_book a left join t_nb_author b on a.code = b.code where a.title like :search or a.publisher like :search or a.isbn13 like :search or b.author like :search) m, " +
-					" t_nb_book n, t_nb_user_book ub where m.code = n.code and m.code = ub.book_code and ub.user_code = :userCode " +
+					" t_nb_book n where m.code = n.code and exists (select distinct book_code from t_nb_user_book where user_code = :userCode) " +
 					" ) countQuery ",
 			nativeQuery = true)
 	Page<TNBBook> findAllBySearchAndUserCode(@Param("search") String search, @Param("userCode") String userCode, Pageable pageable);
