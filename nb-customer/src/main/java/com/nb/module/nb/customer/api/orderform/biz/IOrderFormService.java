@@ -19,6 +19,8 @@ public interface IOrderFormService {
 
 	List<OrderForm<OrderBorrow>> findAllByOwnerUserCodeAndBookCodeAndBorrowerUserCodeAndOrderStatus(String ownerUserCode, String bookCode, String borrowerUserCode, Integer orderStatus);
 
+	List<OrderForm<OrderBorrow>>  findAllByUserCodeAndOrderTypeAndOrderStatus(String userCode, Integer orderType, Integer orderStatus);
+
 	OrderForm<OrderBorrow> borrow(BorrowApply borrowApply);
 
 	OrderForm<OrderBorrow> borrowFlow(OrderFlow orderFlow);

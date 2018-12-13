@@ -17,7 +17,8 @@ public enum OrderFormCode implements IBusinessCode {
 	OF0009("OF0009", "订单已经结束。orderCode:{0}", "订单已经结束"),
 	OF0010("OF0010", "订单内容不存在。orderCode:{0}", "订单内容不存在"),
 	OF0011("OF0011", "订单已更新，请刷新页面。orderCode:{0}", "订单已更新，请刷新页面"),
-	OF0012("OF0012", "请至少借一本书。bookCount:{0}", "请至少借一本书");
+	OF0012("OF0012", "请至少借一本书。bookCount:{0}", "请至少借一本书"),
+	OF0013("OF0013", "您有逾期的书尚未归还。userCode:{0}, size:{1}", "您有逾期的书尚未归还，请归还原后再进行借阅");
 
 	private String clazz;
 

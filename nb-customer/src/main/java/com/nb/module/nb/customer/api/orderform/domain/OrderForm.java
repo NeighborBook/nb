@@ -16,6 +16,8 @@ public class OrderForm<T> {
 
 	private String code;
 
+	private String userCode;
+
 	private Integer orderType;
 
 	private Integer orderStatus;
@@ -26,15 +28,17 @@ public class OrderForm<T> {
 
 	private UserBonus userBonus;
 
-	public OrderForm(Date created, Date updated, String code, Integer orderType, Integer orderStatus) {
+	public OrderForm(Date created, Date updated, String code, String userCode, Integer orderType, Integer orderStatus) {
 		this.created = created;
 		this.updated = updated;
 		this.code = code;
+		this.userCode = userCode;
 		this.orderType = orderType;
 		this.orderStatus = orderStatus;
 	}
 
-	public OrderForm(Integer orderType, Integer orderStatus) {
+	public OrderForm(String userCode, Integer orderType, Integer orderStatus) {
+		this.userCode = userCode;
 		this.orderType = orderType;
 		this.orderStatus = orderStatus;
 	}

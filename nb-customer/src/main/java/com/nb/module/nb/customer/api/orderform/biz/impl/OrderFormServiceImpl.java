@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFormService {
@@ -133,6 +134,13 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		if (null != list && !list.isEmpty()) {
 			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
 		}
+		List<OrderForm<OrderBorrow>> expireList = findAllByUserCodeAndOrderTypeAndOrderStatus(borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START).stream().filter(e -> {
+			int differentDays = DifferentDays.differentDays(e.getOrder().getExpectedReturnDate(), new Date());
+			return differentDays > 10 ? true : false;
+		}).collect(Collectors.toList());
+		if (null != expireList && !expireList.isEmpty()) {
+			throw new BusinessException(OrderFormCode.OF0013, new Object[]{borrowApply.getBorrowerUserCode(), expireList.size()});
+		}
 	}
 
 	/**************************************************************************************************************************************************************/
@@ -141,7 +149,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		TNBOrderForm orderFormPO = orderFormService.findOneByCode(e.getOrderCode());
 		OrderForm<OrderBorrow> orderForm = null;
 		if (null != orderFormPO) {
-			orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
+			orderForm = new OrderForm<>(orderFormPO.getCreated(), orderFormPO.getUpdated(), orderFormPO.getCode(), orderFormPO.getUserCode(), orderFormPO.getOrderType(), orderFormPO.getOrderStatus());
 			orderForm.setDetails(map(orderFormDetailService.findAllByCode(e.getOrderCode()), s -> new OrderFormDetail(s.getCreated(), s.getOrderDetailType(), s.getOrderDetailStatus(), s.getRemark())));
 			orderForm.setOrder(mapOneIfNotNull(e, s -> new OrderBorrow(s.getOwnerUserCode(), weixinUserService.findNicknameByCode(s.getOwnerUserCode()), s.getBookCode(), s.getBorrowerUserCode(), weixinUserService.findNicknameByCode(s.getBorrowerUserCode()), s.getBookCount(), s.getStartBorrowDate(), s.getInitialReturnDate(), s.getExpectedReturnDate(), s.getActualReturnDate())));
 		}
@@ -175,6 +183,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	private <T> void save(OrderForm<T> orderForm, Consumer<OrderForm<T>> consumer) {
 		// 订单主体
 		TNBOrderForm po = orderFormService.newInstance();
+		po.setUserCode(orderForm.getUserCode());
 		po.setOrderType(orderForm.getOrderType());
 		po.setOrderStatus(orderForm.getOrderStatus());
 		orderFormService.save(po);
@@ -290,6 +299,11 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 			BigDecimal expireBonus = MINUS_TEN.multiply(new BigDecimal(differentDays));
 			extraBonus = bonus.add(expireBonus);
 		}
+		// 超过10天按照10天计算
+		else if (differentDays < 10) {
+			BigDecimal expireBonus = MINUS_TEN.multiply(new BigDecimal(10));
+			extraBonus = bonus.add(expireBonus);
+		}
 		return extraBonus;
 	}
 
@@ -322,13 +336,19 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public List<OrderForm<OrderBorrow>> findAllByUserCodeAndOrderTypeAndOrderStatus(String userCode, Integer orderType, Integer orderStatus) {
+		return map(orderFormService.findAllByUserCodeAndOrderTypeAndOrderStatus(userCode, orderType, orderStatus), e -> findOrderBorrowByOrderCode(e.getCode()));
+	}
+
+	@Override
 	@Transactional
 	public OrderForm<OrderBorrow> borrow(BorrowApply borrowApply) {
 		OrderForm<OrderBorrow> orderForm;
 		// 检查订单申请
 		checkOrderBorrow(borrowApply);
 		// 创建订单
-		orderForm = new OrderForm<>(OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
+		orderForm = new OrderForm<>(borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START);
 		orderForm.setOrder(convert(borrowApply));
 		orderForm.getDetails().add(new OrderFormDetail(OrderDetailTypeBorrowConstant.ORDER_DETAIL_TYPE_BORROW.getKey(), OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.getKey(), borrowApply.getRemark()));
 		// 保存订单

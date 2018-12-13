@@ -13,6 +13,8 @@ public class TNBOrderForm extends DataEntity {
 
 	private String code;
 
+	private String userCode;
+
 	private Integer orderType;
 
 	private Integer orderStatus;

@@ -51,7 +51,12 @@ public class UserBonusServiceImpl extends CommonServiceImpl implements IUserBonu
 			userBonus.setTotalBonus(userBonus.getTotalBonus().add(realBonus));
 		}
 		// 当前积分
-		userBonus.setCurrentBonus(userBonus.getCurrentBonus().add(realBonus));
+		BigDecimal currentBonus = userBonus.getCurrentBonus().add(realBonus);
+		// 当前积分比0小则提示积分不足
+		if (-1 == currentBonus.compareTo(BigDecimal.ZERO)) {
+			throw new BusinessException(UserBonusCode.UB0003, new Object[]{userBonusTemplate.getUserCode(), userBonus.getCurrentBonus(), realBonus});
+		}
+		userBonus.setCurrentBonus(currentBonus);
 		return new UserBonusDetail(null, null, userBonus.getUserCode(), userBonusTemplate.getUserBonusConstant().getKey(), realBonus, userBonusTemplate.getRemark(), userBonusTemplate.getBizCode());
 	}
 
