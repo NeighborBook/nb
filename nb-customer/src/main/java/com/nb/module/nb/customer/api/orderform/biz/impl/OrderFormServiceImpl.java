@@ -135,8 +135,12 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
 		}
 		List<OrderForm<OrderBorrow>> expireList = findAllByUserCodeAndOrderTypeAndOrderStatus(borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START).stream().filter(e -> {
-			int differentDays = DifferentDays.differentDays(e.getOrder().getExpectedReturnDate(), new Date());
-			return differentDays > 10 ? true : false;
+			if (null != e && null != e.getOrder() && null != e.getOrder().getExpectedReturnDate()) {
+				long differentDays = DifferentDays.differentLocalDate(e.getOrder().getExpectedReturnDate(), new Date());
+				return differentDays > 10L ? true : false;
+			} else {
+				return false;
+			}
 		}).collect(Collectors.toList());
 		if (null != expireList && !expireList.isEmpty()) {
 			throw new BusinessException(OrderFormCode.OF0013, new Object[]{borrowApply.getBorrowerUserCode(), expireList.size()});
