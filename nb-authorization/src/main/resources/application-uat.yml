@@ -7,3 +7,10 @@ sync:
   cron:
     method: 0 0 0 * * ?
     businesscode: 0 0 0 * * ?
+
+server:
+  port: 18730
+
+common:
+  base:
+    path: /home/microservice-uat
