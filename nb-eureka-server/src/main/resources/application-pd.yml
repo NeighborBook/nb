@@ -4,3 +4,10 @@ eureka:
     enable-self-preservation: false
   instance:
     ip-address:
+
+server:
+  port: 8761
+
+common:
+  base:
+    path: /home/microservice

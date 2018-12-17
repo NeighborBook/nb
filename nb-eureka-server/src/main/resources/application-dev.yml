@@ -2,3 +2,10 @@ eureka:
   server:
     #开发时关闭自我保护
     enable-self-preservation: false
+
+server:
+  port: 8761
+
+common:
+  base:
+    path: /home/microservice
