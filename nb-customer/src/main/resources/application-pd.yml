@@ -1,7 +1,7 @@
 eureka:
   instance:
-    #实例ip
-    ip-address: 127.0.0.1
+    #实例ip 配置在sh中
+    ip-address:
 sync:
   cron:
     api:

@@ -1,0 +1,2 @@
+#!/bin/bash  
+nohup java -Xmx500m -jar /home/microservice/service/nb-customer/nb-customer-1.0.0.jar --spring.profiles.active='uat, db_nb_pd,redis_pd, eureka_pd, weixin_pd' --eureka.instance.ip-address=47.100.243.160 &
