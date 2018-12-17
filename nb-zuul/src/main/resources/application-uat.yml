@@ -4,6 +4,10 @@ eureka:
     ip-address: #10.130.12.42
     
 server:
-  port: 8060
+  port: 18060
   servlet:
     context-path:
+
+common:
+  base:
+    path: /home/microservice-uat

@@ -7,3 +7,7 @@ server:
   port: 8060
   servlet:
     context-path:
+
+common:
+  base:
+    path: /home/microservice
