@@ -12,6 +12,13 @@ verify:
   signName: 邻里爱读书
   smsTemplateCode: SMS_152506400
 
+weixin:
+  message:
+    bookLendingReminderTemplateId: -LGNf9vuHBh7qksNK5PtommL9bjDkEYMsD6eiOIquPw
+    bookLendingReminderTemplateUrl: http://upload.neighborbook.com.cn/order_detail.php?order=
+    bookLendingStatusReminderTemplateId: RGHNpgGk5LwDLeGHh25iSuCNGdOm2fcoCl9-Wt_gLdA
+    bookLendingStatusReminderTemplateUrl: http://upload.neighborbook.com.cn/order_detail.php?order=
+
 server:
   port: 10001
 
