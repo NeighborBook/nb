@@ -41,4 +41,6 @@ public interface IBookService {
 	Page<BookMinInfo> findAllBySearchAndUserCodeNot(String search, String userCode, Pageable pageable);
 
 	Page<BookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
+
+	Page<BookMinInfo> findAllByLbsIdAndUserCodeNot(List<String> lbsId, Integer sharable, String userCode, Pageable pageable);
 }

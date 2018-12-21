@@ -314,4 +314,51 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 					" ) countQuery ",
 			nativeQuery = true)
 	Page<TNBBook> findAllBySearchAndUserCode(@Param("search") String search, @Param("userCode") String userCode, Pageable pageable);
+
+	/***********************************************************************************************************************************************************************/
+
+	/**
+	 * 通过地址和用户编号(!=)查询
+	 *
+	 * @param lbsId
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select * from t_nb_book where code in ( " +
+			" select distinct book_code from t_nb_user_book where user_code in ( " +
+			" select user_code from t_nb_user_location where lbs_id in :lbsId and user_code != :userCode " +
+			" )) ",
+			countQuery = " select count(*) from ( " +
+					" select * from t_nb_book where code in ( " +
+					" select distinct book_code from t_nb_user_book where user_code in ( " +
+					" select user_code from t_nb_user_location where lbs_id in :lbsId and user_code != :userCode " +
+					" )) " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllByLbsIdAndUserCodeNot(@Param("lbsId") List<String> lbsId, @Param("userCode") String userCode, Pageable pageable);
+
+
+	/**
+	 * 通过地址，是否共享和用户编号(!=)查询
+	 *
+	 * @param lbsId
+	 * @param sharable
+	 * @param userCode
+	 * @param pageable
+	 * @return
+	 */
+	@Query(value = " select * from t_nb_book where code in ( " +
+			" select distinct book_code from t_nb_user_book where user_code in ( " +
+			" select user_code from t_nb_user_location where lbs_id in :lbsId and user_code != :userCode " +
+			" ) and sharable = :sharable) ",
+			countQuery = " select count(*) from ( " +
+					" select * from t_nb_book where code in ( " +
+					" select distinct book_code from t_nb_user_book where user_code in ( " +
+					" select user_code from t_nb_user_location where lbs_id in :lbsId and user_code != :userCode " +
+					" ) and sharable = :sharable) " +
+					" ) countQuery ",
+			nativeQuery = true)
+	Page<TNBBook> findAllByLbsIdAndSharableAndUserCodeNot(@Param("lbsId") List<String> lbsId, @Param("sharable") Integer sharable, @Param("userCode") String userCode, Pageable pageable);
+
 }

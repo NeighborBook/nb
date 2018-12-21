@@ -132,4 +132,13 @@ public class TNBBookServiceImpl extends DataServiceImpl<TNBBook, Integer> implem
 		}
 		return repository.findAllBySearchAndUserCode(SpecificationUtil.like(SpecificationOperate.LIKE, search), userCode, pageable);
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<TNBBook> findAllByLbsIdAndUserCodeNot(List<String> lbsId, Integer sharable, String userCode, Pageable pageable) {
+		if (null == sharable) {
+			return repository.findAllByLbsIdAndUserCodeNot(lbsId, userCode, pageable);
+		}
+		return repository.findAllByLbsIdAndSharableAndUserCodeNot(lbsId, sharable, userCode, pageable);
+	}
 }

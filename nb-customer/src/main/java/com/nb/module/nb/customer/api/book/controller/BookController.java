@@ -67,4 +67,10 @@ public class BookController extends BaseController {
 	public JsonContainer<Page<BookMinInfo>> findAllBySearch(@RequestParam @NotNull String search, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllBySearch(search, pageable));
 	}
+
+	@ApiOperation(value = "通过地址，是否共享和用户编号(!=)查询", notes = "通过地址，是否共享和用户编号(!=)查询")
+	@RequestMapping(value = "/findAllByLbsIdAndUserCodeNot", method = RequestMethod.POST)
+	public JsonContainer<Page<BookMinInfo>> findAllByLbsIdAndUserCodeNot(@RequestBody @NotNull List<String> lbsId, @RequestParam(required = false) Integer sharable, @RequestParam String userCode, @PageableDefault Pageable pageable) {
+		return setSuccessMessage(service.findAllByLbsIdAndUserCodeNot(lbsId, sharable, userCode, pageable));
+	}
 }

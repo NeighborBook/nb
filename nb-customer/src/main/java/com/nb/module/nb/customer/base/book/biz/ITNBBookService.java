@@ -26,4 +26,7 @@ public interface ITNBBookService extends IDataService<TNBBook, Integer> {
 	Page<TNBBook> findAllBySearchAndUserCodeNot(String search, String userCode, Pageable pageable);
 
 	Page<TNBBook> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
+
+	Page<TNBBook> findAllByLbsIdAndUserCodeNot(List<String> lbsId, Integer sharable, String userCode, Pageable pageable);
+
 }
