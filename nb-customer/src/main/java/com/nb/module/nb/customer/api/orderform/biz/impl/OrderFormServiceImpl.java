@@ -413,7 +413,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					updateOrderBorrow(orderForm);
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
-					// 归还图书加回积分，如果逾期则扣积分
+					// 借阅同意扣除积分
 					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_AGREE, true);
 				}
 				// 不同意
@@ -422,7 +422,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_END);
 					// 订单状态
 					status = status + orderDetailStatusConstant.getValue();
-					// 归还图书加回积分，如果逾期则扣积分
+					// 归还图书加回积分
 					BaseUserBonus targetBaseUserBonus = userBonusService.findOneBaseUserBonusByUserCode(userCode);
 					orderForm = processUserBonus(orderForm, targetBaseUserBonus, UserBonusConstant.USER_BONUS_BORROW_DENY, false);
 				}
@@ -458,6 +458,15 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_RETURN, processExpireBonus(UserBonusConstant.USER_BONUS_RETURN.getBonus(), orderForm), true);
 				}
 				break;
+			// 取消借阅
+			case ORDER_DETAIL_TYPE_CANCEL:
+				// 同意
+				if (OrderDetailStatusConstant.ORDER_DETAIL_STATUS_AGREE.equals(orderDetailStatusConstant)) {
+					// 订单结束
+					orderForm.setOrderStatus(OrderFormConstant.ORDER_STATUS_CANCEL);
+					// 取消借阅加回积分
+					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_CANCEL, false);
+				}
 		}
 		updateOrderForm(orderForm);
 		// 发送消息

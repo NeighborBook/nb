@@ -22,7 +22,9 @@ public enum UserBonusConstant {
 
 	USER_BONUS_BORROW_AGREE(8, "借阅同意", new BigDecimal(10)),
 
-	USER_BONUS_BORROW_DENY(9, "借阅不同意", new BigDecimal(110));
+	USER_BONUS_BORROW_DENY(9, "借阅不同意", new BigDecimal(110)),
+
+	USER_BONUS_BORROW_CANCEL(10, "取消借阅", new BigDecimal(110));
 
 	private Integer key;
 
