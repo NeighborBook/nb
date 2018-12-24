@@ -297,14 +297,14 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private BigDecimal processExpireBonus(BigDecimal bonus, OrderForm<OrderBorrow> orderForm) {
 		BigDecimal extraBonus = BigDecimal.ZERO;
-		int differentDays = DifferentDays.differentDays(orderForm.getOrder().getExpectedReturnDate(), orderForm.getOrder().getActualReturnDate());
+		long differentDays = DifferentDays.differentLocalDate(orderForm.getOrder().getExpectedReturnDate(), orderForm.getOrder().getActualReturnDate());
 		// 0 - 10天之间进行计算
-		if (0 < differentDays && differentDays <= 10) {
+		if (0L < differentDays && differentDays <= 10L) {
 			BigDecimal expireBonus = MINUS_TEN.multiply(new BigDecimal(differentDays));
 			extraBonus = bonus.add(expireBonus);
 		}
 		// 超过10天按照10天计算
-		else if (differentDays < 10) {
+		else if (differentDays < 10L) {
 			BigDecimal expireBonus = MINUS_TEN.multiply(new BigDecimal(10));
 			extraBonus = bonus.add(expireBonus);
 		}
