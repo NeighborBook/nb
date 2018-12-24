@@ -55,6 +55,9 @@ public class WeixinTokenServiceImpl extends CommonServiceImpl implements IWeixin
 		String result = client.getUserInfo(accessToken, openid, lang);
 		try {
 			cgiBinWeixinUserInfo = JSON.parseObject(result, CgiBinWeixinUserInfo.class);
+			if (null == cgiBinWeixinUserInfo.getSubscribe()) {
+				throw new BusinessException(WeixinCode.WX0006, null, result);
+			}
 		} catch (Exception e) {
 			throw new BusinessException(WeixinCode.WX0006, e, result);
 		}
