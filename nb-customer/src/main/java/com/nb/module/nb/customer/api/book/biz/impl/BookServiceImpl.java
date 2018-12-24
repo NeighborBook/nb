@@ -5,6 +5,7 @@ import com.nb.module.nb.customer.api.book.domain.Author;
 import com.nb.module.nb.customer.api.book.domain.Book;
 import com.nb.module.nb.customer.api.book.domain.BookMinInfo;
 import com.nb.module.nb.customer.api.book.domain.Translator;
+import com.nb.module.nb.customer.api.book.exception.BookCode;
 import com.nb.module.nb.customer.api.tag.biz.ITagService;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
@@ -16,6 +17,7 @@ import com.nb.module.nb.customer.base.translator.biz.ITNBTranslatorService;
 import com.nb.module.nb.customer.base.translator.domain.TNBTranslator;
 import com.nb.module.partner.aliyun.oss.path.IPathService;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
+import com.zjk.module.common.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -181,6 +183,9 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<BookMinInfo> findAllByLbsIdAndUserCodeNot(List<String> lbsId, Integer sharable, String userCode, Pageable pageable) {
+		if (null == lbsId || lbsId.isEmpty()) {
+			throw new BusinessException(BookCode.B0001, new Object[]{userCode});
+		}
 		return bookService.findAllByLbsIdAndUserCodeNot(lbsId, sharable, userCode, pageable).map(e -> new BookMinInfo(convert(e)));
 	}
 }
