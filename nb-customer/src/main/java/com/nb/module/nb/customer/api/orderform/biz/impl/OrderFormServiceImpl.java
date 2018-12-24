@@ -317,14 +317,16 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<OrderForm<OrderBorrow>> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable) {
 		return orderBorrowService.findAllByOwnerUserCode(ownerUserCode, pageable)
-				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
+				.map(e -> mapOneIfNotNull(convert(e), s -> processWhenFindAllOrderBorrow(s)));
+//				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<OrderForm<OrderBorrow>> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable) {
 		return orderBorrowService.findAllByBorrowerUserCode(borrowerUserCode, pageable)
-				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
+				.map(e -> mapOneIfNotNull(convert(e), s -> processWhenFindAllOrderBorrow(s)));
+//				.map(e -> mapOneIfNotNull(findOrderBorrowByOrderCode(e.getOrderCode()), s -> processWhenFindAllOrderBorrow(s)));
 	}
 
 	@Override
