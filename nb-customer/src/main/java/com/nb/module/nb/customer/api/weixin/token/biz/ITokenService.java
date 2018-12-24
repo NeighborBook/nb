@@ -13,4 +13,6 @@ public interface ITokenService {
 
 	Sign sign(String url);
 
+	Boolean isFollow(String openid);
+
 }

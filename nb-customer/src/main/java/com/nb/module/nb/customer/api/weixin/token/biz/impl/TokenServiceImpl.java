@@ -1,6 +1,7 @@
 package com.nb.module.nb.customer.api.weixin.token.biz.impl;
 
 import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
+import com.nb.module.partner.weixin.client.api.sns.constant.SnsConstant;
 import com.nb.module.partner.weixin.client.api.token.biz.IWeixinTokenService;
 import com.nb.module.partner.weixin.client.api.token.constant.TokenConstant;
 import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
@@ -52,5 +53,10 @@ public class TokenServiceImpl extends CommonServiceImpl implements ITokenService
 	public Sign sign(String url) {
 		JsapiTicket jsapiTicket = getTicket();
 		return Signature.sign(holder.getAppId(), jsapiTicket.getTicket(), url);
+	}
+
+	@Override
+	public Boolean isFollow(String openid) {
+		return weixinTokenService.isFollow(accessToken(false).getAccessToken(), openid, SnsConstant.LANG);
 	}
 }

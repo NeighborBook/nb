@@ -1,17 +1,31 @@
 package com.nb.module.partner.weixin.client.api.token.domain;
 
-import com.nb.module.partner.weixin.client.api.sns.domain.WeixinUserInfo;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class CgiBinWeixinUserInfo extends WeixinUserInfo {
+public class CgiBinWeixinUserInfo implements Serializable {
 
 	private Integer subscribe;
 
 	private String language;
+
+	private String openid;
+
+	private String nickname;
+
+	private Integer sex;
+
+	private String province;
+
+	private String city;
+
+	private String country;
+
+	private String headimgurl;
 
 	private Date subscribe_time;
 

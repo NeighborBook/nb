@@ -43,4 +43,11 @@ public class TokenController extends BaseController {
 	public JsonContainer<Sign> sign(@RequestParam @NotBlank String url) {
 		return setSuccessMessage(service.sign(url));
 	}
+
+	@ApiOperation(value = "是否关注", notes = "是否关注")
+	@RequestMapping(value = "/isFollow", method = RequestMethod.GET)
+	public JsonContainer<Boolean> isFollow(@RequestParam @NotBlank String openid) {
+		return setSuccessMessage(service.isFollow(openid));
+	}
+
 }
