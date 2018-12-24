@@ -19,4 +19,9 @@ public interface ITokenClient {
 	String getTicket(@RequestParam(value = "access_token") String accessToken,
 					 @RequestParam(value = "type") String type);
 
+	@RequestMapping(value = "/user/info", method = RequestMethod.GET)
+	String getUserInfo(@RequestParam(value = "access_token") String accessToken,
+					@RequestParam(value = "openid") String openid,
+					@RequestParam(value = "lang") String lang);
+
 }

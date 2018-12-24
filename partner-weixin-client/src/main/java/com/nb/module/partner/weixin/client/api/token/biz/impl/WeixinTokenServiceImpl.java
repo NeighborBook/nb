@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.nb.module.partner.weixin.client.api.token.biz.IWeixinTokenService;
 import com.nb.module.partner.weixin.client.api.token.client.ITokenClient;
 import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
+import com.nb.module.partner.weixin.client.api.token.domain.CgiBinWeixinUserInfo;
 import com.nb.module.partner.weixin.client.api.token.domain.JsapiTicket;
 import com.nb.module.partner.weixin.client.exception.WeixinCode;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
@@ -46,5 +47,26 @@ public class WeixinTokenServiceImpl extends CommonServiceImpl implements IWeixin
 			throw new BusinessException(WeixinCode.WX0002, e, result);
 		}
 		return jsapiTicket;
+	}
+
+	@Override
+	public CgiBinWeixinUserInfo getUserInfo(String accessToken, String openid, String lang) {
+		CgiBinWeixinUserInfo cgiBinWeixinUserInfo;
+		String result = client.getUserInfo(accessToken, openid, lang);
+		try {
+			cgiBinWeixinUserInfo = JSON.parseObject(result, CgiBinWeixinUserInfo.class);
+		} catch (Exception e) {
+			throw new BusinessException(WeixinCode.WX0006, e, result);
+		}
+		return cgiBinWeixinUserInfo;
+	}
+
+	@Override
+	public boolean isFollow(String accessToken, String openid, String lang) {
+		CgiBinWeixinUserInfo cgiBinWeixinUserInfo = getUserInfo(accessToken, openid, lang);
+		if (1 == cgiBinWeixinUserInfo.getSubscribe()) {
+			return true;
+		}
+		return false;
 	}
 }
