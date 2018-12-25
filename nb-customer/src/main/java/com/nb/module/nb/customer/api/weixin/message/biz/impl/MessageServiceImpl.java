@@ -1,5 +1,6 @@
 package com.nb.module.nb.customer.api.weixin.message.biz.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.nb.module.nb.customer.api.weixin.message.biz.IMessageService;
 import com.nb.module.nb.customer.api.weixin.token.biz.ITokenService;
 import com.nb.module.partner.weixin.client.api.message.biz.IWeixinMessageService;
@@ -9,6 +10,7 @@ import com.nb.module.partner.weixin.client.api.message.domain.WeixinMessageTempl
 import com.nb.module.partner.weixin.client.api.message.provider.WeixinMessageTemplateProvider;
 import com.nb.module.partner.weixin.client.api.token.domain.AccessToken;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class MessageServiceImpl extends CommonServiceImpl implements IMessageService {
 
 	@Autowired
@@ -43,8 +46,13 @@ public class MessageServiceImpl extends CommonServiceImpl implements IMessageSer
 
 	@Override
 	public void templateSend(WeixinMessageTemplate template) {
-		AccessToken accessToken = tokenService.accessToken(false);
-		WeixinMessageTemplateResult result = weixinMessageService.templateSend(accessToken.getAccessToken(), template);
+		try {
+			AccessToken accessToken = tokenService.accessToken(false);
+			WeixinMessageTemplateResult result = weixinMessageService.templateSend(accessToken.getAccessToken(), template);
+		} catch (Exception e) {
+			// TODO 暂时屏蔽异常
+			log.error(e.getMessage(), JSON.toJSONString(template));
+		}
 	}
 
 	@Override
