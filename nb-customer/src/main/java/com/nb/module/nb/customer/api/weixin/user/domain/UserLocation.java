@@ -2,8 +2,9 @@ package com.nb.module.nb.customer.api.weixin.user.domain;
 
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.math.BigDecimal;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class UserLocation {
@@ -11,38 +12,16 @@ public class UserLocation {
 	@NotBlank
 	private String userCode;
 
-	private String title;
+	@NotNull
+	@Valid
+	private Location location;
 
-	private String address;
+	private String tagCode;
 
-	private String province;
-
-	private String city;
-
-	private String district;
-
-	private String adcode;
-
-	private Integer type;
-
-	private BigDecimal lat;
-
-	private BigDecimal lng;
-
-	private String lbsId;
-
-	public UserLocation(@NotBlank String userCode, String title, String address, String province, String city, String district, String adcode, Integer type, BigDecimal lat, BigDecimal lng, String lbsId) {
+	public UserLocation(@NotBlank String userCode, @NotNull @Valid Location location, String tagCode) {
 		this.userCode = userCode;
-		this.title = title;
-		this.address = address;
-		this.province = province;
-		this.city = city;
-		this.district = district;
-		this.adcode = adcode;
-		this.type = type;
-		this.lat = lat;
-		this.lng = lng;
-		this.lbsId = lbsId;
+		this.location = location;
+		this.tagCode = tagCode;
 	}
 
 	public UserLocation() {

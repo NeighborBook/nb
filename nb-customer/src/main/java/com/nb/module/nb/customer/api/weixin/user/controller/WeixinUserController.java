@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Validated
 @CreateApiDocs
@@ -41,16 +42,23 @@ public class WeixinUserController extends BaseController {
 		return setSuccessMessage(service.updateMobile(mobile));
 	}
 
-	@ApiOperation(value = "更新用户地址信息", notes = "更新用户地址信息")
+	@ApiOperation(value = "保存用户地址信息", notes = "保存用户地址信息")
 	@RequestMapping(value = "/saveUserLocation", method = RequestMethod.POST)
 	public JsonContainer saveUserLocation(@RequestBody @Validated UserLocation userLocation) {
 		service.saveUserLocation(userLocation);
 		return setSuccessMessage();
 	}
 
+	@ApiOperation(value = "删除用户地址信息", notes = "删除用户地址信息")
+	@RequestMapping(value = "/deleteUserLocation", method = RequestMethod.DELETE)
+	public JsonContainer deleteUserLocation(@RequestBody @Validated UserLocation userLocation) {
+		service.deleteUserLocation(userLocation);
+		return setSuccessMessage();
+	}
+
 	@ApiOperation(value = "获取用户地址信息", notes = "获取用户地址信息")
 	@RequestMapping(value = "/userLocation/{userCode}", method = RequestMethod.GET)
-	public JsonContainer<UserLocation> findUserLocationByCode(@PathVariable @NotBlank String userCode) {
+	public JsonContainer<List<UserLocation>> findUserLocationByCode(@PathVariable @NotBlank String userCode) {
 		return setSuccessMessage(service.findUserLocationByCode(userCode));
 	}
 

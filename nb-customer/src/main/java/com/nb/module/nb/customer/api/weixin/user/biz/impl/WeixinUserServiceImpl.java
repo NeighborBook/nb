@@ -9,10 +9,14 @@ import com.nb.module.nb.customer.api.userintro.biz.IUserIntroService;
 import com.nb.module.nb.customer.api.userintro.domain.UserIntro;
 import com.nb.module.nb.customer.api.verify.biz.IVerifyService;
 import com.nb.module.nb.customer.api.weixin.constant.WeixinLoginConstant;
+import com.nb.module.nb.customer.api.weixin.exception.WeixinCode;
 import com.nb.module.nb.customer.api.weixin.exception.WeixinLoginCode;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
+import com.nb.module.nb.customer.api.weixin.user.domain.Location;
 import com.nb.module.nb.customer.api.weixin.user.domain.Mobile;
 import com.nb.module.nb.customer.api.weixin.user.domain.UserLocation;
+import com.nb.module.nb.customer.base.location.biz.ITNBLocationService;
+import com.nb.module.nb.customer.base.location.domain.TNBLocation;
 import com.nb.module.nb.customer.base.userlocation.biz.ITNBUserLocationService;
 import com.nb.module.nb.customer.base.userlocation.domain.TNBUserLocation;
 import com.nb.module.partner.aliyun.oss.path.IPathService;
@@ -30,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinUserService {
@@ -40,6 +45,8 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	private IPathService pathService;
 	@Autowired
 	private IVerifyService verifyService;
+	@Autowired
+	private ITNBLocationService locationService;
 	@Autowired
 	private ITNBUserLocationService userLocationService;
 
@@ -139,29 +146,59 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 	@Override
 	@Transactional
 	public void saveUserLocation(UserLocation userLocation) {
-		// 保存userLocation
-		TNBUserLocation po = userLocationService.findOneByUserCode(userLocation.getUserCode());
-		if (null == po) {
-			po = new TNBUserLocation();
-			po.setUserCode(userLocation.getUserCode());
+		TNBUserLocation po = userLocationService.findOneByUserCodeAndLbsIdAndTagCode(userLocation.getUserCode(), userLocation.getLocation().getLbsId(), userLocation.getTagCode());
+		if (null != po) {
+			// 如果存在则报错
+			throw new BusinessException(WeixinCode.WX0001, new Object[]{userLocation.getUserCode(), userLocation.getLocation().getLbsId(), userLocation.getTagCode()});
 		}
-		po.setTitle(userLocation.getTitle());
-		po.setAddress(userLocation.getAddress());
-		po.setProvince(userLocation.getProvince());
-		po.setCity(userLocation.getCity());
-		po.setDistrict(userLocation.getDistrict());
-		po.setAdcode(userLocation.getAdcode());
-		po.setType(userLocation.getType());
-		po.setLat(userLocation.getLat());
-		po.setLng(userLocation.getLng());
-		po.setLbsId(userLocation.getLbsId());
+		// 保存地址
+		saveLocation(userLocation.getLocation());
+		// 保存userLocation
+		po = new TNBUserLocation();
+		po.setUserCode(userLocation.getUserCode());
+		po.setLbsId(userLocation.getLocation().getLbsId());
+		po.setTagCode(userLocation.getTagCode());
 		userLocationService.save(po);
+	}
+
+	private void saveLocation(Location location) {
+		TNBLocation po = locationService.findOneByLbsId(location.getLbsId());
+		if (null != po) {
+			// 已存在信息暂不修改
+			return;
+		}
+		po = new TNBLocation();
+		po.setTitle(location.getTitle());
+		po.setAddress(location.getAddress());
+		po.setProvince(location.getProvince());
+		po.setCity(location.getCity());
+		po.setDistrict(location.getDistrict());
+		po.setAdcode(location.getAdcode());
+		po.setType(location.getType());
+		po.setLat(location.getLat());
+		po.setLng(location.getLng());
+		po.setLbsId(location.getLbsId());
+		locationService.save(po);
+	}
+
+	@Override
+	@Transactional
+	public void deleteUserLocation(UserLocation userLocation) {
+		TNBUserLocation po = userLocationService.findOneByUserCodeAndLbsIdAndTagCode(userLocation.getUserCode(), userLocation.getLocation().getLbsId(), userLocation.getTagCode());
+		if (null != po) {
+			userLocationService.delete(po);
+		}
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public UserLocation findUserLocationByCode(String userCode) {
-		return mapOneIfNotNull(userLocationService.findOneByUserCode(userCode),
-				e -> new UserLocation(e.getUserCode(), e.getTitle(), e.getAddress(), e.getProvince(), e.getCity(), e.getDistrict(), e.getAdcode(), e.getType(), e.getLat(), e.getLng(), e.getLbsId()));
+	public List<UserLocation> findUserLocationByCode(String userCode) {
+		return map(userLocationService.findAllByUserCode(userCode), e -> convert(e));
+	}
+
+	private UserLocation convert(TNBUserLocation e) {
+		Location location = mapOneIfNotNull(locationService.findOneByLbsId(e.getLbsId()), s -> new Location(s.getTitle(), s.getAddress(), s.getProvince(), s.getCity(), s.getDistrict(), s.getAdcode(), s.getType(), s.getLat(), s.getLng(), s.getLbsId()));
+		UserLocation userLocation = new UserLocation(e.getUserCode(), location, e.getTagCode());
+		return userLocation;
 	}
 }
