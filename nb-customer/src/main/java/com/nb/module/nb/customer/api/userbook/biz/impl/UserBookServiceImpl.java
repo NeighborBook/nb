@@ -102,6 +102,6 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserBookUserInfo> findAllUserInfoByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable) {
 		return findAllByBookCodeAndSharable(bookCode, sharable, pageable)
-				.map(e -> new UserBookUserInfo(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCode(), e.getBookCount(), e.getSharable(), e.getLentAmount()));
+				.map(e -> new UserBookUserInfo(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCode(), e.getBookCount(), e.getSharable(), e.getLentAmount(), weixinUserService.findUserLocationByCode(e.getUserCode())));
 	}
 }
