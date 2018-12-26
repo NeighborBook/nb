@@ -16,9 +16,10 @@ public class UserLocation {
 	@Valid
 	private Location location;
 
+	@NotBlank
 	private String tagCode;
 
-	public UserLocation(@NotBlank String userCode, @NotNull @Valid Location location, String tagCode) {
+	public UserLocation(@NotBlank String userCode, @NotNull @Valid Location location, @NotBlank String tagCode) {
 		this.userCode = userCode;
 		this.location = location;
 		this.tagCode = tagCode;
