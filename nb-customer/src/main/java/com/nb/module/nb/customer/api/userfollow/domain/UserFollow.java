@@ -18,10 +18,9 @@ public class UserFollow {
 
 	private User followUser;
 
-	@NotBlank
 	private String source;
 
-	public UserFollow(@NotBlank String userCode, @NotBlank String followUserCode, @NotBlank String source) {
+	public UserFollow(@NotBlank String userCode, @NotBlank String followUserCode, String source) {
 		this.userCode = userCode;
 		this.followUserCode = followUserCode;
 		this.source = source;
