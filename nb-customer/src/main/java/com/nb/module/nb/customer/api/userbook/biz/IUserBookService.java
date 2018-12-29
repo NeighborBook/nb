@@ -32,7 +32,7 @@ public interface IUserBookService {
 
 	Page<UserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, @PageableDefault Pageable pageable);
 
-	Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, Pageable pageable);
+	Page<UserBookMinInfo> findAllByTagCodeAndUserCode(List<String> tagCodes, Integer sharable, String userCode, @PageableDefault Pageable pageable);
 
 	Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
 
