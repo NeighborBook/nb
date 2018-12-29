@@ -1,6 +1,7 @@
 package com.nb.module.nb.customer.base.userbook.biz;
 
 import com.nb.module.nb.customer.base.userbook.domain.TNBUserBook;
+import com.nb.module.nb.customer.base.userbook.domain.TNBUserBookCount;
 import com.zjk.module.common.data.biz.IDataService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,5 @@ public interface ITNBUserBookService extends IDataService<TNBUserBook, Integer> 
 
 	Page<TNBUserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable);
 
+	Page<TNBUserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable);
 }
