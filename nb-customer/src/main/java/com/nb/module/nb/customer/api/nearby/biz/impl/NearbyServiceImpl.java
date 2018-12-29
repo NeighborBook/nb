@@ -29,7 +29,7 @@ public class NearbyServiceImpl extends CommonServiceImpl implements INearbyServi
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<NearbyUser> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
 		return userBookService.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable)
-				.map(e -> new NearbyUser(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCount(),
+				.map(e -> new NearbyUser(weixinUserService.findOneByCode(e.getUserCode()), weixinUserService.findUserLocationByCode(e.getUserCode()), e.getBookCount(),
 						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), PageRequest.of(0, 3))));
 	}
 }
