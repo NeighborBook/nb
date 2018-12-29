@@ -3,6 +3,7 @@ package com.nb.module.nb.customer.api.userbook.biz;
 
 import com.nb.module.nb.customer.api.userbonus.domain.UserBonus;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookCount;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,7 @@ public interface IUserBookService {
 	Page<UserBookMinInfo> findAllBySearchAndUserCode(String search, String userCode, Pageable pageable);
 
 	Page<UserBookUserInfo> findAllUserInfoByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable);
+
+	Page<UserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable);
 
 }

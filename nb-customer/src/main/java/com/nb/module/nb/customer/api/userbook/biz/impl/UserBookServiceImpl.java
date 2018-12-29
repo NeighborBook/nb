@@ -8,6 +8,7 @@ import com.nb.module.nb.customer.api.userbonus.domain.UserBonusTemplate;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
 import com.nb.module.nb.customer.api.userbook.domain.UserBook;
+import com.nb.module.nb.customer.api.userbook.domain.UserBookCount;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookMinInfo;
 import com.nb.module.nb.customer.api.userbook.domain.UserBookUserInfo;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
@@ -103,5 +104,11 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	public Page<UserBookUserInfo> findAllUserInfoByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable) {
 		return findAllByBookCodeAndSharable(bookCode, sharable, pageable)
 				.map(e -> new UserBookUserInfo(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCode(), e.getBookCount(), e.getSharable(), e.getLentAmount(), weixinUserService.findUserLocationByCode(e.getUserCode())));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Page<UserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
+		return userBookService.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable).map(e -> new UserBookCount(e.getUserCode(), e.getBookCount()));
 	}
 }
