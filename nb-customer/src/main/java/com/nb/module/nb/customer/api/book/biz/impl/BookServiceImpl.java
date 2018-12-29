@@ -20,6 +20,7 @@ import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import com.zjk.module.common.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -69,7 +70,7 @@ public class BookServiceImpl extends CommonServiceImpl implements IBookService {
 		// 标签
 		book.setBookTags(tagService.findAllByBookCodeOrderByTagCountDesc(e.getCode()));
 		// 用户书（查拥有该书的用户，仅能查共享的）
-		book.setUserBooks(userBookService.findAllByBookCodeAndSharable(book.getCode(), UserBookConstant.SHARABLE, null));
+		book.setUserBooks(userBookService.findAllByBookCodeAndSharable(book.getCode(), UserBookConstant.SHARABLE, PageRequest.of(0, 3)));
 		return book;
 	}
 

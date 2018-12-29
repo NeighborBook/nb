@@ -8,6 +8,7 @@ import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,6 +30,6 @@ public class NearbyServiceImpl extends CommonServiceImpl implements INearbyServi
 	public Page<NearbyUser> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
 		return userBookService.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable)
 				.map(e -> new NearbyUser(weixinUserService.findOneByCode(e.getUserCode()), e.getBookCount(),
-						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), null)));
+						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), PageRequest.of(0, 3))));
 	}
 }
