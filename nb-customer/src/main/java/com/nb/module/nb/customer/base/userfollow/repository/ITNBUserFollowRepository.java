@@ -15,4 +15,7 @@ public interface ITNBUserFollowRepository extends IDataRepository<TNBUserFollow,
 
 	TNBUserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode);
 
+	Long countByUserCode(String userCode);
+
+	Long countByFollowUserCode(String followUserCode);
 }

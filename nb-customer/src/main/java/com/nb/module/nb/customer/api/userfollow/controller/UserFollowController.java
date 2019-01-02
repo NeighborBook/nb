@@ -2,6 +2,7 @@ package com.nb.module.nb.customer.api.userfollow.controller;
 
 import com.nb.module.nb.customer.api.userfollow.biz.IUserFollowService;
 import com.nb.module.nb.customer.api.userfollow.domain.UserFollow;
+import com.nb.module.nb.customer.api.userfollow.domain.UserFollowCount;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
@@ -24,6 +25,12 @@ public class UserFollowController extends BaseController {
 	@Autowired
 	private IUserFollowService service;
 
+	@ApiOperation(value = "关注及粉丝数量", notes = "关注及粉丝数量")
+	@RequestMapping(value = "/count/{userCode}", method = RequestMethod.GET)
+	public JsonContainer<UserFollowCount> count(@PathVariable @NotBlank String userCode) {
+		return setSuccessMessage(service.count(userCode));
+	}
+
 	@ApiOperation(value = "关注列表", notes = "关注列表")
 	@RequestMapping(value = "/userCode/{userCode}", method = RequestMethod.GET)
 	public JsonContainer<Page<UserFollow>> findAllByUserCode(@PathVariable @NotBlank String userCode, @PageableDefault Pageable pageable) {
@@ -34,6 +41,12 @@ public class UserFollowController extends BaseController {
 	@RequestMapping(value = "/followUserCode/{followUserCode}", method = RequestMethod.GET)
 	public JsonContainer<Page<UserFollow>> findAllByFollowUserCode(@PathVariable @NotBlank String followUserCode, @PageableDefault Pageable pageable) {
 		return setSuccessMessage(service.findAllByFollowUserCode(followUserCode, pageable));
+	}
+
+	@ApiOperation(value = "是否关注", notes = "是否关注")
+	@RequestMapping(value = "/isFollow", method = RequestMethod.GET)
+	public JsonContainer<Boolean> isFollow(@RequestParam @NotBlank String userCode, @RequestParam @NotBlank String followUserCode) {
+		return setSuccessMessage(service.isFollow(userCode, followUserCode));
 	}
 
 	@ApiOperation(value = "关注", notes = "关注")

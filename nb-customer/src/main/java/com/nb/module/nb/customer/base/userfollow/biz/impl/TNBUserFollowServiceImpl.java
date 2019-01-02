@@ -34,4 +34,16 @@ public class TNBUserFollowServiceImpl extends DataServiceImpl<TNBUserFollow, Int
 	public TNBUserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode) {
 		return repository.findOneByUserCodeAndFollowUserCode(userCode, followUserCode);
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByUserCode(String userCode) {
+		return repository.countByUserCode(userCode);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByFollowUserCode(String followUserCode) {
+		return repository.countByFollowUserCode(followUserCode);
+	}
 }

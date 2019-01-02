@@ -13,4 +13,7 @@ public interface ITNBUserFollowService extends IDataService<TNBUserFollow, Integ
 
 	TNBUserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode);
 
+	Long countByUserCode(String userCode);
+
+	Long countByFollowUserCode(String followUserCode);
 }

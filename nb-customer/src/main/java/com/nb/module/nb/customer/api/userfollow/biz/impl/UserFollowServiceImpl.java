@@ -2,6 +2,7 @@ package com.nb.module.nb.customer.api.userfollow.biz.impl;
 
 import com.nb.module.nb.customer.api.userfollow.biz.IUserFollowService;
 import com.nb.module.nb.customer.api.userfollow.domain.UserFollow;
+import com.nb.module.nb.customer.api.userfollow.domain.UserFollowCount;
 import com.nb.module.nb.customer.api.userfollow.exception.UserFollowCode;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.nb.module.nb.customer.base.userfollow.biz.ITNBUserFollowService;
@@ -26,6 +27,12 @@ public class UserFollowServiceImpl extends CommonServiceImpl implements IUserFol
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UserFollowCount count(String userCode) {
+		return new UserFollowCount(userFollowService.countByUserCode(userCode), userFollowService.countByFollowUserCode(userCode));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<UserFollow> findAllByUserCode(String userCode, Pageable pageable) {
 		return userFollowService.findAllByUserCode(userCode, pageable).map(e -> {
 			UserFollow userFollow = convert(e);
@@ -46,8 +53,12 @@ public class UserFollowServiceImpl extends CommonServiceImpl implements IUserFol
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public UserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode) {
-		return mapOneIfNotNull(userFollowService.findOneByUserCodeAndFollowUserCode(userCode, followUserCode), e -> convert(e));
+	public Boolean isFollow(String userCode, String followUserCode) {
+		TNBUserFollow po = userFollowService.findOneByUserCodeAndFollowUserCode(userCode, followUserCode);
+		if (null != po) {
+			return true;
+		}
+		return false;
 	}
 
 	private UserFollow convert(TNBUserFollow e) {
