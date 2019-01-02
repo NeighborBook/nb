@@ -328,6 +328,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 
 	private UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderForms(List<TNBOrderBorrow> list) {
 		UnfinishedOrderForms<OrderBorrow> unfinished = new UnfinishedOrderForms<>(0L, 0L, null);
+		// 获取未完成列表
 		List<OrderForm<OrderBorrow>> orderForms = map(list, e -> mapOneIfNotNull(convert(e), s -> processWhenFindAllOrderBorrow(s)));
 		List<UnfinishedOrderForm<OrderBorrow>> unfinishedOrderForms = orderForms.stream().map(e -> {
 			// 逾期天数
