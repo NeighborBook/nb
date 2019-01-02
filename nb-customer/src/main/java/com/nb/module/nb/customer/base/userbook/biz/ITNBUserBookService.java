@@ -18,4 +18,6 @@ public interface ITNBUserBookService extends IDataService<TNBUserBook, Integer> 
 	Page<TNBUserBook> findAllByBookCodeAndSharable(String bookCode, Integer sharable, Pageable pageable);
 
 	Page<TNBUserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable);
+
+	Long countByUserCode(String userCode);
 }

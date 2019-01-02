@@ -39,4 +39,5 @@ public interface IUserBookService {
 
 	Page<UserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable);
 
+	Long countByUserCode(String userCode);
 }

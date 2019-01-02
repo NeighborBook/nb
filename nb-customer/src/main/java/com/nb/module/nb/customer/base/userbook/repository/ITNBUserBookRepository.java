@@ -24,4 +24,6 @@ public interface ITNBUserBookRepository extends IDataRepository<TNBUserBook, Int
 			" select ul.userCode from TNBUserLocation ul where ul.lbsId in :lbsId and ul.userCode <> :userCode " +
 			" ) and ub.sharable = 1 group by ub.userCode order by count(ub.id) desc ")
 	Page<TNBUserBookCount> findAllByLbsIdInAndUserCodeNot(@Param("lbsId") List<String> lbsId, @Param("userCode") String userCode, Pageable pageable);
+
+	Long countByUserCode(String userCode);
 }

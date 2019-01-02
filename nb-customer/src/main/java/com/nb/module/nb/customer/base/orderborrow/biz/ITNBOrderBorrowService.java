@@ -17,4 +17,8 @@ public interface ITNBOrderBorrowService extends IDataService<TNBOrderBorrow, Int
 	Page<TNBOrderBorrow> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable);
 
 	Page<TNBOrderBorrow> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable);
+
+	List<TNBOrderBorrow> findAllByOwnerUserCodeAndOrderStatus(String ownerUserCode, Integer orderStatus);
+
+	List<TNBOrderBorrow> findAllByBorrowerUserCodeAndOrderStatus(String borrowerUserCode, Integer orderStatus);
 }

@@ -111,4 +111,10 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 	public Page<UserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
 		return userBookService.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable).map(e -> new UserBookCount(e.getUserCode(), e.getBookCount()));
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByUserCode(String userCode) {
+		return userBookService.countByUserCode(userCode);
+	}
 }

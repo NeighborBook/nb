@@ -43,4 +43,10 @@ public class TNBUserBookServiceImpl extends DataServiceImpl<TNBUserBook, Integer
 	public Page<TNBUserBookCount> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
 		return repository.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable);
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByUserCode(String userCode) {
+		return repository.countByUserCode(userCode);
+	}
 }

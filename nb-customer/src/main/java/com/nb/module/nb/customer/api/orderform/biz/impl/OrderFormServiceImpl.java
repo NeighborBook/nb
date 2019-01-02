@@ -135,9 +135,9 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 			throw new BusinessException(OrderFormCode.OF0001, new Object[]{borrowApply.getOwnerUserCode(), borrowApply.getBookCode(), borrowApply.getBorrowerUserCode()});
 		}
 		List<OrderForm<OrderBorrow>> expireList = findAllByUserCodeAndOrderTypeAndOrderStatus(borrowApply.getBorrowerUserCode(), OrderFormConstant.ORDER_TYPE_BORROW, OrderFormConstant.ORDER_STATUS_START).stream().filter(e -> {
-			if (null != e && null != e.getOrder() && null != e.getOrder().getExpectedReturnDate()) {
-				long differentDays = DifferentDays.differentLocalDate(e.getOrder().getExpectedReturnDate(), new Date());
-				return differentDays > 10L ? true : false;
+			Long days = overdueDays(e);
+			if (null != days) {
+				return days > 10L ? true : false;
 			} else {
 				return false;
 			}
@@ -311,7 +311,56 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return extraBonus;
 	}
 
+	private Long getSize(List list) {
+		if (null == list || list.isEmpty()) {
+			return 0L;
+		}
+		return Long.valueOf(list.size());
+	}
+
+	private Long overdueDays(OrderForm<OrderBorrow> e) {
+		if (null != e && null != e.getOrder() && null != e.getOrder().getExpectedReturnDate()) {
+			long differentDays = DifferentDays.differentLocalDate(e.getOrder().getExpectedReturnDate(), new Date());
+			return differentDays;
+		}
+		return null;
+	}
+
+	private UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderForms(List<TNBOrderBorrow> list) {
+		UnfinishedOrderForms<OrderBorrow> unfinished = new UnfinishedOrderForms<>(0L, 0L, null);
+		List<OrderForm<OrderBorrow>> orderForms = map(list, e -> mapOneIfNotNull(convert(e), s -> processWhenFindAllOrderBorrow(s)));
+		List<UnfinishedOrderForm<OrderBorrow>> unfinishedOrderForms = orderForms.stream().map(e -> {
+			// 逾期天数
+			Long days = overdueDays(e);
+			// 逾期条数
+			unfinished.cal(days);
+			return new UnfinishedOrderForm<>(days, e);
+		}).collect(Collectors.toList());
+		unfinished.setUnfinishedOrderForms(unfinishedOrderForms);
+		return unfinished;
+	}
+
 	/**************************************************************************************************************************************************************/
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UserBookAndOrderCount count(String userCode) {
+		return new UserBookAndOrderCount(userBookService.countByUserCode(userCode),
+				getSize(orderBorrowService.findAllByBorrowerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START)),
+				getSize(orderBorrowService.findAllByOwnerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START)));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderFormsByOwnerUserCode(String ownerUserCode) {
+		return findAllUnfinishedOrderForms(orderBorrowService.findAllByOwnerUserCodeAndOrderStatus(ownerUserCode, OrderFormConstant.ORDER_STATUS_START));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderFormsByBorrowerUserCode(String borrowerUserCode) {
+		return findAllUnfinishedOrderForms(orderBorrowService.findAllByBorrowerUserCodeAndOrderStatus(borrowerUserCode, OrderFormConstant.ORDER_STATUS_START));
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)

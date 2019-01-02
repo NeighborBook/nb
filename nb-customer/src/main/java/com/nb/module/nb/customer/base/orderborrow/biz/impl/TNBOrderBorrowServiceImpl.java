@@ -42,4 +42,16 @@ public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, I
 	public Page<TNBOrderBorrow> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable) {
 		return repository.findAllByBorrowerUserCode(borrowerUserCode, pageable);
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public List<TNBOrderBorrow> findAllByOwnerUserCodeAndOrderStatus(String ownerUserCode, Integer orderStatus) {
+		return repository.findAllByOwnerUserCodeAndOrderStatus(ownerUserCode, orderStatus);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public List<TNBOrderBorrow> findAllByBorrowerUserCodeAndOrderStatus(String borrowerUserCode, Integer orderStatus) {
+		return repository.findAllByBorrowerUserCodeAndOrderStatus(borrowerUserCode, orderStatus);
+	}
 }

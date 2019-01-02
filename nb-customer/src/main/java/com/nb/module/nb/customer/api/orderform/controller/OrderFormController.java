@@ -1,10 +1,7 @@
 package com.nb.module.nb.customer.api.orderform.controller;
 
 import com.nb.module.nb.customer.api.orderform.biz.IOrderFormService;
-import com.nb.module.nb.customer.api.orderform.domain.BorrowApply;
-import com.nb.module.nb.customer.api.orderform.domain.OrderBorrow;
-import com.nb.module.nb.customer.api.orderform.domain.OrderFlow;
-import com.nb.module.nb.customer.api.orderform.domain.OrderForm;
+import com.nb.module.nb.customer.api.orderform.domain.*;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
@@ -26,6 +23,24 @@ public class OrderFormController extends BaseController {
 
 	@Autowired
 	private IOrderFormService service;
+
+	@ApiOperation(value = "书，借进和借出数量", notes = "书，借进和借出数量")
+	@RequestMapping(value = "/count/{userCode}", method = RequestMethod.GET)
+	public JsonContainer<UserBookAndOrderCount> count(@PathVariable @NotBlank String userCode) {
+		return setSuccessMessage(service.count(userCode));
+	}
+
+	@ApiOperation(value = "未完成owner列表", notes = "未完成owner列表")
+	@RequestMapping(value = "/borrow/owner/unfinished/{ownerUserCode}", method = RequestMethod.GET)
+	public JsonContainer<UnfinishedOrderForms<OrderBorrow>> findAllUnfinishedOrderFormsByOwnerUserCode(@PathVariable @NotBlank String ownerUserCode) {
+		return setSuccessMessage(service.findAllUnfinishedOrderFormsByOwnerUserCode(ownerUserCode));
+	}
+
+	@ApiOperation(value = "未完成borrower列表", notes = "未完成borrower列表")
+	@RequestMapping(value = "/borrow/borrower/unfinished/{borrowerUserCode}", method = RequestMethod.GET)
+	public JsonContainer<UnfinishedOrderForms<OrderBorrow>> findAllUnfinishedOrderFormsByBorrowerUserCode(@PathVariable @NotBlank String borrowerUserCode) {
+		return setSuccessMessage(service.findAllUnfinishedOrderFormsByBorrowerUserCode(borrowerUserCode));
+	}
 
 	@ApiOperation(value = "owner列表", notes = "owner列表")
 	@RequestMapping(value = "/borrow/owner/{ownerUserCode}", method = RequestMethod.GET)
