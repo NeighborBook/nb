@@ -25,11 +25,11 @@ public interface ITNBOrderBorrowRepository extends IDataRepository<TNBOrderBorro
 
 	@Query(value = "select a.* from t_nb_order_borrow a, t_nb_order_form b where a.order_code = b.code and b.order_type = 1 " +
 			" and a.owner_user_code = ?1 " +
-			" and b.order_status = ?4 ", nativeQuery = true)
+			" and b.order_status = ?2 ", nativeQuery = true)
 	List<TNBOrderBorrow> findAllByOwnerUserCodeAndOrderStatus(String ownerUserCode, Integer orderStatus);
 
 	@Query(value = "select a.* from t_nb_order_borrow a, t_nb_order_form b where a.order_code = b.code and b.order_type = 1 " +
 			" and a.borrower_user_code = ?1 " +
-			" and b.order_status = ?4 ", nativeQuery = true)
+			" and b.order_status = ?2 ", nativeQuery = true)
 	List<TNBOrderBorrow> findAllByBorrowerUserCodeAndOrderStatus(String borrowerUserCode, Integer orderStatus);
 }
