@@ -68,6 +68,15 @@ public interface IUserService {
 	User findOneByCode(String userCode, String plugin);
 
 	/**
+	 * 通过用户名查询用户信息
+	 *
+	 * @param username
+	 * @param plugin
+	 * @return
+	 */
+	User findOneByUsername(String username, String plugin);
+
+	/**
 	 * 更新用户姓名和证件信息
 	 *
 	 * @param userCode

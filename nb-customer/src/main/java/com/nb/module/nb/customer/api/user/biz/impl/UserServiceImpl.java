@@ -67,6 +67,11 @@ public class UserServiceImpl extends CommonServiceImpl implements IUserService {
 	}
 
 	@Override
+	public User findOneByUsername(String username, String plugin) {
+		return checkJsonContainer(passportClient.findOneByUsername(username, plugin));
+	}
+
+	@Override
 	@Transactional
 	public void updateNameAndIdCard(String userCode, String userName, String idCard, Integer idCardType) {
 		checkJsonContainer(passportClient.updateNameAndIdCard(userCode, userName, idCard, idCardType));
