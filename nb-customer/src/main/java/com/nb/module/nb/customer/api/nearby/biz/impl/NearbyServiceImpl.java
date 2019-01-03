@@ -4,6 +4,7 @@ import com.nb.module.nb.customer.api.nearby.biz.INearbyService;
 import com.nb.module.nb.customer.api.nearby.domain.NearbyUser;
 import com.nb.module.nb.customer.api.userbook.biz.IUserBookService;
 import com.nb.module.nb.customer.api.userbook.constant.UserBookConstant;
+import com.nb.module.nb.customer.api.userfollow.biz.IUserFollowService;
 import com.nb.module.nb.customer.api.weixin.user.biz.IWeixinUserService;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class NearbyServiceImpl extends CommonServiceImpl implements INearbyServi
 
 	@Autowired
 	private IUserBookService userBookService;
-
+	@Autowired
+	private IUserFollowService userFollowService;
 	@Autowired
 	private IWeixinUserService weixinUserService;
 
@@ -29,7 +31,10 @@ public class NearbyServiceImpl extends CommonServiceImpl implements INearbyServi
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<NearbyUser> findAllByLbsIdInAndUserCodeNot(List<String> lbsId, String userCode, Pageable pageable) {
 		return userBookService.findAllByLbsIdInAndUserCodeNot(lbsId, userCode, pageable)
-				.map(e -> new NearbyUser(weixinUserService.findOneByCode(e.getUserCode()), weixinUserService.findUserLocationByCode(e.getUserCode()), e.getBookCount(),
-						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), PageRequest.of(0, 3))));
+				.map(e -> new NearbyUser(weixinUserService.findOneByCode(e.getUserCode()),
+						weixinUserService.findUserLocationByCode(e.getUserCode()),
+						e.getBookCount(),
+						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), PageRequest.of(0, 3)),
+						userFollowService.isFollow(userCode, e.getUserCode())));
 	}
 }

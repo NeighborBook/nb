@@ -19,11 +19,14 @@ public class NearbyUser {
 
 	private Page<UserBookMinInfo> userBookMinInfos;
 
-	public NearbyUser(User user, List<UserLocation> userLocations, Long bookCount, Page<UserBookMinInfo> userBookMinInfos) {
+	private Boolean followed;
+
+	public NearbyUser(User user, List<UserLocation> userLocations, Long bookCount, Page<UserBookMinInfo> userBookMinInfos, Boolean followed) {
 		this.user = user;
 		this.userLocations = userLocations;
 		this.bookCount = bookCount;
 		this.userBookMinInfos = userBookMinInfos;
+		this.followed = followed;
 	}
 
 	public NearbyUser() {
