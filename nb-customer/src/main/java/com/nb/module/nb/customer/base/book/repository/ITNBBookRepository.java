@@ -351,7 +351,8 @@ public interface ITNBBookRepository extends IDataRepository<TNBBook, Integer> {
 	@Query(value = " select * from t_nb_book where code in ( " +
 			" select distinct book_code from t_nb_user_book where user_code in ( " +
 			" select user_code from t_nb_user_location where lbs_id in :lbsId and user_code != :userCode " +
-			" ) and sharable = :sharable) ",
+			" ) and sharable = :sharable)" +
+			" order by updated desc ",
 			countQuery = " select count(*) from ( " +
 					" select * from t_nb_book where code in ( " +
 					" select distinct book_code from t_nb_user_book where user_code in ( " +
