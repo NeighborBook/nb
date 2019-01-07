@@ -1,6 +1,5 @@
 package com.nb.module.nb.customer.api.userfollow.domain;
 
-import com.zjk.module.common.authorization.client.api.user.domain.User;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,12 +10,8 @@ public class UserFollow {
 	@NotBlank
 	private String userCode;
 
-	private User user;
-
 	@NotBlank
 	private String followUserCode;
-
-	private User followUser;
 
 	private String source;
 
