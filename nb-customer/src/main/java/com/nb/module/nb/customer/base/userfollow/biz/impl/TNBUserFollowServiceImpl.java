@@ -19,14 +19,14 @@ public class TNBUserFollowServiceImpl extends DataServiceImpl<TNBUserFollow, Int
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBUserFollow> findAllByUserCode(String userCode, Pageable pageable) {
-		return repository.findAllByUserCode(userCode, pageable);
+	public Page<TNBUserFollow> findAllByUserCodeOrderByUpdatedDesc(String userCode, Pageable pageable) {
+		return repository.findAllByUserCodeOrderByUpdatedDesc(userCode, pageable);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-	public Page<TNBUserFollow> findAllByFollowUserCode(String followUserCode, Pageable pageable) {
-		return repository.findAllByFollowUserCode(followUserCode, pageable);
+	public Page<TNBUserFollow> findAllByFollowUserCodeOrderByUpdatedDesc(String followUserCode, Pageable pageable) {
+		return repository.findAllByFollowUserCodeOrderByUpdatedDesc(followUserCode, pageable);
 	}
 
 	@Override

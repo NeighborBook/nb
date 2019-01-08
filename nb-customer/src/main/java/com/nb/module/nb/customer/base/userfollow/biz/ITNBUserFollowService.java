@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface ITNBUserFollowService extends IDataService<TNBUserFollow, Integer> {
 
-	Page<TNBUserFollow> findAllByUserCode(String userCode, Pageable pageable);
+	Page<TNBUserFollow> findAllByUserCodeOrderByUpdatedDesc(String userCode, Pageable pageable);
 
-	Page<TNBUserFollow> findAllByFollowUserCode(String followUserCode, Pageable pageable);
+	Page<TNBUserFollow> findAllByFollowUserCodeOrderByUpdatedDesc(String followUserCode, Pageable pageable);
 
 	TNBUserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode);
 

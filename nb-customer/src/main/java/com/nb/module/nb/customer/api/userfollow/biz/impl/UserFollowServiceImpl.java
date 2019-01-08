@@ -42,7 +42,7 @@ public class UserFollowServiceImpl extends CommonServiceImpl implements IUserFol
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Follower> findAllFollowers(String userCode, Pageable pageable) {
-		return userFollowService.findAllByUserCode(userCode, pageable).map(e ->
+		return userFollowService.findAllByUserCodeOrderByUpdatedDesc(userCode, pageable).map(e ->
 				new Follower(convert(e), new NearbyUser(
 						weixinUserService.findOneByCode(e.getFollowUserCode()),
 						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getFollowUserCode(), PageRequest.of(0, 3)),
@@ -54,7 +54,7 @@ public class UserFollowServiceImpl extends CommonServiceImpl implements IUserFol
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public Page<Fan> findAllFans(String userCode, Pageable pageable) {
-		return userFollowService.findAllByFollowUserCode(userCode, pageable).map(e ->
+		return userFollowService.findAllByFollowUserCodeOrderByUpdatedDesc(userCode, pageable).map(e ->
 				new Fan(convert(e), new NearbyUser(
 						weixinUserService.findOneByCode(e.getUserCode()),
 						userBookService.findAllByTagCodeAndUserCode(null, UserBookConstant.SHARABLE, e.getUserCode(), PageRequest.of(0, 3)),

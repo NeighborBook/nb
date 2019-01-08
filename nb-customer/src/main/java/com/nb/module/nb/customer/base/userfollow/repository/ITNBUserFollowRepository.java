@@ -9,9 +9,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = "userfollow")
 public interface ITNBUserFollowRepository extends IDataRepository<TNBUserFollow, Integer> {
 
-	Page<TNBUserFollow> findAllByUserCode(String userCode, Pageable pageable);
+	Page<TNBUserFollow> findAllByUserCodeOrderByUpdatedDesc(String userCode, Pageable pageable);
 
-	Page<TNBUserFollow> findAllByFollowUserCode(String followUserCode, Pageable pageable);
+	Page<TNBUserFollow> findAllByFollowUserCodeOrderByUpdatedDesc(String followUserCode, Pageable pageable);
 
 	TNBUserFollow findOneByUserCodeAndFollowUserCode(String userCode, String followUserCode);
 
