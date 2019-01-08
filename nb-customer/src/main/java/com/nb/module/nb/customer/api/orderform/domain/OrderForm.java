@@ -28,6 +28,8 @@ public class OrderForm<T> {
 
 	private UserBonus userBonus;
 
+	private Long days;
+
 	public OrderForm(Date created, Date updated, String code, String userCode, Integer orderType, Integer orderStatus) {
 		this.created = created;
 		this.updated = updated;

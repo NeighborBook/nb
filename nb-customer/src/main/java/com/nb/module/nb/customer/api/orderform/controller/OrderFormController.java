@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Validated
 @CreateApiDocs
@@ -24,7 +25,7 @@ public class OrderFormController extends BaseController {
 	@Autowired
 	private IOrderFormService service;
 
-	@ApiOperation(value = "书，借进和借出数量", notes = "书，借进和借出数量")
+	@ApiOperation(value = "书，借进和借出数量，及明细", notes = "书，借进和借出数量，及明细")
 	@RequestMapping(value = "/count/{userCode}", method = RequestMethod.GET)
 	public JsonContainer<UserBookAndOrderCount> count(@PathVariable @NotBlank String userCode) {
 		return setSuccessMessage(service.count(userCode));
@@ -32,13 +33,13 @@ public class OrderFormController extends BaseController {
 
 	@ApiOperation(value = "未完成owner列表", notes = "未完成owner列表")
 	@RequestMapping(value = "/borrow/owner/unfinished/{ownerUserCode}", method = RequestMethod.GET)
-	public JsonContainer<UnfinishedOrderForms<OrderBorrow>> findAllUnfinishedOrderFormsByOwnerUserCode(@PathVariable @NotBlank String ownerUserCode) {
+	public JsonContainer<List<OrderForm<OrderBorrow>>> findAllUnfinishedOrderFormsByOwnerUserCode(@PathVariable @NotBlank String ownerUserCode) {
 		return setSuccessMessage(service.findAllUnfinishedOrderFormsByOwnerUserCode(ownerUserCode));
 	}
 
 	@ApiOperation(value = "未完成borrower列表", notes = "未完成borrower列表")
 	@RequestMapping(value = "/borrow/borrower/unfinished/{borrowerUserCode}", method = RequestMethod.GET)
-	public JsonContainer<UnfinishedOrderForms<OrderBorrow>> findAllUnfinishedOrderFormsByBorrowerUserCode(@PathVariable @NotBlank String borrowerUserCode) {
+	public JsonContainer<List<OrderForm<OrderBorrow>>> findAllUnfinishedOrderFormsByBorrowerUserCode(@PathVariable @NotBlank String borrowerUserCode) {
 		return setSuccessMessage(service.findAllUnfinishedOrderFormsByBorrowerUserCode(borrowerUserCode));
 	}
 

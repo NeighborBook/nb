@@ -10,9 +10,9 @@ public interface IOrderFormService {
 
 	UserBookAndOrderCount count(String userCode);
 
-	UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderFormsByOwnerUserCode(String ownerUserCode);
+	List<OrderForm<OrderBorrow>> findAllUnfinishedOrderFormsByOwnerUserCode(String ownerUserCode);
 
-	UnfinishedOrderForms<OrderBorrow> findAllUnfinishedOrderFormsByBorrowerUserCode(String borrowerUserCode);
+	List<OrderForm<OrderBorrow>> findAllUnfinishedOrderFormsByBorrowerUserCode(String borrowerUserCode);
 
 	Page<OrderForm<OrderBorrow>> findAllByOwnerUserCode(String ownerUserCode, Pageable pageable);
 
