@@ -320,10 +320,10 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 		return null;
 	}
 
-	private OrderCount getOrderCount(List<TNBOrderBorrow> list) {
+	private OrderCount getOrderCount(List<TNBOrderBorrow> list, Long count) {
 		OrderCount orderCount = new OrderCount();
+		orderCount.setCount(count);
 		if (null != list && !list.isEmpty()) {
-			orderCount.setCount(Long.valueOf(list.size()));
 			// 获取未完成列表
 			List<OrderForm<OrderBorrow>> orderForms = map(list, e -> mapOneIfNotNull(convert(e), s -> processWhenFindAllOrderBorrow(s)));
 			orderForms.stream().forEach(e -> {
@@ -340,8 +340,10 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public UserBookAndOrderCount count(String userCode) {
 		return new UserBookAndOrderCount(userBookService.countByUserCode(userCode),
-				getOrderCount(orderBorrowService.findAllByBorrowerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START)),
-				getOrderCount(orderBorrowService.findAllByOwnerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START)));
+				getOrderCount(orderBorrowService.findAllByBorrowerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START),
+						orderBorrowService.countByBorrowerUserCode(userCode)),
+				getOrderCount(orderBorrowService.findAllByOwnerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START),
+						orderBorrowService.countByBorrowerUserCode(userCode)));
 	}
 
 	@Override

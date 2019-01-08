@@ -23,6 +23,10 @@ public interface ITNBOrderBorrowRepository extends IDataRepository<TNBOrderBorro
 
 	Page<TNBOrderBorrow> findAllByBorrowerUserCode(String borrowerUserCode, Pageable pageable);
 
+	Long countByOwnerUserCode(String ownerUserCode);
+
+	Long countByBorrowerUserCode(String borrowerUserCode);
+
 	@Query(value = "select a.* from t_nb_order_borrow a, t_nb_order_form b where a.order_code = b.code and b.order_type = 1 " +
 			" and a.owner_user_code = ?1 " +
 			" and b.order_status = ?2 ", nativeQuery = true)

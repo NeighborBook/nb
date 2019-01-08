@@ -45,6 +45,18 @@ public class TNBOrderBorrowServiceImpl extends DataServiceImpl<TNBOrderBorrow, I
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByOwnerUserCode(String ownerUserCode) {
+		return repository.countByOwnerUserCode(ownerUserCode);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public Long countByBorrowerUserCode(String borrowerUserCode) {
+		return repository.countByBorrowerUserCode(borrowerUserCode);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public List<TNBOrderBorrow> findAllByOwnerUserCodeAndOrderStatus(String ownerUserCode, Integer orderStatus) {
 		return repository.findAllByOwnerUserCodeAndOrderStatus(ownerUserCode, orderStatus);
 	}
