@@ -343,7 +343,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 				getOrderCount(orderBorrowService.findAllByBorrowerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START),
 						orderBorrowService.countByBorrowerUserCode(userCode)),
 				getOrderCount(orderBorrowService.findAllByOwnerUserCodeAndOrderStatus(userCode, OrderFormConstant.ORDER_STATUS_START),
-						orderBorrowService.countByBorrowerUserCode(userCode)));
+						orderBorrowService.countByOwnerUserCode(userCode)));
 	}
 
 	@Override
