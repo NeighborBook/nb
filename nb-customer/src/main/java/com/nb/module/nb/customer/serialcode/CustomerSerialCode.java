@@ -13,7 +13,8 @@ public enum CustomerSerialCode implements ISerialCode {
 	NBUSERBONUS("NBUSERBONUS", "用户积分"),
 	NBUSERCHECKIN("NBUSERCHECKIN", "用户签到"),
 	NBUSERSHARE("NBUSERSHARE", "用户分享"),
-	NBPARTNERAUTH("NBPARTNERAUTH", "第三方认证");
+	NBPARTNERAUTH("NBPARTNERAUTH", "第三方认证"),
+	NBCHILDREN("NBCHILDREN", "孩子"),;
 
 	private String serialGroup;
 
