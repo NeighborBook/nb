@@ -14,7 +14,8 @@ public enum CustomerSerialCode implements ISerialCode {
 	NBUSERCHECKIN("NBUSERCHECKIN", "用户签到"),
 	NBUSERSHARE("NBUSERSHARE", "用户分享"),
 	NBPARTNERAUTH("NBPARTNERAUTH", "第三方认证"),
-	NBCHILDREN("NBCHILDREN", "孩子"),;
+	NBCHILDREN("NBCHILDREN", "孩子"),
+	NBEVENT("NBEVENT", "活动"),;
 
 	private String serialGroup;
 

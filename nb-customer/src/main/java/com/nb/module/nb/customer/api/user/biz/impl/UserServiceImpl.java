@@ -85,6 +85,12 @@ public class UserServiceImpl extends CommonServiceImpl implements IUserService {
 
 	@Override
 	@Transactional
+	public void updateNameAndProfession(String userCode, String userName, String profession) {
+		checkJsonContainer(passportClient.updateNameAndProfession(userCode, userName, profession));
+	}
+
+	@Override
+	@Transactional
 	public User updateUser(User user, String plugin) {
 		return checkJsonContainer(passportClient.updateUser(user, plugin));
 	}

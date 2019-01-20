@@ -13,8 +13,4 @@ public class TNBUserVolunteer extends DataEntity {
 
 	private String code;
 
-	private String name;
-
-	private String profession;
-
 }

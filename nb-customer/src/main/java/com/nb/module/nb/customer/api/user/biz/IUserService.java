@@ -95,6 +95,15 @@ public interface IUserService {
 	void updateName(String userCode, String userName);
 
 	/**
+	 * 更新用户姓名和职业
+	 *
+	 * @param userCode
+	 * @param userName
+	 * @param profession
+	 */
+	void updateNameAndProfession(String userCode, String userName, String profession);
+
+	/**
 	 * 更新用户信息
 	 *
 	 * @param user
