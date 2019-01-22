@@ -8,6 +8,8 @@ import com.zjk.module.common.authorization.client.api.serialcode.client.ISerialC
 import com.zjk.module.common.data.biz.impl.DataServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TNBEventServiceImpl extends DataServiceImpl<TNBEvent, Integer> implements ITNBEventService {
@@ -26,6 +28,7 @@ public class TNBEventServiceImpl extends DataServiceImpl<TNBEvent, Integer> impl
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
 	public TNBEvent findOneByCode(String code) {
 		return repository.findOneByCode(code);
 	}
