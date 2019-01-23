@@ -59,12 +59,6 @@ public class UserEventServiceImpl extends CommonServiceImpl implements IUserEven
 	@Override
 	@Transactional
 	public void signUp(UserEvent userEvent) {
-		// 查找活动
-		Event event = eventService.findOneByCode(userEvent.getEventCode());
-		// 判断活动剩余名额
-		if (event.getSurplus() <= 0) {
-			throw new BusinessException(UserEventCode.UE0001, new Object[]{userEvent.getUserCode(), userEvent.getEventCode()});
-		}
 		TNBUserEvent po = userEventService.findOneByUserCodeAndEventCode(userEvent.getUserCode(), userEvent.getEventCode());
 		if (po == null) {
 			po = new TNBUserEvent();
@@ -73,6 +67,12 @@ public class UserEventServiceImpl extends CommonServiceImpl implements IUserEven
 			if (UserEventConstant.STATUS_1.equals(po.getStatus())) {
 				throw new BusinessException(UserEventCode.UE0002, new Object[]{userEvent.getUserCode(), userEvent.getEventCode()});
 			}
+		}
+		// 查找活动
+		Event event = eventService.findOneByCode(userEvent.getEventCode());
+		// 判断活动剩余名额
+		if (event.getSurplus() <= 0) {
+			throw new BusinessException(UserEventCode.UE0001, new Object[]{userEvent.getUserCode(), userEvent.getEventCode()});
 		}
 		po.setUserCode(userEvent.getUserCode());
 		po.setEventCode(userEvent.getEventCode());
