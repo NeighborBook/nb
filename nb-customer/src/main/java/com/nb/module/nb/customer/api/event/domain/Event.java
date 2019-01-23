@@ -25,7 +25,11 @@ public class Event {
 
 	private Integer maxQuota;
 
-	public Event(String code, String name, Date beginDate, Date endDate, String location, Date enterBeginDate, Date enterEndDate, Integer quota, Integer maxQuota) {
+	private Integer signUp;
+
+	private Integer surplus;
+
+	public Event(String code, String name, Date beginDate, Date endDate, String location, Date enterBeginDate, Date enterEndDate, Integer quota, Integer maxQuota, Integer signUp, Integer surplus) {
 		this.code = code;
 		this.name = name;
 		this.beginDate = beginDate;
@@ -35,6 +39,8 @@ public class Event {
 		this.enterEndDate = enterEndDate;
 		this.quota = quota;
 		this.maxQuota = maxQuota;
+		this.signUp = signUp;
+		this.surplus = surplus;
 	}
 
 	public Event() {

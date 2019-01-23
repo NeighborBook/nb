@@ -128,6 +128,12 @@ public class WeixinUserServiceImpl extends CommonServiceImpl implements IWeixinU
 		return userBonusService.addUserBonusToUser(user, userBonus);
 	}
 
+	@Override
+	@Transactional
+	public void updateNameAndProfession(String code, String name, String profession) {
+		userService.updateNameAndProfession(code, name, profession);
+	}
+
 	private void saveUserIntro(UserIntro userIntro) {
 		// 如果UserIntro存在，则给邀请人加分，并保存关系
 		if (null != userIntro) {

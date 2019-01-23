@@ -29,6 +29,8 @@ public interface IWeixinUserService {
 
 	User updateMobile(Mobile mobile);
 
+	void updateNameAndProfession(String code, String name, String profession);
+
 	void saveUserLocation(UserLocation userLocation);
 
 	void deleteUserLocation(UserLocation userLocation);

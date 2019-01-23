@@ -42,6 +42,13 @@ public class WeixinUserController extends BaseController {
 		return setSuccessMessage(service.updateMobile(mobile));
 	}
 
+	@ApiOperation(value = "更新姓名和职业", notes = "更新姓名和职业")
+	@RequestMapping(value = "/updateNameAndProfession", method = RequestMethod.PUT)
+	public JsonContainer updateNameAndProfession(@RequestParam String code, @RequestParam String name, @RequestParam String profession) {
+		service.updateNameAndProfession(code, name, profession);
+		return setSuccessMessage();
+	}
+
 	@ApiOperation(value = "保存用户地址信息", notes = "保存用户地址信息")
 	@RequestMapping(value = "/saveUserLocation", method = RequestMethod.POST)
 	public JsonContainer saveUserLocation(@RequestBody @Validated UserLocation userLocation) {

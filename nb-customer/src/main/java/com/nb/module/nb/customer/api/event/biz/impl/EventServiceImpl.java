@@ -2,6 +2,8 @@ package com.nb.module.nb.customer.api.event.biz.impl;
 
 import com.nb.module.nb.customer.api.event.biz.IEventService;
 import com.nb.module.nb.customer.api.event.domain.Event;
+import com.nb.module.nb.customer.api.userevent.biz.IUserEventService;
+import com.nb.module.nb.customer.api.userevent.constant.UserEventConstant;
 import com.nb.module.nb.customer.base.event.biz.ITNBEventService;
 import com.nb.module.nb.customer.base.event.domain.TNBEvent;
 import com.zjk.module.common.base.biz.impl.CommonServiceImpl;
@@ -17,6 +19,8 @@ public class EventServiceImpl extends CommonServiceImpl implements IEventService
 
 	@Autowired
 	private ITNBEventService eventService;
+	@Autowired
+	private IUserEventService userEventService;
 
 	@Override
 	@Transactional
@@ -49,7 +53,9 @@ public class EventServiceImpl extends CommonServiceImpl implements IEventService
 	}
 
 	private Event convert(TNBEvent e) {
+		Integer signUp = userEventService.countByEventCodeAndStatus(e.getCode(), UserEventConstant.STATUS_1).intValue();
+		Integer surplus = e.getMaxQuota() - signUp;
 		return new Event(e.getCode(), e.getName(), e.getBeginDate(), e.getEndDate(), e.getLocation(),
-				e.getEnterBeginDate(), e.getEnterEndDate(), e.getQuota(), e.getMaxQuota());
+				e.getEnterBeginDate(), e.getEnterEndDate(), e.getQuota(), e.getMaxQuota(), signUp, surplus);
 	}
 }

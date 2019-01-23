@@ -24,8 +24,8 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "保存活动", notes = "保存活动")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public JsonContainer save(@RequestBody Event userChildren) {
-		service.save(userChildren);
+	public JsonContainer save(@RequestBody Event event) {
+		service.save(event);
 		return setSuccessMessage();
 	}
 
