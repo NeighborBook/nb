@@ -2,6 +2,7 @@ package com.nb.module.nb.customer.api.userevent.controller;
 
 import com.nb.module.nb.customer.api.userevent.biz.IUserEventService;
 import com.nb.module.nb.customer.api.userevent.domain.UserEvent;
+import com.nb.module.nb.customer.api.userevent.domain.UserEventDetail;
 import com.zjk.module.common.base.annotation.CreateApiDocs;
 import com.zjk.module.common.base.controller.BaseController;
 import com.zjk.module.common.base.domain.JsonContainer;
@@ -36,4 +37,9 @@ public class UserEventController extends BaseController {
 		return setSuccessMessage();
 	}
 
+	@ApiOperation(value = "用户活动详情", notes = "用户活动详情")
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+	public JsonContainer<UserEventDetail> detail(@RequestBody @Validated UserEvent userEvent) {
+		return setSuccessMessage(service.detail(userEvent));
+	}
 }

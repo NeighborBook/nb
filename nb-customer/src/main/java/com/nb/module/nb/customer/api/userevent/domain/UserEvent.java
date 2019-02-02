@@ -5,13 +5,16 @@ import lombok.Data;
 @Data
 public class UserEvent {
 
-	String userCode;
+	private String userCode;
 
-	String eventCode;
+	private String eventCode;
 
-	public UserEvent(String userCode, String eventCode) {
+	private Integer status;
+
+	public UserEvent(String userCode, String eventCode, Integer status) {
 		this.userCode = userCode;
 		this.eventCode = eventCode;
+		this.status = status;
 	}
 
 	public UserEvent() {

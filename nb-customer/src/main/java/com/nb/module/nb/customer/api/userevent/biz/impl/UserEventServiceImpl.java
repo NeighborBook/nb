@@ -2,9 +2,11 @@ package com.nb.module.nb.customer.api.userevent.biz.impl;
 
 import com.nb.module.nb.customer.api.event.biz.IEventService;
 import com.nb.module.nb.customer.api.event.domain.Event;
+import com.nb.module.nb.customer.api.user.biz.IUserService;
 import com.nb.module.nb.customer.api.userevent.biz.IUserEventService;
 import com.nb.module.nb.customer.api.userevent.constant.UserEventConstant;
 import com.nb.module.nb.customer.api.userevent.domain.UserEvent;
+import com.nb.module.nb.customer.api.userevent.domain.UserEventDetail;
 import com.nb.module.nb.customer.api.userevent.exception.UserEventCode;
 import com.nb.module.nb.customer.base.userevent.biz.ITNBUserEventService;
 import com.nb.module.nb.customer.base.userevent.domain.TNBUserEvent;
@@ -24,6 +26,8 @@ public class UserEventServiceImpl extends CommonServiceImpl implements IUserEven
 	private ITNBUserEventService userEventService;
 	@Autowired
 	private IEventService eventService;
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
@@ -53,7 +57,7 @@ public class UserEventServiceImpl extends CommonServiceImpl implements IUserEven
 	}
 
 	private UserEvent convert(TNBUserEvent e) {
-		return new UserEvent(e.getUserCode(), e.getEventCode());
+		return new UserEvent(e.getUserCode(), e.getEventCode(), e.getStatus());
 	}
 
 	@Override
@@ -89,5 +93,13 @@ public class UserEventServiceImpl extends CommonServiceImpl implements IUserEven
 		}
 		po.setStatus(UserEventConstant.STATUS_0);
 		userEventService.save(po);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+	public UserEventDetail detail(UserEvent userEvent) {
+		return mapOneIfNotNull(findOneByUserCodeAndEventCode(userEvent.getUserCode(), userEvent.getEventCode()),
+				e -> new UserEventDetail(userService.findOneByCode(e.getUserCode(), null),
+						eventService.findOneByCode(e.getEventCode()), e.getStatus()));
 	}
 }
