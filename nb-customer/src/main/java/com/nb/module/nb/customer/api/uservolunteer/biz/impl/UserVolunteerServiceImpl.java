@@ -28,13 +28,14 @@ public class UserVolunteerServiceImpl extends CommonServiceImpl implements IUser
 			po = new TNBUserVolunteer();
 		}
 		po.setCode(userVolunteer.getCode());
+		po.setSpeciality(userVolunteer.getSpeciality());
 		userVolunteerService.save(po);
 		userService.updateNameAndProfession(userVolunteer.getCode(), userVolunteer.getName(), userVolunteer.getProfession());
 	}
 
 	private UserVolunteer convert(TNBUserVolunteer e) {
 		User user = userService.findOneByCode(e.getCode(), null);
-		return new UserVolunteer(e.getCode(), user.getSettings().getName(), user.getSettings().getProfession());
+		return new UserVolunteer(e.getCode(), user.getSettings().getName(), user.getSettings().getProfession(), e.getSpeciality());
 	}
 
 	@Override

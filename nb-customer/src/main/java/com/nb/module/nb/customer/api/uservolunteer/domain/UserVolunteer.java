@@ -16,10 +16,14 @@ public class UserVolunteer {
 	@NotBlank
 	private String profession;
 
-	public UserVolunteer(@NotBlank String code, @NotBlank String name, @NotBlank String profession) {
+	@NotBlank
+	private String speciality;
+
+	public UserVolunteer(@NotBlank String code, @NotBlank String name, @NotBlank String profession, @NotBlank String speciality) {
 		this.code = code;
 		this.name = name;
 		this.profession = profession;
+		this.speciality = speciality;
 	}
 
 	public UserVolunteer() {
