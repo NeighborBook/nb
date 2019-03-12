@@ -514,6 +514,7 @@ public class OrderFormServiceImpl extends CommonServiceImpl implements IOrderFor
 					// 取消借阅加回积分
 					orderForm = processUserBonus(orderForm, orderFlow.getBaseUserBonus(), UserBonusConstant.USER_BONUS_BORROW_CANCEL, true);
 				}
+				break;
 		}
 		updateOrderForm(orderForm);
 		// 发送消息
