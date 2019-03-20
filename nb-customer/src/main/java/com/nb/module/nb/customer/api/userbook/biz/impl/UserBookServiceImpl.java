@@ -63,7 +63,7 @@ public class UserBookServiceImpl extends CommonServiceImpl implements IUserBookS
 			po.setUserCode(vo.getUserCode());
 			po.setBookCode(vo.getBookCode());
 			// 如果是第一次绑定，并且shareable = 1-可共享的，则送积分
-			if (UserBookConstant.SHARABLE == vo.getSharable()) {
+			if (UserBookConstant.SHARABLE.equals(vo.getSharable())) {
 				userBonus = userBonusService.operate(new UserBonusTemplate(vo.getBaseUserBonus(), UserBonusConstant.USER_BONUS_ADD_BOOK));
 			}
 		}
